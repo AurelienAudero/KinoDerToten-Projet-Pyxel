@@ -1,6 +1,6 @@
 # Importations des bibliothèques nécéssaires
 import pyxel
-from tkinter import Tk, Label, Radiobutton, Button, IntVar
+from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox
 
 ########################
 #   PROGRAMME DU JEU   #
@@ -67,26 +67,37 @@ def fenetreChoix(question, reponses):
   """
   Crée une fenêtre de choix en utilisant Tkinter
   IN : question (Str) et reponses (list)
-  OUT : Indice de la réponse
+  OUT : Indice de la réponse ou -1 si la fenêtre est fermée ou 0 si aucun choix n'as été fait
   """
   
+  # Intialisation de la fenêtre et de ses variables
   fenetre = Tk()
-  Label(fenetre, text=question).pack()
+  fenetre.title("Kino der toten")
   v = IntVar()
   i = 1
+
+  # Action en cas de fermeture de la fenêtre
+  def fermetureFenetre():
+    if messagebox.askokcancel("Oui", "Voulez-vous quitter le jeu ?"):
+      fenetre.destroy()
+
+  # Ajout du contenu à la fenêtre
+  Label(fenetre, text=question).pack()
   for element in reponses:
     Radiobutton(fenetre, text=element, variable=v, value=i).pack(anchor="w")
     i += 1
   Button(text="Confirmer", command=fenetre.destroy).pack()
+
+  # Création de la fenêtre
+  fenetre.protocol("WM_DELETE_WINDOW", fermetureFenetre)
   fenetre.mainloop()
-  if v.get() == 0:
-    return None
-  else:
-    return v.get()
+
+  # Retour du choix de l'utilisateur
+  return v.get()
 
 # Demande à l'utilisateur les touches à utiliser
-userChosenKeybinds = None
-while userChosenKeybinds == None :
+userChosenKeybinds = 0
+while userChosenKeybinds == 0 :
   userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY"])
 
 # Lancement du jeu
