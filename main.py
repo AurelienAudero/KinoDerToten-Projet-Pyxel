@@ -78,7 +78,9 @@ def fenetreChoix(question, reponses):
 
   # Action en cas de fermeture de la fenêtre
   def fermetureFenetre():
+    nonlocal v
     if messagebox.askokcancel("Oui", "Voulez-vous quitter le jeu ?"):
+      v = -1
       fenetre.destroy()
 
   # Ajout du contenu à la fenêtre
@@ -93,12 +95,19 @@ def fenetreChoix(question, reponses):
   fenetre.mainloop()
 
   # Retour du choix de l'utilisateur
-  return v.get()
+  if v == -1:
+    return -1
+  else:
+    return v.get()
 
 # Demande à l'utilisateur les touches à utiliser
 userChosenKeybinds = 0
 while userChosenKeybinds == 0 :
   userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY"])
+  # Affiche une erreur si aucun choix n'est fait par l'utilisateur
+  if userChosenKeybinds == 0:
+    messagebox.showwarning("Erreur", "Il est nécéssaire de choisir une méthode d'entrée")
 
 # Lancement du jeu
-Jeu(720, 480, userChosenKeybinds)
+if (userChosenKeybinds == 1) or (userChosenKeybinds == 2):
+  Jeu(720, 480, userChosenKeybinds)
