@@ -1,5 +1,6 @@
 # Importations des bibliothèques nécéssaires
 import pyxel
+from random import randint
 from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox
 
 ########################
@@ -43,46 +44,49 @@ class Personnage:
     pyxel.rect(self.x, self.y, self.width, self.height, 9)
 
 class Zombie:
-  def __init__(self, x, y, width, height):
+  def __init__(self, x, y, width, height, vitesse, personnage):
     self.x = x
     self.y = y
     self.width = width
     self.height = height
+    self.vitesse = vitesse
+    self.personnage = personnage
 
-  """
   def move(self):
-    if pyxel.btn(self.personnageHaut):
-      if (self.y > 0) :
-        self.y = self.y - 10
-    if pyxel.btn(self.personnageGauche):
-      if (self.x > 0) :
-        self.x = self.x - 10
-    if pyxel.btn(self.personnageBas):
-      if (self.y < resHauteur-self.height) :
-        self.y = self.y + 10
-    if pyxel.btn(self.personnageDroite):
-      if (self.x < resLongueur-self.width) :
-        self.x = self.x + 10
-  """
-          
+    if (self.y > 0) and (self.y > self.personnage.y) :
+      self.y = self.y - self.vitesse
+    if (self.x > 0) and (self.x > self.personnage.x) :
+      self.x = self.x - self.vitesse
+    if (self.y < resHauteur-self.height) and (self.y < self.personnage.y):
+      self.y = self.y + self.vitesse
+    if (self.x < resLongueur-self.width) and (self.x < self.personnage.x):
+      self.x = self.x + self.vitesse
+
   def draw(self):
-    pyxel.rect(self.x, self.y, self.width, self.height, 9)
+    pyxel.rect(self.x, self.y, self.width, self.height, 11)
 
 class Jeu:
-  def __init__(self, l, h, keybinds):
-    pyxel.init(l, h, title = "Kino der toten")
+  def __init__(self, l, h, fps, keybinds):
+    pyxel.init(l, h, title="Kino der toten", fps=fps)
 
-    # Création du personnage
+    self.zombiesList = []
+    self.tempsSpawnMob = 5 # Temps entre chaque spawn de mob (en secondes)
     self.personnage = Personnage(360, 240, 50, 80, keybinds)
 
     pyxel.run(self.update, self.draw)
 
   def update(self):
     self.personnage.move()
+    for element in self.zombiesList:
+      element.move()
+    if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
+      self.zombiesList.append(Zombie(randint(20, 250), randint(20, 250), 50, 80, 5, self.personnage))
 
   def draw(self):
     pyxel.cls(7)
     self.personnage.draw()
+    for element in self.zombiesList:
+      element.draw()
 
 ########################
 #  PROGRAMME PRINCIPAL #
@@ -137,4 +141,5 @@ while userChosenKeybinds == 0 :
 if (userChosenKeybinds == 1) or (userChosenKeybinds == 2):
   resLongueur = 720
   resHauteur = 480
-  game = Jeu(resLongueur, resHauteur, userChosenKeybinds)
+  fps = 60
+  game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds)
