@@ -116,7 +116,7 @@ def fenetreChoix(question, reponses):
   # Action en cas de fermeture de la fenêtre
   def fermetureFenetre():
     nonlocal v
-    if messagebox.askokcancel("Oui", "Voulez-vous quitter le jeu ?"):
+    if messagebox.askokcancel("Kino der toten", "Voulez-vous quitter le jeu ?"):
       v = -1
       fenetre.destroy()
 
