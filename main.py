@@ -80,10 +80,19 @@ class Jeu:
     for element in self.zombiesList:
       element.move()
     if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
-      self.zombiesList.append(Zombie(randint(20, 250), randint(20, 250), 50, 80, 5, self.personnage))
+      numeroSpawner = randint(1,3)
+      if numeroSpawner == 1:
+        self.zombiesList.append(Zombie(100, 25, 50, 80, 5, self.personnage))
+      elif numeroSpawner == 2:
+        self.zombiesList.append(Zombie(300, 25, 50, 80, 5, self.personnage))
+      elif numeroSpawner == 3:
+        self.zombiesList.append(Zombie(500, 25, 50, 80, 5, self.personnage))
 
   def draw(self):
     pyxel.cls(7)
+    pyxel.rect(100, 25, 100, 100, 12)
+    pyxel.rect(300, 25, 100, 100, 12)
+    pyxel.rect(500, 25, 100, 100, 12)
     self.personnage.draw()
     for element in self.zombiesList:
       element.draw()
