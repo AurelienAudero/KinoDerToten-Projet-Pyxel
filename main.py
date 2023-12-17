@@ -143,10 +143,12 @@ while userChosenKeybinds == 0 :
   userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY"])
   # Affiche une erreur si aucun choix n'est fait par l'utilisateur
   if userChosenKeybinds == 0:
+    fenetre = Tk()
+    fenetre.title("Kino der toten")
     messagebox.showwarning("Erreur", "Il est nécéssaire de choisir une méthode d'entrée")
+    fenetre.destroy()
 
 # Lancement du jeu
-
 if (userChosenKeybinds == 1) or (userChosenKeybinds == 2):
   resLongueur = 720
   resHauteur = 480
