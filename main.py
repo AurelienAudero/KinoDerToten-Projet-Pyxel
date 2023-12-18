@@ -7,12 +7,13 @@ from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox
 #   PROGRAMME DU JEU   #
 ########################
 class Personnage:
-  def __init__(self, x, y, width, height, keybinds):
+  def __init__(self, x, y, width, height, keybinds, tirsList):
     self.x = x
     self.y = y
     self.width = width
     self.height = height
     self.keybinds = keybinds
+    self.tirsList = tirsList
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -20,11 +21,13 @@ class Personnage:
       self.personnageGauche = pyxel.KEY_Q
       self.personnageBas = pyxel.KEY_S
       self.personnageDroite = pyxel.KEY_D
+      self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
     elif self.keybinds == 2 :
       self.personnageHaut = pyxel.KEY_W
       self.personnageGauche = pyxel.KEY_A
       self.personnageBas = pyxel.KEY_S
       self.personnageDroite = pyxel.KEY_D
+      self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
 
   def move(self):
     if pyxel.btn(self.personnageHaut):
@@ -39,9 +42,26 @@ class Personnage:
     if pyxel.btn(self.personnageDroite):
       if (self.x < resLongueur-self.width) :
         self.x = self.x + 10
+    if pyxel.btn(self.personnageTir):
+      self.tirsList.append(Tir(self.x, self.y))
           
   def draw(self):
     pyxel.rect(self.x, self.y, self.width, self.height, 9)
+
+class Tir:
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+    self.alive = True
+
+  def move(self):
+    if self.x < 0 or self.x > resLongueur:
+      self.alive = False
+    else:
+        self.x = self.x - 2
+
+  def draw(self):
+    pyxel.rect(self.x, self.y, 1, 4, 10)
 
 class Zombie:
   def __init__(self, x, y, width, height, vitesse, personnage):
@@ -70,8 +90,9 @@ class Jeu:
     pyxel.init(l, h, title="Kino der toten", fps=fps)
 
     self.zombiesList = []
+    self.tirsList = []
     self.tempsSpawnMob = 5 # Temps entre chaque spawn de mob (en secondes)
-    self.personnage = Personnage(360, 240, 50, 80, keybinds)
+    self.personnage = Personnage(360, 240, 50, 80, keybinds, self.tirsList)
 
     pyxel.run(self.update, self.draw)
 
@@ -82,24 +103,24 @@ class Jeu:
     if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
       numeroSpawner = randint(1,3)
       if numeroSpawner == 1:
-        self.zombiesList.append(Zombie(100, 25, 50, 80, 5, self.personnage))
+        self.zombiesList.append(Zombie(100, 25, 50, 80, 1, self.personnage))
       elif numeroSpawner == 2:
-        self.zombiesList.append(Zombie(300, 25, 50, 80, 5, self.personnage))
+        self.zombiesList.append(Zombie(300, 25, 50, 80, 1, self.personnage))
       elif numeroSpawner == 3:
-        self.zombiesList.append(Zombie(500, 25, 50, 80, 5, self.personnage))
+        self.zombiesList.append(Zombie(500, 25, 50, 80, 1, self.personnage))
 
   def draw(self):
     pyxel.cls(7)
-    pyxel.rect(100, 25, 100, 100, 12)
-    pyxel.rect(300, 25, 100, 100, 12)
-    pyxel.rect(500, 25, 100, 100, 12)
+    pyxel.rect(150, 25, 100, 100, 12)
+    pyxel.rect(450, 25, 100, 100, 12)
+    pyxel.rect(750, 25, 100, 100, 12)
     self.personnage.draw()
     for element in self.zombiesList:
       element.draw()
 
 ########################
 #  PROGRAMME PRINCIPAL #
-########################
+#######################
 def fenetreChoix(question, reponses):
   """
   Crée une fenêtre de choix en utilisant Tkinter
@@ -150,7 +171,7 @@ while userChosenKeybinds == 0 :
 
 # Lancement du jeu
 if (userChosenKeybinds == 1) or (userChosenKeybinds == 2):
-  resLongueur = 720
-  resHauteur = 480
+  resLongueur = 960
+  resHauteur = 540
   fps = 60
   game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds)
