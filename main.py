@@ -43,7 +43,8 @@ class Personnage:
       if (self.x < resLongueur-self.width) :
         self.x = self.x + 10
     if pyxel.btn(self.personnageTir):
-      self.tirsList.append(Tir(self.x, self.y))
+      return self.x, self.y
+    return None
           
   def draw(self):
     pyxel.rect(self.x, self.y, self.width, self.height, 9)
@@ -97,9 +98,17 @@ class Jeu:
     pyxel.run(self.update, self.draw)
 
   def update(self):
-    self.personnage.move()
+    v = self.personnage.move()
+    
+    # Si le personnage appuie sur le bouton de tir
+    if v is not None:
+      self.tirsList.append(Tir(v[0], v[1]))
+    
+    # Déplacement des zombies
     for element in self.zombiesList:
       element.move()
+    
+    # Spawn aléatoire des zombies
     if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
       numeroSpawner = randint(1,3)
       if numeroSpawner == 1:
