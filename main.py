@@ -31,6 +31,12 @@ class Personnage:
       self.personnageBas = pyxel.KEY_S
       self.personnageDroite = pyxel.KEY_D
       self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
+    elif self.keybinds == 3 :
+      self.personnageHaut = pyxel.KEY_UP
+      self.personnageGauche = pyxel.KEY_LEFT
+      self.personnageBas = pyxel.KEY_DOWN
+      self.personnageDroite = pyxel.KEY_RIGHT
+      self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
 
   def move(self):
     if pyxel.btn(self.personnageHaut):
@@ -231,7 +237,7 @@ def fenetreChoix(question, reponses):
 # Demande à l'utilisateur les touches à utiliser
 userChosenKeybinds = 0
 while userChosenKeybinds == 0 :
-  userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY"])
+  userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles"])
   # Affiche une erreur si aucun choix n'est fait par l'utilisateur
   if userChosenKeybinds == 0:
     fenetre = Tk()
@@ -240,7 +246,7 @@ while userChosenKeybinds == 0 :
     fenetre.destroy()
 
 # Lancement du jeu
-if (userChosenKeybinds == 1) or (userChosenKeybinds == 2):
+if (userChosenKeybinds == 1) or (userChosenKeybinds == 2) or (userChosenKeybinds == 3):
   resLongueur = 960
   resHauteur = 540
   fps = 60
