@@ -14,7 +14,6 @@ class Personnage:
     self.width = width
     self.height = height
     self.keybinds = keybinds
-    self.cadenceArme = 0.25
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -43,9 +42,8 @@ class Personnage:
     if pyxel.btn(self.personnageDroite):
       if (self.x < resLongueur-self.width) :
         self.x = self.x + 10
-    if pyxel.btn(self.personnageTir):
-      if pyxel.frame_count % (fps*self.cadenceArme) == 0:
-        return self.x, self.y
+    if pyxel.btnp(self.personnageTir):
+      return self.x, self.y+(self.height/2)
     
     return None
           
@@ -56,16 +54,18 @@ class Tir:
   def __init__(self, x, y):
     self.x = x
     self.y = y
+    self.width = 40
+    self.height = 10
     self.alive = True
 
   def move(self):
-    if self.x < 0 or self.x > resLongueur:
+    if self.x < 0-self.width or self.x > resLongueur+self.width:
       self.alive = False
     else:
         self.x = self.x - 2
 
   def draw(self):
-    pyxel.rect(self.x, self.y, 40, 10, 10)
+    pyxel.rect(self.x, self.y, self.width, self.height, 10)
 
 class Zombie:
   def __init__(self, x, y, width, height, vitesse, personnage):
@@ -107,10 +107,12 @@ class Jeu:
     # Création d'un tir si le joueur appuie sur la touche de tir
     if v is not None:
       self.tirsList.append(Tir(v[0], v[1]))
-    
-    # Déplacement des tirs existants
+
+    # Déplacement des tirs existants et suppression des tirs terminés
     for element in self.tirsList:
       element.move()
+      if not element.alive:
+        self.tirsList.remove(element)
 
     # Déplacement des zombies
     for element in self.zombiesList:
