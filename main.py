@@ -14,6 +14,9 @@ class Personnage:
     self.width = width
     self.height = height
     self.keybinds = keybinds
+    self.score = 0
+    self.scoreTXT = ""
+    self.kills = 0
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -93,14 +96,16 @@ class Zombie:
 class Jeu:
   def __init__(self, l, h, fps, keybinds):
     pyxel.init(l, h, title="Kino der toten", fps=fps)
+    pyxel.load("KinoDerToten.pyxres")
 
     self.zombiesList = []
     self.tirsList = []
     self.tempsSpawnMob = 1 # Temps entre chaque spawn de mob (en secondes)
+    self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
     self.personnage = Personnage(100, 210, 50, 80, keybinds)
 
     pyxel.run(self.update, self.draw)
-
+  
   def update(self):
     # Déplacement du personnage joueur
     v = self.personnage.move()
@@ -128,6 +133,8 @@ class Jeu:
         if ennemi.x+ennemi.width > tir.x and tir.x+tir.width > ennemi.x and ennemi.y+ennemi.height > tir.y and tir.y+tir.height > ennemi.y:
           self.tirsList.remove(tir)
           self.zombiesList.remove(ennemi)
+          self.personnage.score += self.gainScoreKill
+          self.personnage.kills += 1
 
     # Spawn aléatoire des zombies
     if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
@@ -139,7 +146,32 @@ class Jeu:
 
   def draw(self):
     # Efface l'écran
-    pyxel.cls(7)
+    pyxel.cls(13)
+
+    # Affiche le score actuel du joueur
+    pyxel.blt(15, 15, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
+    self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
+    for i in range(len(self.personnage.scoreTXT)):
+      if self.personnage.scoreTXT[i] == "1":
+        pyxel.blt(120+(16*i), 15, 0, 0, 24, 11, 19, 0) # Affichage du chiffre 1
+      if self.personnage.scoreTXT[i] == "2":
+        pyxel.blt(120+(16*i), 15, 0, 16, 24, 11, 19, 0) # Affichage du chiffre 2
+      if self.personnage.scoreTXT[i] == "3":
+        pyxel.blt(120+(16*i), 15, 0, 32, 24, 11, 19, 0) # Affichage du chiffre 3
+      if self.personnage.scoreTXT[i] == "4":
+        pyxel.blt(120+(16*i), 15, 0, 48, 24, 11, 19, 0) # Affichage du chiffre 4
+      if self.personnage.scoreTXT[i] == "5":
+        pyxel.blt(120+(16*i), 15, 0, 64, 24, 11, 19, 0) # Affichage du chiffre 5
+      if self.personnage.scoreTXT[i] == "6":
+        pyxel.blt(120+(16*i), 15, 0, 80, 24, 11, 19, 0) # Affichage du chiffre 6
+      if self.personnage.scoreTXT[i] == "7":
+        pyxel.blt(120+(16*i), 15, 0, 96, 24, 11, 19, 0) # Affichage du chiffre 7
+      if self.personnage.scoreTXT[i] == "8":
+        pyxel.blt(120+(16*i), 15, 0, 112, 24, 11, 19, 0) # Affichage du chiffre 8
+      if self.personnage.scoreTXT[i] == "9":
+        pyxel.blt(120+(16*i), 15, 0, 128, 24, 11, 19, 0) # Affichage du chiffre 9
+      if self.personnage.scoreTXT[i] == "0":
+        pyxel.blt(120+(16*i), 15, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
     
     # Affichage des trois spawners de zombies
     pyxel.rect(750, 100, 100, 100, 12)
