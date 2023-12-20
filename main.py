@@ -7,13 +7,14 @@ from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox
 #   PROGRAMME DU JEU   #
 ########################
 class Personnage:
-  def __init__(self, x, y, width, height, keybinds, tirsList):
+  def __init__(self, x, y, width, height, keybinds):
+    # Création de variables
     self.x = x
     self.y = y
     self.width = width
     self.height = height
     self.keybinds = keybinds
-    self.tirsList = tirsList
+    self.cadenceArme = 0.25
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -43,7 +44,9 @@ class Personnage:
       if (self.x < resLongueur-self.width) :
         self.x = self.x + 10
     if pyxel.btn(self.personnageTir):
-      return self.x, self.y
+      if pyxel.frame_count % (fps*self.cadenceArme) == 0:
+        return self.x, self.y
+    
     return None
           
   def draw(self):
@@ -62,7 +65,7 @@ class Tir:
         self.x = self.x - 2
 
   def draw(self):
-    pyxel.rect(self.x, self.y, 1, 4, 10)
+    pyxel.rect(self.x, self.y, 40, 10, 10)
 
 class Zombie:
   def __init__(self, x, y, width, height, vitesse, personnage):
@@ -93,17 +96,22 @@ class Jeu:
     self.zombiesList = []
     self.tirsList = []
     self.tempsSpawnMob = 5 # Temps entre chaque spawn de mob (en secondes)
-    self.personnage = Personnage(360, 240, 50, 80, keybinds, self.tirsList)
+    self.personnage = Personnage(360, 240, 50, 80, keybinds)
 
     pyxel.run(self.update, self.draw)
 
   def update(self):
+    # Déplacement du personnage joueur
     v = self.personnage.move()
     
-    # Si le personnage appuie sur le bouton de tir
+    # Création d'un tir si le joueur appuie sur la touche de tir
     if v is not None:
       self.tirsList.append(Tir(v[0], v[1]))
     
+    # Déplacement des tirs existants
+    for element in self.tirsList:
+      element.move()
+
     # Déplacement des zombies
     for element in self.zombiesList:
       element.move()
@@ -119,11 +127,22 @@ class Jeu:
         self.zombiesList.append(Zombie(500, 25, 50, 80, 1, self.personnage))
 
   def draw(self):
+    # Efface l'écran
     pyxel.cls(7)
+    
+    # Affichage des trois spawners de zombies
     pyxel.rect(150, 25, 100, 100, 12)
     pyxel.rect(450, 25, 100, 100, 12)
     pyxel.rect(750, 25, 100, 100, 12)
+    
+    # Affichage du personnage joueur
     self.personnage.draw()
+    
+    # Affichage des tirs
+    for element in self.tirsList:
+      element.draw()
+
+    # Affichage des zombies
     for element in self.zombiesList:
       element.draw()
 
