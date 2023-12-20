@@ -43,7 +43,7 @@ class Personnage:
       if (self.x < resLongueur-self.width) :
         self.x = self.x + 10
     if pyxel.btnp(self.personnageTir):
-      return self.x, self.y+(self.height/2)
+      return self.x+(self.width), self.y+(self.height/2)
     
     return None
           
@@ -62,7 +62,7 @@ class Tir:
     if self.x < 0-self.width or self.x > resLongueur+self.width:
       self.alive = False
     else:
-        self.x = self.x - 2
+        self.x = self.x + 10
 
   def draw(self):
     pyxel.rect(self.x, self.y, self.width, self.height, 10)
@@ -74,6 +74,7 @@ class Zombie:
     self.width = width
     self.height = height
     self.vitesse = vitesse
+    self.alive = True
     self.personnage = personnage
 
   def move(self):
@@ -95,8 +96,8 @@ class Jeu:
 
     self.zombiesList = []
     self.tirsList = []
-    self.tempsSpawnMob = 5 # Temps entre chaque spawn de mob (en secondes)
-    self.personnage = Personnage(360, 240, 50, 80, keybinds)
+    self.tempsSpawnMob = 1 # Temps entre chaque spawn de mob (en secondes)
+    self.personnage = Personnage(100, 210, 50, 80, keybinds)
 
     pyxel.run(self.update, self.draw)
 
@@ -114,28 +115,35 @@ class Jeu:
       if not element.alive:
         self.tirsList.remove(element)
 
-    # Déplacement des zombies
+    # Déplacement des zombies en vie et suppression des zombies morts
     for element in self.zombiesList:
       element.move()
+      if not element.alive:
+        self.zombiesList.remove(element)
     
+    # Collisions entre zombies et tirs
+    for ennemi in self.zombiesList:
+      for tir in self.tirsList:
+        #if (tir.y <= ennemi.y and tir.y >= ennemi.y+ennemi.height) and (tir.x+tir.width >= ennemi.x):
+        if ennemi.x+ennemi.width > tir.x and tir.x+tir.width > ennemi.x and ennemi.y+ennemi.height > tir.y and tir.y+tir.height > ennemi.y:
+          self.tirsList.remove(tir)
+          self.zombiesList.remove(ennemi)
+
     # Spawn aléatoire des zombies
     if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
-      numeroSpawner = randint(1,3)
+      numeroSpawner = randint(1,2)
       if numeroSpawner == 1:
-        self.zombiesList.append(Zombie(100, 25, 50, 80, 1, self.personnage))
+        self.zombiesList.append(Zombie(750, 100, 50, 80, 1, self.personnage))
       elif numeroSpawner == 2:
-        self.zombiesList.append(Zombie(300, 25, 50, 80, 1, self.personnage))
-      elif numeroSpawner == 3:
-        self.zombiesList.append(Zombie(500, 25, 50, 80, 1, self.personnage))
+        self.zombiesList.append(Zombie(750, 300, 50, 80, 1, self.personnage))
 
   def draw(self):
     # Efface l'écran
     pyxel.cls(7)
     
     # Affichage des trois spawners de zombies
-    pyxel.rect(150, 25, 100, 100, 12)
-    pyxel.rect(450, 25, 100, 100, 12)
-    pyxel.rect(750, 25, 100, 100, 12)
+    pyxel.rect(750, 100, 100, 100, 12)
+    pyxel.rect(750, 300, 100, 100, 12)
     
     # Affichage du personnage joueur
     self.personnage.draw()
