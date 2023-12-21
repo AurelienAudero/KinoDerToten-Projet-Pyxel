@@ -135,7 +135,6 @@ class Jeu:
     # Collisions entre zombies et tirs
     for ennemi in self.zombiesList:
       for tir in self.tirsList:
-        #if (tir.y <= ennemi.y and tir.y >= ennemi.y+ennemi.height) and (tir.x+tir.width >= ennemi.x):
         if ennemi.x+ennemi.width > tir.x and tir.x+tir.width > ennemi.x and ennemi.y+ennemi.height > tir.y and tir.y+tir.height > ennemi.y:
           self.tirsList.remove(tir)
           self.zombiesList.remove(ennemi)
