@@ -17,6 +17,7 @@ class Personnage:
     self.score = 0
     self.scoreTXT = ""
     self.kills = 0
+    self.lastSide = "Right"
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -45,33 +46,49 @@ class Personnage:
     if pyxel.btn(self.personnageGauche):
       if (self.x > 0) :
         self.x = self.x - 10
+        if self.lastSide != "Left":
+          self.lastSide = "Left"
     if pyxel.btn(self.personnageBas):
       if (self.y < resHauteur-self.height) :
         self.y = self.y + 10
     if pyxel.btn(self.personnageDroite):
       if (self.x < resLongueur-self.width) :
         self.x = self.x + 10
+        if self.lastSide != "Right":
+          self.lastSide = "Right"
     if pyxel.btnp(self.personnageTir):
-      return self.x+(self.width), self.y+(self.height/2)
+      if self.lastSide == "Right":
+        return self.x+(self.width), self.y+(self.height/2), self.lastSide
+      if self.lastSide == "Left":
+        return self.x-((self.width/4)*3), self.y+(self.height/2), self.lastSide
     
     return None
           
   def draw(self):
-    pyxel.rect(self.x, self.y, self.width, self.height, 9)
+    if self.lastSide == "Left":
+      pyxel.rect(self.x, self.y, self.width, self.height, 9)
+      pyxel.rect(self.x+5, self.y+10, 10, 10, 0)
+    if self.lastSide == "Right":
+      pyxel.rect(self.x, self.y, self.width, self.height, 9)
+      pyxel.rect(self.x+self.width-15, self.y+10, 10, 10, 0)
 
 class Tir:
-  def __init__(self, x, y):
+  def __init__(self, x, y, direction):
     self.x = x
     self.y = y
     self.width = 40
     self.height = 10
     self.alive = True
+    self.direction = direction
 
   def move(self):
     if self.x < 0-self.width or self.x > resLongueur+self.width:
       self.alive = False
     else:
-        self.x = self.x + 10
+        if self.direction == "Right":
+          self.x = self.x + 10
+        if self.direction == "Left":
+          self.x = self.x - 10
 
   def draw(self):
     pyxel.rect(self.x, self.y, self.width, self.height, 10)
@@ -118,7 +135,7 @@ class Jeu:
     
     # Création d'un tir si le joueur appuie sur la touche de tir
     if v is not None:
-      self.tirsList.append(Tir(v[0], v[1]))
+      self.tirsList.append(Tir(v[0], v[1], v[2]))
 
     # Déplacement des tirs existants et suppression des tirs terminés
     for element in self.tirsList:
