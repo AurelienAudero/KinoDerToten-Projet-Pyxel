@@ -335,7 +335,7 @@ while userChosenKeybinds == 0 :
     fenetre.destroy()
 
 # Lancement du jeu
-if userChosenKeybinds != 0:
+if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   resLongueur = 960
   resHauteur = 540
   fps = 60
