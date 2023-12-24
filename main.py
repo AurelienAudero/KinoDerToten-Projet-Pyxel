@@ -157,6 +157,7 @@ class Zombie:
 
   def draw(self):
     pyxel.rect(self.x, self.y, self.width, self.height, 11)
+    pyxel.rectb(self.x, self.y, self.width, self.height, 0)
 
 class Jeu:
   def __init__(self, l, h, fps, keybinds):
