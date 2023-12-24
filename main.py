@@ -38,29 +38,71 @@ class Personnage:
       self.personnageBas = pyxel.KEY_DOWN
       self.personnageDroite = pyxel.KEY_RIGHT
       self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
+    elif self.keybinds == 4 :
+      self.personnageAxeY = pyxel.GAMEPAD1_AXIS_LEFTY
+      self.personnageAxeX = pyxel.GAMEPAD1_AXIS_LEFTX
+      self.personnageTir = pyxel.GAMEPAD1_BUTTON_A
+      self.controllerDeadzone = 2000
+    elif self.keybinds == 5 :
+      self.personnageAxeY = pyxel.GAMEPAD1_AXIS_RIGHTY
+      self.personnageAxeX = pyxel.GAMEPAD1_AXIS_RIGHTX
+      self.personnageTir = pyxel.GAMEPAD1_BUTTON_A
+      self.controllerDeadzone = 2000
+    elif self.keybinds == 6 :
+      self.personnageHaut = pyxel.GAMEPAD1_BUTTON_DPAD_UP
+      self.personnageGauche = pyxel.GAMEPAD1_BUTTON_DPAD_LEFT
+      self.personnageBas = pyxel.GAMEPAD1_BUTTON_DPAD_DOWN
+      self.personnageDroite = pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT
+      self.personnageTir = pyxel.GAMEPAD1_BUTTON_A
 
   def move(self):
-    if pyxel.btn(self.personnageHaut):
-      if (self.y > 0) :
-        self.y = self.y - 10
-    if pyxel.btn(self.personnageGauche):
-      if (self.x > 0) :
-        self.x = self.x - 10
-        if self.lastSide != "Left":
-          self.lastSide = "Left"
-    if pyxel.btn(self.personnageBas):
-      if (self.y < resHauteur-self.height) :
-        self.y = self.y + 10
-    if pyxel.btn(self.personnageDroite):
-      if (self.x < resLongueur-self.width) :
-        self.x = self.x + 10
-        if self.lastSide != "Right":
-          self.lastSide = "Right"
-    if pyxel.btnp(self.personnageTir):
-      if self.lastSide == "Right":
-        return self.x+(self.width), self.y+(self.height/2), self.lastSide
-      if self.lastSide == "Left":
-        return self.x-((self.width/4)*3), self.y+(self.height/2), self.lastSide
+    # Contrôles avec les boutons du clavier ou de la manette
+    if (self.keybinds != 4) and (self.keybinds != 5):
+      if pyxel.btn(self.personnageHaut):
+        if (self.y > 0) :
+          self.y = self.y - 10
+      if pyxel.btn(self.personnageGauche):
+        if (self.x > 0) :
+          self.x = self.x - 10
+          if self.lastSide != "Left":
+            self.lastSide = "Left"
+      if pyxel.btn(self.personnageBas):
+        if (self.y < resHauteur-self.height) :
+          self.y = self.y + 10
+      if pyxel.btn(self.personnageDroite):
+        if (self.x < resLongueur-self.width) :
+          self.x = self.x + 10
+          if self.lastSide != "Right":
+            self.lastSide = "Right"
+      if pyxel.btnp(self.personnageTir):
+        if self.lastSide == "Right":
+          return self.x+(self.width), self.y+(self.height/2), self.lastSide
+        if self.lastSide == "Left":
+          return self.x-((self.width/4)*3), self.y+(self.height/2), self.lastSide
+    
+    # Contrôles avec les sticks analogiques de la manette
+    elif (self.keybinds == 4) or (self.keybinds == 5):
+      if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone:
+        if (self.y > 0) :
+          self.y = self.y - 10
+      if pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone:
+        if (self.x > 0) :
+          self.x = self.x - 10
+          if self.lastSide != "Left":
+            self.lastSide = "Left"
+      if pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone:
+        if (self.y < resHauteur-self.height) :
+          self.y = self.y + 10
+      if pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone:
+        if (self.x < resLongueur-self.width) :
+          self.x = self.x + 10
+          if self.lastSide != "Right":
+            self.lastSide = "Right"
+      if pyxel.btnp(self.personnageTir):
+        if self.lastSide == "Right":
+          return self.x+(self.width), self.y+(self.height/2), self.lastSide
+        if self.lastSide == "Left":
+          return self.x-((self.width/4)*3), self.y+(self.height/2), self.lastSide
     
     return None
           
@@ -129,7 +171,7 @@ class Jeu:
 
     pyxel.run(self.update, self.draw)
   
-  def update(self):
+  def update(self): 
     # Déplacement du personnage joueur
     v = self.personnage.move()
     
@@ -253,7 +295,7 @@ def fenetreChoix(question, reponses):
 # Demande à l'utilisateur les touches à utiliser
 userChosenKeybinds = 0
 while userChosenKeybinds == 0 :
-  userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles"])
+  userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles", "Manette - Stick Gauche", "Manette - Stick Droit", "Manette - Flèches directionnelles"])
   # Affiche une erreur si aucun choix n'est fait par l'utilisateur
   if userChosenKeybinds == 0:
     fenetre = Tk()
@@ -262,7 +304,7 @@ while userChosenKeybinds == 0 :
     fenetre.destroy()
 
 # Lancement du jeu
-if (userChosenKeybinds == 1) or (userChosenKeybinds == 2) or (userChosenKeybinds == 3):
+if userChosenKeybinds != 0:
   resLongueur = 960
   resHauteur = 540
   fps = 60
