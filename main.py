@@ -302,6 +302,37 @@ while userChosenKeybinds == 0 :
     fenetre.title("Kino der toten")
     messagebox.showwarning("Erreur", "Il est nécéssaire de choisir une méthode d'entrée")
     fenetre.destroy()
+  # Affiche un message d'informations avec toutes les touches utilisables par l'utilisateur
+  elif userChosenKeybinds == 1:
+    fenetre = Tk()
+    fenetre.title("Kino der toten")
+    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nZ : Aller vers le haut\nA : Aller à gauche\n S : Aller en bas\n D : Aller à droite\n Clic gauche de la souris : Tirer")
+    fenetre.destroy()
+  elif userChosenKeybinds == 2:
+    fenetre = Tk()
+    fenetre.title("Kino der toten")
+    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nW : Aller vers le haut\nA : Aller à gauche\n S : Aller en bas\n D : Aller à droite\n Clic gauche de la souris : Tirer")
+    fenetre.destroy()
+  elif userChosenKeybinds == 3:
+    fenetre = Tk()
+    fenetre.title("Kino der toten")
+    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\n Flèche du bas : Aller en bas\n Flèche de droite : Aller à droite\n Clic gauche de la souris : Tirer")
+    fenetre.destroy()
+  elif userChosenKeybinds == 4:
+    fenetre = Tk()
+    fenetre.title("Kino der toten")
+    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick gauche : Se déplacer\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+    fenetre.destroy()
+  elif userChosenKeybinds == 5:
+    fenetre = Tk()
+    fenetre.title("Kino der toten")
+    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick droit : Se déplacer\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+    fenetre.destroy()
+  elif userChosenKeybinds == 6:
+    fenetre = Tk()
+    fenetre.title("Kino der toten")
+    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\n Flèche du bas : Aller en bas\n Flèche de droite : Aller à droite\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+    fenetre.destroy()
 
 # Lancement du jeu
 if userChosenKeybinds != 0:
