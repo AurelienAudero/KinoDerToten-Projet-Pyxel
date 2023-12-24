@@ -146,13 +146,13 @@ class Zombie:
     self.personnage = personnage
 
   def move(self):
-    if (self.y > 0) and (self.y > self.personnage.y) :
+    if (self.y > 0) and (self.y-self.height > self.personnage.y) :
       self.y = self.y - self.vitesse
-    if (self.x > 0) and (self.x > self.personnage.x-(self.personnage.width-5)) :
+    if (self.x > 0) and (self.x > self.personnage.x-self.personnage.width) :
       self.x = self.x - self.vitesse
-    if (self.y < resHauteur-self.height) and (self.y < self.personnage.y):
+    if (self.y < resHauteur-self.height) and (self.y+self.height < self.personnage.y):
       self.y = self.y + self.vitesse
-    if (self.x < resLongueur-self.width) and (self.x < self.personnage.x+(self.personnage.width-5)):
+    if (self.x < resLongueur-self.width) and (self.x < self.personnage.x+self.personnage.width):
       self.x = self.x + self.vitesse
 
   def draw(self):
