@@ -168,7 +168,7 @@ class Jeu:
     self.tirsList = []
     self.tempsSpawnMob = 1 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
-    self.personnage = Personnage(100, 210, 50, 80, keybinds)
+    self.personnage = Personnage(450, 210, 50, 80, keybinds)
 
     pyxel.run(self.update, self.draw)
   
@@ -205,9 +205,9 @@ class Jeu:
     if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
       numeroSpawner = randint(1,2)
       if numeroSpawner == 1:
-        self.zombiesList.append(Zombie(750, 100, 50, 80, 1, self.personnage))
+        self.zombiesList.append(Zombie(650, 100, 50, 80, 1, self.personnage))
       elif numeroSpawner == 2:
-        self.zombiesList.append(Zombie(750, 300, 50, 80, 1, self.personnage))
+        self.zombiesList.append(Zombie(150, 100, 50, 80, 1, self.personnage))
 
   def draw(self):
     # Efface l'écran
@@ -238,9 +238,9 @@ class Jeu:
       if self.personnage.scoreTXT[i] == "0":
         pyxel.blt(120+(16*i), 15, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
     
-    # Affichage des trois spawners de zombies
-    pyxel.rect(750, 100, 100, 100, 12)
-    pyxel.rect(750, 300, 100, 100, 12)
+    # Affichage des deux spawners de zombies
+    pyxel.rect(650, 100, 100, 100, 12)
+    pyxel.rect(150, 100, 100, 100, 12)
     
     # Affichage du personnage joueur
     self.personnage.draw()
