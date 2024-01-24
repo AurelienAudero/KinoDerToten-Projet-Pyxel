@@ -187,11 +187,37 @@ class Jeu:
         self.tirsList.remove(element)
 
     # Déplacement des zombies en vie et suppression des zombies morts
+    def isOverlapping(zombie1, zombie2):
+      if zombie1.x+zombie1.width > zombie2.x and zombie2.x+zombie2.width > zombie1.x and zombie1.y+zombie1.height > zombie2.y and zombie2.y+zombie2.height > zombie1.y:
+        return True
+
+    def resolveOverlap(zombie1, zombie2):
+      # Calculer la direction de la superposition
+      dx = zombie1.x - zombie2.x
+      dy = zombie1.y - zombie2.y
+
+      # Normaliser la direction
+      distance = (dx**2 + dy**2)**0.5
+      dx /= distance
+      dy /= distance
+
+      # Déplacer les zombies dans la direction opposée à la superposition
+      overlap = 0.5 * (distance - zombie1.width - zombie2.width)
+      zombie1.x -= overlap * dx
+      zombie1.y -= overlap * dy
+      zombie2.x += overlap * dx
+      zombie2.y += overlap * dy
+
     for element in self.zombiesList:
       element.move()
       if not element.alive:
         self.zombiesList.remove(element)
-    
+
+    for i in range(len(self.zombiesList)):
+      for j in range(len(self.zombiesList)):
+        if i != j and isOverlapping(self.zombiesList[i], self.zombiesList[j]):
+          resolveOverlap(self.zombiesList[i], self.zombiesList[j])
+
     # Collisions entre zombies et tirs
     for ennemi in self.zombiesList:
       for tir in self.tirsList:
