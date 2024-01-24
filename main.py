@@ -229,11 +229,13 @@ class Jeu:
 
     # Spawn aléatoire des zombies
     if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
-      numeroSpawner = randint(1,2)
+      numeroSpawner = randint(1,3)
       if numeroSpawner == 1:
-        self.zombiesList.append(Zombie(650, 100, 50, 80, 1, self.personnage))
+        self.zombiesList.append(Zombie(725, 50, 50, 80, 1, self.personnage))
       elif numeroSpawner == 2:
-        self.zombiesList.append(Zombie(150, 100, 50, 80, 1, self.personnage))
+        self.zombiesList.append(Zombie(425, 50, 50, 80, 1, self.personnage))
+      elif numeroSpawner == 3:
+        self.zombiesList.append(Zombie(125, 50, 50, 80, 1, self.personnage))
 
   def draw(self):
     # Efface l'écran
@@ -265,8 +267,9 @@ class Jeu:
         pyxel.blt(120+(16*i), 15, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
     
     # Affichage des deux spawners de zombies
-    pyxel.rect(650, 100, 100, 100, 12)
-    pyxel.rect(150, 100, 100, 100, 12)
+    pyxel.rect(725, 50, 100, 100, 12)
+    pyxel.rect(425, 50, 100, 100, 12)
+    pyxel.rect(125, 50, 100, 100, 12)
     
     # Affichage du personnage joueur
     self.personnage.draw()
