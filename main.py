@@ -186,15 +186,16 @@ class Jeu:
       if not element.alive:
         self.tirsList.remove(element)
 
-    # Déplacement des zombies en vie et suppression des zombies morts
-    def isOverlapping(zombie1, zombie2):
-      if zombie1.x+zombie1.width > zombie2.x and zombie2.x+zombie2.width > zombie1.x and zombie1.y+zombie1.height > zombie2.y and zombie2.y+zombie2.height > zombie1.y:
+    # Détéction de la superposition de deux entités
+    def isOverlapping(entity1, entity2):
+      if entity1.x+entity1.width > entity2.x and entity2.x+entity2.width > entity1.x and entity1.y+entity1.height > entity2.y and entity2.y+entity2.height > entity1.y:
         return True
 
-    def resolveOverlap(zombie1, zombie2):
+    # Résolution de la superposition de deux entités (par le déplacement)
+    def resolveOverlap(entity1, entity2):
       # Calculer la direction de la superposition
-      dx = zombie1.x - zombie2.x
-      dy = zombie1.y - zombie2.y
+      dx = entity1.x - entity2.x
+      dy = entity1.y - entity2.y
 
       # Normaliser la direction
       distance = (dx**2 + dy**2)**0.5
@@ -202,12 +203,13 @@ class Jeu:
       dy /= distance
 
       # Déplacer les zombies dans la direction opposée à la superposition
-      overlap = 0.5 * (distance - zombie1.width - zombie2.width)
-      zombie1.x -= overlap * dx
-      zombie1.y -= overlap * dy
-      zombie2.x += overlap * dx
-      zombie2.y += overlap * dy
+      overlap = 0.5 * (distance - entity1.width - entity2.width)
+      entity1.x -= overlap * dx
+      entity1.y -= overlap * dy
+      entity2.x += overlap * dx
+      entity2.y += overlap * dy
 
+    # Déplacement des zombies en vie et suppression des zombies morts
     for element in self.zombiesList:
       element.move()
       if not element.alive:
