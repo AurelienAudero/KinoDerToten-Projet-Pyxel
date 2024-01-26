@@ -170,6 +170,7 @@ class Jeu:
     self.tempsSpawnMob = 1 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
     self.personnage = Personnage(450, 210, 50, 80, keybinds)
+    self.perteHP = 0.5 # Nombre de points de vie perdus au contact d'un zombie
 
     pyxel.run(self.update, self.draw)
   
@@ -224,7 +225,7 @@ class Jeu:
     # Dégâts des zombies sur le joueur
     for ennemi in self.zombiesList:
       if isOverlapping(self.personnage, ennemi):
-        self.personnage.hp -= 0.5
+        self.personnage.hp -= self.perteHP
 
     # Collisions entre zombies et tirs
     for ennemi in self.zombiesList:
