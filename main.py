@@ -18,6 +18,7 @@ class Personnage:
     self.scoreTXT = ""
     self.kills = 0
     self.lastSide = "Right"
+    self.hp = 100.0
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -219,6 +220,11 @@ class Jeu:
       for j in range(len(self.zombiesList)):
         if i != j and isOverlapping(self.zombiesList[i], self.zombiesList[j]):
           resolveOverlap(self.zombiesList[i], self.zombiesList[j])
+
+    # Dégâts des zombies sur le joueur
+    for ennemi in self.zombiesList:
+      if isOverlapping(self.personnage, ennemi):
+        self.personnage.hp -= 0.5
 
     # Collisions entre zombies et tirs
     for ennemi in self.zombiesList:
