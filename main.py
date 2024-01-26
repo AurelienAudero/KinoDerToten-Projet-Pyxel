@@ -276,6 +276,10 @@ class Jeu:
       if self.personnage.scoreTXT[i] == "0":
         pyxel.blt(120+(16*i), 15, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
     
+    # Affichage de la barre d'HP du joueur
+    pyxel.rect(740, 25, 200, 10, 8)
+    pyxel.rect(740, 25, self.personnage.currentHP*2, 10, 11)
+
     # Affichage des deux spawners de zombies
     pyxel.rect(725, 50, 100, 100, 12)
     pyxel.rect(425, 50, 100, 100, 12)
