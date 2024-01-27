@@ -172,129 +172,155 @@ class Jeu:
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
     self.personnage = Personnage(450, 210, 50, 80, keybinds)
     self.perteHP = 0.5 # Nombre de points de vie perdus au contact d'un zombie
+    self.partieTerminee = False
 
     pyxel.run(self.update, self.draw)
   
   def update(self): 
-    # Déplacement du personnage joueur
-    v = self.personnage.move()
+    if not self.partieTerminee:
+      # Vérifie si le joueur est mort
+      if self.personnage.currentHP <= 0:
+        self.partieTerminee = True
+      
+      # Déplacement du personnage joueur
+      v = self.personnage.move()
+      
+      # Création d'un tir si le joueur appuie sur la touche de tir
+      if v is not None:
+        self.tirsList.append(Tir(v[0], v[1], v[2]))
+
+      # Déplacement des tirs existants et suppression des tirs terminés
+      for element in self.tirsList:
+        element.move()
+        if not element.alive:
+          self.tirsList.remove(element)
+
+      # Détéction de la superposition de deux entités
+      def isOverlapping(entity1, entity2):
+        if entity1.x+entity1.width > entity2.x and entity2.x+entity2.width > entity1.x and entity1.y+entity1.height > entity2.y and entity2.y+entity2.height > entity1.y:
+          return True
+
+      # Résolution de la superposition de deux entités (par le déplacement)
+      def resolveOverlap(entity1, entity2):
+        # Calculer la direction de la superposition
+        dx = entity1.x - entity2.x
+        dy = entity1.y - entity2.y
+
+        # Normaliser la direction
+        distance = (dx**2 + dy**2)**0.5
+        dx /= distance
+        dy /= distance
+
+        # Déplacer les zombies dans la direction opposée à la superposition
+        overlap = 0.5 * (distance - entity1.width - entity2.width)
+        entity1.x -= overlap * dx
+        entity1.y -= overlap * dy
+        entity2.x += overlap * dx
+        entity2.y += overlap * dy
+
+      # Déplacement des zombies en vie et suppression des zombies morts
+      for element in self.zombiesList:
+        element.move()
+        if not element.alive:
+          self.zombiesList.remove(element)
+
+      for i in range(len(self.zombiesList)):
+        for j in range(len(self.zombiesList)):
+          if i != j and isOverlapping(self.zombiesList[i], self.zombiesList[j]):
+            resolveOverlap(self.zombiesList[i], self.zombiesList[j])
+
+      # Dégâts des zombies sur le joueur
+      for ennemi in self.zombiesList:
+        if isOverlapping(self.personnage, ennemi):
+          self.personnage.currentHP -= self.perteHP
+
+      # Collisions entre zombies et tirs
+      for ennemi in self.zombiesList:
+        for tir in self.tirsList:
+          if ennemi.x+ennemi.width > tir.x and tir.x+tir.width > ennemi.x and ennemi.y+ennemi.height > tir.y and tir.y+tir.height > ennemi.y:
+            self.tirsList.remove(tir)
+            self.zombiesList.remove(ennemi)
+            self.personnage.score += self.gainScoreKill
+            self.personnage.kills += 1
+
+      # Spawn aléatoire des zombies
+      if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
+        numeroSpawner = randint(1,3)
+        if numeroSpawner == 1:
+          self.zombiesList.append(Zombie(725, 50, 50, 80, 1, self.personnage))
+        elif numeroSpawner == 2:
+          self.zombiesList.append(Zombie(425, 50, 50, 80, 1, self.personnage))
+        elif numeroSpawner == 3:
+          self.zombiesList.append(Zombie(125, 50, 50, 80, 1, self.personnage))
     
-    # Création d'un tir si le joueur appuie sur la touche de tir
-    if v is not None:
-      self.tirsList.append(Tir(v[0], v[1], v[2]))
-
-    # Déplacement des tirs existants et suppression des tirs terminés
-    for element in self.tirsList:
-      element.move()
-      if not element.alive:
-        self.tirsList.remove(element)
-
-    # Détéction de la superposition de deux entités
-    def isOverlapping(entity1, entity2):
-      if entity1.x+entity1.width > entity2.x and entity2.x+entity2.width > entity1.x and entity1.y+entity1.height > entity2.y and entity2.y+entity2.height > entity1.y:
-        return True
-
-    # Résolution de la superposition de deux entités (par le déplacement)
-    def resolveOverlap(entity1, entity2):
-      # Calculer la direction de la superposition
-      dx = entity1.x - entity2.x
-      dy = entity1.y - entity2.y
-
-      # Normaliser la direction
-      distance = (dx**2 + dy**2)**0.5
-      dx /= distance
-      dy /= distance
-
-      # Déplacer les zombies dans la direction opposée à la superposition
-      overlap = 0.5 * (distance - entity1.width - entity2.width)
-      entity1.x -= overlap * dx
-      entity1.y -= overlap * dy
-      entity2.x += overlap * dx
-      entity2.y += overlap * dy
-
-    # Déplacement des zombies en vie et suppression des zombies morts
-    for element in self.zombiesList:
-      element.move()
-      if not element.alive:
-        self.zombiesList.remove(element)
-
-    for i in range(len(self.zombiesList)):
-      for j in range(len(self.zombiesList)):
-        if i != j and isOverlapping(self.zombiesList[i], self.zombiesList[j]):
-          resolveOverlap(self.zombiesList[i], self.zombiesList[j])
-
-    # Dégâts des zombies sur le joueur
-    for ennemi in self.zombiesList:
-      if isOverlapping(self.personnage, ennemi):
-        self.personnage.currentHP -= self.perteHP
-
-    # Collisions entre zombies et tirs
-    for ennemi in self.zombiesList:
-      for tir in self.tirsList:
-        if ennemi.x+ennemi.width > tir.x and tir.x+tir.width > ennemi.x and ennemi.y+ennemi.height > tir.y and tir.y+tir.height > ennemi.y:
-          self.tirsList.remove(tir)
-          self.zombiesList.remove(ennemi)
-          self.personnage.score += self.gainScoreKill
-          self.personnage.kills += 1
-
-    # Spawn aléatoire des zombies
-    if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
-      numeroSpawner = randint(1,3)
-      if numeroSpawner == 1:
-        self.zombiesList.append(Zombie(725, 50, 50, 80, 1, self.personnage))
-      elif numeroSpawner == 2:
-        self.zombiesList.append(Zombie(425, 50, 50, 80, 1, self.personnage))
-      elif numeroSpawner == 3:
-        self.zombiesList.append(Zombie(125, 50, 50, 80, 1, self.personnage))
+    elif self.partieTerminee:
+      # Code à exécuter si la partie est terminée
+      pass
 
   def draw(self):
-    # Efface l'écran
-    pyxel.cls(13)
+    if not self.partieTerminee:
+      # Efface l'écran
+      pyxel.cls(13)
 
-    # Affiche le score actuel du joueur
-    pyxel.blt(15, 15, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
-    self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
-    for i in range(len(self.personnage.scoreTXT)):
-      if self.personnage.scoreTXT[i] == "1":
-        pyxel.blt(120+(16*i), 15, 0, 0, 24, 11, 19, 0) # Affichage du chiffre 1
-      if self.personnage.scoreTXT[i] == "2":
-        pyxel.blt(120+(16*i), 15, 0, 16, 24, 11, 19, 0) # Affichage du chiffre 2
-      if self.personnage.scoreTXT[i] == "3":
-        pyxel.blt(120+(16*i), 15, 0, 32, 24, 11, 19, 0) # Affichage du chiffre 3
-      if self.personnage.scoreTXT[i] == "4":
-        pyxel.blt(120+(16*i), 15, 0, 48, 24, 11, 19, 0) # Affichage du chiffre 4
-      if self.personnage.scoreTXT[i] == "5":
-        pyxel.blt(120+(16*i), 15, 0, 64, 24, 11, 19, 0) # Affichage du chiffre 5
-      if self.personnage.scoreTXT[i] == "6":
-        pyxel.blt(120+(16*i), 15, 0, 80, 24, 11, 19, 0) # Affichage du chiffre 6
-      if self.personnage.scoreTXT[i] == "7":
-        pyxel.blt(120+(16*i), 15, 0, 96, 24, 11, 19, 0) # Affichage du chiffre 7
-      if self.personnage.scoreTXT[i] == "8":
-        pyxel.blt(120+(16*i), 15, 0, 112, 24, 11, 19, 0) # Affichage du chiffre 8
-      if self.personnage.scoreTXT[i] == "9":
-        pyxel.blt(120+(16*i), 15, 0, 128, 24, 11, 19, 0) # Affichage du chiffre 9
-      if self.personnage.scoreTXT[i] == "0":
-        pyxel.blt(120+(16*i), 15, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
-    
-    # Affichage de la barre d'HP du joueur
-    pyxel.rect(740, 25, 200, 10, 8)
-    pyxel.rect(740, 25, self.personnage.currentHP*2, 10, 11)
+      # Affiche le score actuel du joueur
+      pyxel.blt(15, 15, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
+      self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
+      for i in range(len(self.personnage.scoreTXT)):
+        if self.personnage.scoreTXT[i] == "1":
+          pyxel.blt(120+(16*i), 15, 0, 0, 24, 11, 19, 0) # Affichage du chiffre 1
+        if self.personnage.scoreTXT[i] == "2":
+          pyxel.blt(120+(16*i), 15, 0, 16, 24, 11, 19, 0) # Affichage du chiffre 2
+        if self.personnage.scoreTXT[i] == "3":
+          pyxel.blt(120+(16*i), 15, 0, 32, 24, 11, 19, 0) # Affichage du chiffre 3
+        if self.personnage.scoreTXT[i] == "4":
+          pyxel.blt(120+(16*i), 15, 0, 48, 24, 11, 19, 0) # Affichage du chiffre 4
+        if self.personnage.scoreTXT[i] == "5":
+          pyxel.blt(120+(16*i), 15, 0, 64, 24, 11, 19, 0) # Affichage du chiffre 5
+        if self.personnage.scoreTXT[i] == "6":
+          pyxel.blt(120+(16*i), 15, 0, 80, 24, 11, 19, 0) # Affichage du chiffre 6
+        if self.personnage.scoreTXT[i] == "7":
+          pyxel.blt(120+(16*i), 15, 0, 96, 24, 11, 19, 0) # Affichage du chiffre 7
+        if self.personnage.scoreTXT[i] == "8":
+          pyxel.blt(120+(16*i), 15, 0, 112, 24, 11, 19, 0) # Affichage du chiffre 8
+        if self.personnage.scoreTXT[i] == "9":
+          pyxel.blt(120+(16*i), 15, 0, 128, 24, 11, 19, 0) # Affichage du chiffre 9
+        if self.personnage.scoreTXT[i] == "0":
+          pyxel.blt(120+(16*i), 15, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
+      
+      # Affichage de la barre d'HP du joueur
+      pyxel.rect(740, 25, 200, 10, 8)
+      pyxel.rect(740, 25, self.personnage.currentHP*2, 10, 11)
 
-    # Affichage des deux spawners de zombies
-    pyxel.rect(725, 50, 100, 100, 12)
-    pyxel.rect(425, 50, 100, 100, 12)
-    pyxel.rect(125, 50, 100, 100, 12)
-    
-    # Affichage du personnage joueur
-    self.personnage.draw()
-    
-    # Affichage des tirs
-    for element in self.tirsList:
-      element.draw()
+      # Affichage des deux spawners de zombies
+      pyxel.rect(725, 50, 100, 100, 12)
+      pyxel.rect(425, 50, 100, 100, 12)
+      pyxel.rect(125, 50, 100, 100, 12)
+      
+      # Affichage du personnage joueur
+      self.personnage.draw()
+      
+      # Affichage des tirs
+      for element in self.tirsList:
+        element.draw()
 
-    # Affichage des zombies
-    for element in self.zombiesList:
-      element.draw()
+      # Affichage des zombies
+      for element in self.zombiesList:
+        element.draw()
+    
+    elif self.partieTerminee:
+      # Efface l'écran
+      pyxel.cls(14)
+
+      # Affiche le curseur de la souris
+      pyxel.mouse(True)
+
+      # Affiche le message de fin de partie
+      pyxel.images[0].load(0,0, "GameOverScreen.png")
+      pyxel.blt(350, 100, 0, 0, 0, 255, 55, 7) # Affiche le texte "Game Over"
+      pyxel.blt(300, 200, 0, 0, 65, 180, 25, 7) # Affiche le texte "Score :"
+      pyxel.blt(300, 225, 0, 0, 90, 180, 25, 7) # Affiche le texte "Kills :"
+      pyxel.blt(300, 260, 0, 0, 125, 180, 25, 7) # Affiche le texte "PV Perdus :"
+      pyxel.blt(300, 285, 0, 0, 150, 180, 25, 7) # Affiche le texte "Nombre de vagues :"
 
 ########################
 #  PROGRAMME PRINCIPAL #
