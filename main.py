@@ -17,6 +17,9 @@ class Personnage:
     self.score = 0
     self.scoreTXT = ""
     self.kills = 0
+    self.killsTXT = ""
+    self.pvPerdus = 0
+    self.pvPerdusTXT = ""
     self.lastSide = "Right"
     self.currentHP = 100.0
     self.maxHP = 100.0
@@ -168,6 +171,8 @@ class Jeu:
 
     self.zombiesList = []
     self.tirsList = []
+    self.nbVagues = 0 # Nombre de vagues de zombies 
+    self.nbVaguesTXT = "" # Nombre de vagues de zombies en texte
     self.tempsSpawnMob = 1 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
     self.personnage = Personnage(450, 210, 50, 80, keybinds)
@@ -315,12 +320,53 @@ class Jeu:
       pyxel.mouse(True)
 
       # Affiche le message de fin de partie
-      pyxel.images[0].load(0,0, "GameOverScreen.png")
-      pyxel.blt(350, 100, 0, 0, 0, 255, 55, 7) # Affiche le texte "Game Over"
-      pyxel.blt(300, 200, 0, 0, 65, 180, 25, 7) # Affiche le texte "Score :"
-      pyxel.blt(300, 225, 0, 0, 90, 180, 25, 7) # Affiche le texte "Kills :"
-      pyxel.blt(300, 260, 0, 0, 125, 180, 25, 7) # Affiche le texte "PV Perdus :"
-      pyxel.blt(300, 285, 0, 0, 150, 180, 25, 7) # Affiche le texte "Nombre de vagues :"
+      pyxel.images[1].load(0,0, "GameOverScreen.png")
+      pyxel.blt(350, 100, 1, 0, 0, 255, 55, 7) # Affiche le texte "Game Over"
+      pyxel.blt(300, 200, 1, 0, 65, 180, 25, 7) # Affiche le texte "Score :"
+      pyxel.blt(300, 225, 1, 0, 90, 180, 25, 7) # Affiche le texte "Kills :"
+      pyxel.blt(300, 260, 1, 0, 125, 180, 25, 7) # Affiche le texte "PV Perdus :"
+      pyxel.blt(300, 285, 1, 0, 150, 180, 25, 7) # Affiche le texte "Nombre de vagues :"
+
+      self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
+      self.personnage.killsTXT = str(self.personnage.kills) # Transforme le nombre de kills du joueur en texte (INT -> STR)
+      self.personnage.pvPerdusTXT = str(self.personnage.pvPerdus) # Transforme le nombre de PV perdus du joueur en texte (INT -> STR)
+      self.nbVaguesTXT = str(self.nbVagues) # Transforme le nombre de vagues en texte (INT -> STR)
+      
+      for a in range(4):
+        if a == 0:
+          c = 200
+          d = self.personnage.scoreTXT
+        elif a == 1:
+          c = 225
+          d = self.personnage.killsTXT
+        elif a == 2:
+          c = 260
+          d = self.personnage.pvPerdusTXT
+        elif a == 3:
+          c = 285     
+          d = self.nbVaguesTXT
+
+        for b in range(len(d)):
+          if d[b] == "1":
+            pyxel.blt(525+(16*b), c, 0, 0, 24, 11, 19, 0) # Affichage du chiffre 1
+          if d[b] == "2":
+            pyxel.blt(525+(16*b), c, 0, 16, 24, 11, 19, 0) # Affichage du chiffre 2
+          if d[b] == "3":
+            pyxel.blt(525+(16*b), c, 0, 32, 24, 11, 19, 0) # Affichage du chiffre 3
+          if d[b] == "4":
+            pyxel.blt(525+(16*b), c, 0, 48, 24, 11, 19, 0) # Affichage du chiffre 4
+          if d[b] == "5":
+            pyxel.blt(525+(16*b), c, 0, 64, 24, 11, 19, 0) # Affichage du chiffre 5
+          if d[b] == "6":
+            pyxel.blt(525+(16*b), c, 0, 80, 24, 11, 19, 0) # Affichage du chiffre 6
+          if d[b] == "7":
+            pyxel.blt(525+(16*b), c, 0, 96, 24, 11, 19, 0) # Affichage du chiffre 7
+          if d[b] == "8":
+            pyxel.blt(525+(16*b), c, 0, 112, 24, 11, 19, 0) # Affichage du chiffre 8
+          if d[b] == "9":
+            pyxel.blt(525+(16*b), c, 0, 128, 24, 11, 19, 0) # Affichage du chiffre 9
+          if d[b] == "0":
+            pyxel.blt(525+(16*b), c, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
 
 ########################
 #  PROGRAMME PRINCIPAL #
