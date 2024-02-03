@@ -292,6 +292,8 @@ class Jeu:
           pyxel.blt(120+(16*i), 15, 0, 128, 24, 11, 19, 0) # Affichage du chiffre 9
         if self.personnage.scoreTXT[i] == "0":
           pyxel.blt(120+(16*i), 15, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
+        if self.personnage.scoreTXT[i] == ".":
+          pyxel.blt(120+(16*i), 15, 0, 158, 24, 11, 19, 0) # Affichage de la virgule
       
       # Affichage de la barre d'HP du joueur
       pyxel.rect(740, 25, 200, 10, 8)
@@ -368,6 +370,8 @@ class Jeu:
             pyxel.blt(525+(16*b), c, 0, 128, 24, 11, 19, 0) # Affichage du chiffre 9
           if d[b] == "0":
             pyxel.blt(525+(16*b), c, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
+          if d[b] == ".":
+            pyxel.blt(525+(16*b), c, 0, 158, 24, 11, 19, 0) # Affichage de la virgule
 
 ########################
 #  PROGRAMME PRINCIPAL #
