@@ -171,7 +171,7 @@ class Jeu:
 
     self.zombiesList = []
     self.tirsList = []
-    self.nbVagues = 0 # Nombre de vagues de zombies 
+    self.nbVagues = 0 # Nombre de vagues de zombies
     self.nbVaguesTXT = "" # Nombre de vagues de zombies en texte
     self.tempsSpawnMob = 1 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
@@ -238,6 +238,7 @@ class Jeu:
       for ennemi in self.zombiesList:
         if isOverlapping(self.personnage, ennemi):
           self.personnage.currentHP -= self.perteHP
+          self.personnage.pvPerdus += self.perteHP
 
       # Collisions entre zombies et tirs
       for ennemi in self.zombiesList:
