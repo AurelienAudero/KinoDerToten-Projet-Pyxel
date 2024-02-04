@@ -281,7 +281,7 @@ class Jeu:
         pyxel.quit()
 
       # Clic sur le bouton "GitHub"
-      if pyxel.mouse_x > 900 and pyxel.mouse_x < 960 and pyxel.mouse_y > 520 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
+      if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
         import webbrowser
         webbrowser.open("https://github.com/AurelienAudero/NSI-Terminale-Projet-Pyxel")
 
@@ -347,7 +347,7 @@ class Jeu:
       # Affiche le message de fin de partie
       pyxel.images[1].load(0,0, "GameOverScreen.png")
       pyxel.blt(350, 100, 1, 0, 0, 255, 55, 7) # Affiche le texte "Game Over"
-      pyxel.blt(300, 200, 1, 0, 65, 180, 25, 7) # Affiche le texte "Score :"
+      pyxel.blt(405, 200, 1, 105, 65, 75, 25, 7) # Affiche le texte "Score :"
       pyxel.blt(300, 225, 1, 0, 90, 180, 25, 7) # Affiche le texte "Kills :"
       pyxel.blt(300, 260, 1, 0, 125, 180, 25, 7) # Affiche le texte "PV Perdus :"
       pyxel.blt(300, 285, 1, 0, 150, 180, 25, 7) # Affiche le texte "Nombre de vagues :"
@@ -406,7 +406,7 @@ class Jeu:
       pyxel.text(10, 520, "(c) Aurelien Audero, Axel Thibert, Tony Baca - 2024 - Tous droits reserves", 7)
 
       # Affiche le lien vers le GitHub du projet
-      pyxel.text(915, 520, "GitHub", 7)
+      pyxel.blt(875, 510, 1, 0, 65, 75, 25, 7)
 
 ########################
 #  PROGRAMME PRINCIPAL #
