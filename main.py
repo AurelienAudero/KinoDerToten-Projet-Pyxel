@@ -213,6 +213,11 @@ class Jeu:
 
         # Normaliser la direction
         distance = (dx**2 + dy**2)**0.5
+
+        # Si la distance est zéro, sortir de la fonction (pour éviter la division par zéro)
+        if distance == 0:
+          return
+
         dx /= distance
         dy /= distance
 
