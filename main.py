@@ -260,8 +260,25 @@ class Jeu:
           self.zombiesList.append(Zombie(125, 50, 50, 80, 1, self.personnage))
     
     elif self.partieTerminee:
-      # Code à exécuter si la partie est terminée
-      pass
+      self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
+      self.personnage.killsTXT = str(self.personnage.kills) # Transforme le nombre de kills du joueur en texte (INT -> STR)
+      self.personnage.pvPerdusTXT = str(self.personnage.pvPerdus) # Transforme le nombre de PV perdus du joueur en texte (INT -> STR)
+      self.nbVaguesTXT = str(self.nbVagues) # Transforme le nombre de vagues en texte (INT -> STR)
+
+      # Clic sur le bouton "Rejouer"
+      if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
+        pyxel.cls(0)
+        pyxel.text(resLongueur/2, resHauteur/2, "Relancement du jeu...", 7)
+        relancerJeu()
+      
+      # Clic sur le bouton "Quitter"
+      if pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
+        pyxel.quit()
+
+      # Clic sur le bouton "GitHub"
+      if pyxel.mouse_x > 900 and pyxel.mouse_x < 960 and pyxel.mouse_y > 520 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
+        import webbrowser
+        webbrowser.open("https://github.com/AurelienAudero/NSI-Terminale-Projet-Pyxel")
 
   def draw(self):
     if not self.partieTerminee:
@@ -317,7 +334,7 @@ class Jeu:
     
     elif self.partieTerminee:
       # Efface l'écran
-      pyxel.cls(14)
+      pyxel.cls(10)
 
       # Affiche le curseur de la souris
       pyxel.mouse(True)
@@ -330,23 +347,18 @@ class Jeu:
       pyxel.blt(300, 260, 1, 0, 125, 180, 25, 7) # Affiche le texte "PV Perdus :"
       pyxel.blt(300, 285, 1, 0, 150, 180, 25, 7) # Affiche le texte "Nombre de vagues :"
 
-      self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
-      self.personnage.killsTXT = str(self.personnage.kills) # Transforme le nombre de kills du joueur en texte (INT -> STR)
-      self.personnage.pvPerdusTXT = str(self.personnage.pvPerdus) # Transforme le nombre de PV perdus du joueur en texte (INT -> STR)
-      self.nbVaguesTXT = str(self.nbVagues) # Transforme le nombre de vagues en texte (INT -> STR)
-      
       for a in range(4):
         if a == 0:
           c = 200
           d = self.personnage.scoreTXT
         elif a == 1:
-          c = 225
+          c = 230
           d = self.personnage.killsTXT
         elif a == 2:
           c = 260
           d = self.personnage.pvPerdusTXT
         elif a == 3:
-          c = 285     
+          c = 290
           d = self.nbVaguesTXT
 
         for b in range(len(d)):
@@ -372,6 +384,24 @@ class Jeu:
             pyxel.blt(525+(16*b), c, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
           if d[b] == ".":
             pyxel.blt(525+(16*b), c, 0, 158, 24, 11, 19, 0) # Affichage de la virgule
+      
+      # Affiche le bouton "Rejouer"
+      if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
+        pyxel.blt(325, 400, 1, 105, 187, 105, 35, 7)
+      else:
+        pyxel.blt(325, 400, 1, 0, 187, 105, 35, 7)
+      
+      # Affiche le bouton "Quitter"
+      if pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
+        pyxel.blt(525, 400, 1, 96, 222, 96, 35, 7)
+      else:
+        pyxel.blt(525, 400, 1, 0, 222, 96, 35, 7)
+
+      # Affiche les copyrights
+      pyxel.text(10, 520, "(c) Aurelien Audero, Axel Thibert, Tony Baca - 2024 - Tous droits reserves", 7)
+
+      # Affiche le lien vers le GitHub du projet
+      pyxel.text(915, 520, "GitHub", 7)
 
 ########################
 #  PROGRAMME PRINCIPAL #
@@ -454,6 +484,12 @@ while userChosenKeybinds == 0 :
     fenetre.title("Kino der toten")
     messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
     fenetre.destroy()
+
+def relancerJeu():
+  import subprocess, sys
+  sys.modules[__name__].__dict__.clear()
+  subprocess.call([sys.executable] + sys.argv)
+  sys.exit()
 
 # Lancement du jeu
 if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
