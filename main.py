@@ -421,6 +421,7 @@ def fenetreChoix(question, reponses):
   # Intialisation de la fenêtre et de ses variables
   fenetre = Tk()
   fenetre.title("Kino der toten")
+  fenetre.eval('tk::PlaceWindow . center')
   v = IntVar()
   i = 1
 
