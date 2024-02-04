@@ -178,6 +178,7 @@ class Jeu:
     self.personnage = Personnage(450, 210, 50, 80, keybinds)
     self.perteHP = 0.5 # Nombre de points de vie perdus au contact d'un zombie
     self.partieTerminee = False
+    self.gameOverChosenBtn = 1
 
     pyxel.run(self.update, self.draw)
   
@@ -269,16 +270,31 @@ class Jeu:
       self.personnage.killsTXT = str(self.personnage.kills) # Transforme le nombre de kills du joueur en texte (INT -> STR)
       self.personnage.pvPerdusTXT = str(self.personnage.pvPerdus) # Transforme le nombre de PV perdus du joueur en texte (INT -> STR)
       self.nbVaguesTXT = str(self.nbVagues) # Transforme le nombre de vagues en texte (INT -> STR)
-
-      # Clic sur le bouton "Rejouer"
-      if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
-        pyxel.cls(0)
-        pyxel.text(resLongueur/2, resHauteur/2, "Relancement du jeu...", 7)
-        relancerJeu()
-      
-      # Clic sur le bouton "Quitter"
-      if pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
-        pyxel.quit()
+      if self.personnage.keybinds == 4 or self.personnage.keybinds == 5 or self.personnage.keybinds == 6:
+        if pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT) or pyxel.btnv(pyxel.GAMEPAD1_AXIS_LEFTX) > self.personnage.controllerDeadzone:
+          self.gameOverChosenBtn = 2
+        elif pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT) or pyxel.btnv(pyxel.GAMEPAD1_AXIS_LEFTX) < -self.personnage.controllerDeadzone:
+          self.gameOverChosenBtn = 1
+        
+        # Clic sur le bouton "Rejouer"
+        if self.gameOverChosenBtn == 1 and pyxel.btn(self.personnage.personnageTir):
+          pyxel.cls(0)
+          pyxel.text(resLongueur/2, resHauteur/2, "Relancement du jeu...", 7)
+          relancerJeu()
+        
+        # Clic sur le bouton "Quitter"
+        elif self.gameOverChosenBtn and pyxel.btn(self.personnage.personnageTir):
+          pyxel.quit()
+      else:
+        # Clic sur le bouton "Rejouer"
+        if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
+          pyxel.cls(0)
+          pyxel.text(resLongueur/2, resHauteur/2, "Relancement du jeu...", 7)
+          relancerJeu()
+        
+        # Clic sur le bouton "Quitter"
+        elif pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
+          pyxel.quit()
 
       # Clic sur le bouton "GitHub"
       if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
@@ -390,17 +406,26 @@ class Jeu:
           if d[b] == ".":
             pyxel.blt(525+(16*b), c, 0, 158, 24, 11, 19, 0) # Affichage de la virgule
       
-      # Affiche le bouton "Rejouer"
-      if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
-        pyxel.blt(325, 400, 1, 105, 187, 105, 35, 7)
+      if self.personnage.keybinds == 4 or self.personnage.keybinds == 5 or self.personnage.keybinds == 6:
+        if self.gameOverChosenBtn == 1:
+          pyxel.blt(325, 400, 1, 105, 187, 105, 35, 7)
+          pyxel.blt(525, 400, 1, 0, 222, 96, 35, 7)
+        elif self.gameOverChosenBtn == 2:
+          pyxel.blt(325, 400, 1, 0, 187, 105, 35, 7)
+          pyxel.blt(525, 400, 1, 96, 222, 96, 35, 7)
+          
       else:
-        pyxel.blt(325, 400, 1, 0, 187, 105, 35, 7)
-      
-      # Affiche le bouton "Quitter"
-      if pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
-        pyxel.blt(525, 400, 1, 96, 222, 96, 35, 7)
-      else:
-        pyxel.blt(525, 400, 1, 0, 222, 96, 35, 7)
+        # Affiche le bouton "Rejouer"
+        if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
+          pyxel.blt(325, 400, 1, 105, 187, 105, 35, 7)
+        else:
+          pyxel.blt(325, 400, 1, 0, 187, 105, 35, 7)
+        
+        # Affiche le bouton "Quitter"
+        if pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
+          pyxel.blt(525, 400, 1, 96, 222, 96, 35, 7)
+        else:
+          pyxel.blt(525, 400, 1, 0, 222, 96, 35, 7)
 
       # Affiche les copyrights
       pyxel.text(10, 520, "(c) Aurelien Audero, Axel Thibert, Tony Baca - 2024 - Tous droits reserves", 7)
