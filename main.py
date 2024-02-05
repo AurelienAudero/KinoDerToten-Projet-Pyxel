@@ -63,50 +63,42 @@ class Personnage:
   def move(self):
     # Contrôles avec les boutons du clavier ou de la manette
     if (self.keybinds != 4) and (self.keybinds != 5):
-      if pyxel.btn(self.personnageHaut):
-        if (self.y > 0) :
+      if pyxel.btn(self.personnageHaut) and (self.y > 0) :
           self.y = self.y - 10
-      if pyxel.btn(self.personnageGauche):
-        if (self.x > 0) :
+      elif pyxel.btn(self.personnageGauche) and (self.x > 0) :
           self.x = self.x - 10
           if self.lastSide != "Left":
             self.lastSide = "Left"
-      if pyxel.btn(self.personnageBas):
-        if (self.y < resHauteur-self.height) :
+      elif pyxel.btn(self.personnageBas) and (self.y < resHauteur-self.height) :
           self.y = self.y + 10
-      if pyxel.btn(self.personnageDroite):
-        if (self.x < resLongueur-self.width) :
+      elif pyxel.btn(self.personnageDroite) and (self.x < resLongueur-self.width) :
           self.x = self.x + 10
           if self.lastSide != "Right":
             self.lastSide = "Right"
-      if pyxel.btnp(self.personnageTir):
+      elif pyxel.btnp(self.personnageTir):
         if self.lastSide == "Right":
           return self.x+(self.width), self.y+(self.height/2), self.lastSide
-        if self.lastSide == "Left":
+        elif self.lastSide == "Left":
           return self.x-((self.width/4)*3), self.y+(self.height/2), self.lastSide
     
     # Contrôles avec les sticks analogiques de la manette
     elif (self.keybinds == 4) or (self.keybinds == 5):
-      if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone:
-        if (self.y > 0) :
+      if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and (self.y > 0) :
           self.y = self.y - 10
-      if pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone:
-        if (self.x > 0) :
+      elif pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and (self.x > 0) :
           self.x = self.x - 10
           if self.lastSide != "Left":
             self.lastSide = "Left"
-      if pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone:
-        if (self.y < resHauteur-self.height) :
+      elif pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and (self.y < resHauteur-self.height) :
           self.y = self.y + 10
-      if pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone:
-        if (self.x < resLongueur-self.width) :
+      elif pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and (self.x < resLongueur-self.width) :
           self.x = self.x + 10
           if self.lastSide != "Right":
             self.lastSide = "Right"
-      if pyxel.btnp(self.personnageTir):
+      elif pyxel.btnp(self.personnageTir):
         if self.lastSide == "Right":
           return self.x+(self.width), self.y+(self.height/2), self.lastSide
-        if self.lastSide == "Left":
+        elif self.lastSide == "Left":
           return self.x-((self.width/4)*3), self.y+(self.height/2), self.lastSide
     
     return None
@@ -115,7 +107,7 @@ class Personnage:
     if self.lastSide == "Left":
       pyxel.rect(self.x, self.y, self.width, self.height, 9)
       pyxel.rect(self.x+5, self.y+10, 10, 10, 0)
-    if self.lastSide == "Right":
+    elif self.lastSide == "Right":
       pyxel.rect(self.x, self.y, self.width, self.height, 9)
       pyxel.rect(self.x+self.width-15, self.y+10, 10, 10, 0)
 
@@ -134,7 +126,7 @@ class Tir:
     else:
         if self.direction == "Right":
           self.x = self.x + 10
-        if self.direction == "Left":
+        elif self.direction == "Left":
           self.x = self.x - 10
 
   def draw(self):
@@ -153,11 +145,11 @@ class Zombie:
   def move(self):
     if (self.y > 0) and (self.y-self.height > self.personnage.y) :
       self.y = self.y - self.vitesse
-    if (self.x > 0) and (self.x > self.personnage.x-self.personnage.width) :
+    elif (self.x > 0) and (self.x > self.personnage.x-self.personnage.width) :
       self.x = self.x - self.vitesse
-    if (self.y < resHauteur-self.height) and (self.y+self.height < self.personnage.y):
+    elif (self.y < resHauteur-self.height) and (self.y+self.height < self.personnage.y):
       self.y = self.y + self.vitesse
-    if (self.x < resLongueur-self.width) and (self.x < self.personnage.x+self.personnage.width):
+    elif (self.x < resLongueur-self.width) and (self.x < self.personnage.x+self.personnage.width):
       self.x = self.x + self.vitesse
 
   def draw(self):
@@ -179,11 +171,37 @@ class Jeu:
     self.nbVaguesTXT = "" # Nombre de vagues de zombies en texte
     self.tempsSpawnMob = 1 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
-    self.personnage = Personnage(450, 210, 50, 80, self.keybinds)
+    self.personnage = Personnage(450, 210, 50, 80, keybinds)
     self.perteHP = 0.5 # Nombre de points de vie perdus au contact d'un zombie
     self.partieTerminee = False
     self.gameOverChosenBtn = 1
   
+  def screenTextPrint(self, x, y, text):
+    assert type(text) == str, "text doit être une chaîne de caractères"
+    for i in range(len(text)):
+        if text[i] == "1":
+          pyxel.blt(x+(16*i), y, 0, 0, 24, 11, 19, 0) # Affichage du chiffre 1
+        elif text[i] == "2":
+          pyxel.blt(x+(16*i), y, 0, 16, 24, 11, 19, 0) # Affichage du chiffre 2
+        elif text[i] == "3":
+          pyxel.blt(x+(16*i), y, 0, 32, 24, 11, 19, 0) # Affichage du chiffre 3
+        elif text[i] == "4":
+          pyxel.blt(x+(16*i), y, 0, 48, 24, 11, 19, 0) # Affichage du chiffre 4
+        elif text[i] == "5":
+          pyxel.blt(x+(16*i), y, 0, 64, 24, 11, 19, 0) # Affichage du chiffre 5
+        elif text[i] == "6":
+          pyxel.blt(x+(16*i), y, 0, 80, 24, 11, 19, 0) # Affichage du chiffre 6
+        elif text[i] == "7":
+          pyxel.blt(x+(16*i), y, 0, 96, 24, 11, 19, 0) # Affichage du chiffre 7
+        elif text[i] == "8":
+          pyxel.blt(x+(16*i), y, 0, 112, 24, 11, 19, 0) # Affichage du chiffre 8
+        elif text[i] == "9":
+          pyxel.blt(x+(16*i), y, 0, 128, 24, 11, 19, 0) # Affichage du chiffre 9
+        elif text[i] == "0":
+          pyxel.blt(x+(16*i), y, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
+        elif text[i] == ".":
+          pyxel.blt(x+(16*i), y, 0, 158, 24, 11, 19, 0) # Affichage de la virgule
+
   def update(self): 
     if not self.partieTerminee:
       # Vérifie si le joueur est mort
@@ -307,29 +325,7 @@ class Jeu:
       # Affiche le score actuel du joueur
       pyxel.blt(15, 15, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
       self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
-      for i in range(len(self.personnage.scoreTXT)):
-        if self.personnage.scoreTXT[i] == "1":
-          pyxel.blt(120+(16*i), 15, 0, 0, 24, 11, 19, 0) # Affichage du chiffre 1
-        if self.personnage.scoreTXT[i] == "2":
-          pyxel.blt(120+(16*i), 15, 0, 16, 24, 11, 19, 0) # Affichage du chiffre 2
-        if self.personnage.scoreTXT[i] == "3":
-          pyxel.blt(120+(16*i), 15, 0, 32, 24, 11, 19, 0) # Affichage du chiffre 3
-        if self.personnage.scoreTXT[i] == "4":
-          pyxel.blt(120+(16*i), 15, 0, 48, 24, 11, 19, 0) # Affichage du chiffre 4
-        if self.personnage.scoreTXT[i] == "5":
-          pyxel.blt(120+(16*i), 15, 0, 64, 24, 11, 19, 0) # Affichage du chiffre 5
-        if self.personnage.scoreTXT[i] == "6":
-          pyxel.blt(120+(16*i), 15, 0, 80, 24, 11, 19, 0) # Affichage du chiffre 6
-        if self.personnage.scoreTXT[i] == "7":
-          pyxel.blt(120+(16*i), 15, 0, 96, 24, 11, 19, 0) # Affichage du chiffre 7
-        if self.personnage.scoreTXT[i] == "8":
-          pyxel.blt(120+(16*i), 15, 0, 112, 24, 11, 19, 0) # Affichage du chiffre 8
-        if self.personnage.scoreTXT[i] == "9":
-          pyxel.blt(120+(16*i), 15, 0, 128, 24, 11, 19, 0) # Affichage du chiffre 9
-        if self.personnage.scoreTXT[i] == "0":
-          pyxel.blt(120+(16*i), 15, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
-        if self.personnage.scoreTXT[i] == ".":
-          pyxel.blt(120+(16*i), 15, 0, 158, 24, 11, 19, 0) # Affichage de la virgule
+      self.screenTextPrint(120, 15, self.personnage.scoreTXT)
       
       # Affichage de la barre d'HP du joueur
       pyxel.rect(740, 25, 200, 10, 8)
@@ -380,29 +376,7 @@ class Jeu:
           c = 290
           d = self.nbVaguesTXT
 
-        for b in range(len(d)):
-          if d[b] == "1":
-            pyxel.blt(525+(16*b), c, 0, 0, 24, 11, 19, 0) # Affichage du chiffre 1
-          if d[b] == "2":
-            pyxel.blt(525+(16*b), c, 0, 16, 24, 11, 19, 0) # Affichage du chiffre 2
-          if d[b] == "3":
-            pyxel.blt(525+(16*b), c, 0, 32, 24, 11, 19, 0) # Affichage du chiffre 3
-          if d[b] == "4":
-            pyxel.blt(525+(16*b), c, 0, 48, 24, 11, 19, 0) # Affichage du chiffre 4
-          if d[b] == "5":
-            pyxel.blt(525+(16*b), c, 0, 64, 24, 11, 19, 0) # Affichage du chiffre 5
-          if d[b] == "6":
-            pyxel.blt(525+(16*b), c, 0, 80, 24, 11, 19, 0) # Affichage du chiffre 6
-          if d[b] == "7":
-            pyxel.blt(525+(16*b), c, 0, 96, 24, 11, 19, 0) # Affichage du chiffre 7
-          if d[b] == "8":
-            pyxel.blt(525+(16*b), c, 0, 112, 24, 11, 19, 0) # Affichage du chiffre 8
-          if d[b] == "9":
-            pyxel.blt(525+(16*b), c, 0, 128, 24, 11, 19, 0) # Affichage du chiffre 9
-          if d[b] == "0":
-            pyxel.blt(525+(16*b), c, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
-          if d[b] == ".":
-            pyxel.blt(525+(16*b), c, 0, 158, 24, 11, 19, 0) # Affichage de la virgule
+        self.screenTextPrint(525, c, d)
       
       if self.personnage.keybinds == 4 or self.personnage.keybinds == 5 or self.personnage.keybinds == 6:
         if self.gameOverChosenBtn == 1:
@@ -513,12 +487,6 @@ while userChosenKeybinds == 0 :
     fenetre.title("Kino der toten")
     messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
     fenetre.destroy()
-
-def relancerJeu():
-  import subprocess, sys
-  sys.modules[__name__].__dict__.clear()
-  subprocess.call([sys.executable] + sys.argv)
-  sys.exit()
 
 # Lancement du jeu
 if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
