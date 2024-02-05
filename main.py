@@ -168,19 +168,21 @@ class Jeu:
   def __init__(self, l, h, fps, keybinds):
     pyxel.init(l, h, title="Kino der toten", fps=fps)
     pyxel.load("KinoDerToten.pyxres")
+    self.keybinds = keybinds
+    self.start(self.keybinds)
+    pyxel.run(self.update, self.draw)
 
+  def start(self, keybinds):
     self.zombiesList = []
     self.tirsList = []
     self.nbVagues = 0 # Nombre de vagues de zombies
     self.nbVaguesTXT = "" # Nombre de vagues de zombies en texte
     self.tempsSpawnMob = 1 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
-    self.personnage = Personnage(450, 210, 50, 80, keybinds)
+    self.personnage = Personnage(450, 210, 50, 80, self.keybinds)
     self.perteHP = 0.5 # Nombre de points de vie perdus au contact d'un zombie
     self.partieTerminee = False
     self.gameOverChosenBtn = 1
-
-    pyxel.run(self.update, self.draw)
   
   def update(self): 
     if not self.partieTerminee:
@@ -278,9 +280,7 @@ class Jeu:
         
         # Clic sur le bouton "Rejouer"
         if self.gameOverChosenBtn == 1 and pyxel.btn(self.personnage.personnageTir):
-          pyxel.cls(0)
-          pyxel.text(resLongueur/2, resHauteur/2, "Relancement du jeu...", 7)
-          relancerJeu()
+          self.start(self.keybinds)
         
         # Clic sur le bouton "Quitter"
         elif self.gameOverChosenBtn and pyxel.btn(self.personnage.personnageTir):
@@ -288,9 +288,7 @@ class Jeu:
       else:
         # Clic sur le bouton "Rejouer"
         if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
-          pyxel.cls(0)
-          pyxel.text(resLongueur/2, resHauteur/2, "Relancement du jeu...", 7)
-          relancerJeu()
+          self.start(self.keybinds)
         
         # Clic sur le bouton "Quitter"
         elif pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
