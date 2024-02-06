@@ -165,16 +165,35 @@ class Jeu:
     pyxel.run(self.update, self.draw)
 
   def start(self, keybinds):
-    self.zombiesList = []
-    self.tirsList = []
+    self.zombiesList = [] # Liste de tous les zombies
+    self.tirsList = [] # Liste de tous les tirs
     self.nbVagues = 0 # Nombre de vagues de zombies
     self.nbVaguesTXT = "" # Nombre de vagues de zombies en texte
-    self.tempsSpawnMob = 1 # Temps entre chaque spawn de mob (en secondes)
+    self.tempsSpawnMobActuel = 0 # Initialisation de la variable de temps entre chaque spawn de mob
+    self.tempsSpawnMobBase = 5 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
-    self.personnage = Personnage(450, 210, 50, 80, keybinds)
+    self.personnage = Personnage(450, 210, 50, 80, keybinds) # Initialisation du personnage joueur
     self.perteHP = 0.5 # Nombre de points de vie perdus au contact d'un zombie
-    self.partieTerminee = False
-    self.gameOverChosenBtn = 1
+    self.partieTerminee = False # Etat de la partie en cours
+    self.gameOverChosenBtn = 1 # Bouton choisi sur l'écran "Game Over" lors du contrôle à la manette
+    self.nbZombiesTotal = 0 # Nombre total de zombies tués
+    self.nbZombiesVagueActuelle = 0 # Nombre de zombies tués dans la vague actuelle
+    self.nbZombiesPourTerminerVague = 20 # Nombre de zombies à tuer pour terminer une vague
+    self.tempsAttenteNouvelleVague = 15 # Temps d'attente avant le début de la prochaine vague (en secondes)
+    self.startNewWave() # Démarrage de la première vague
+
+  def startNewWave(self):
+    self.tempsSpawnMobActuel = 3600 # Arrêt du spawn des zombies
+    self.zombiesList = [] # Suppression de tous les zombies
+    self.nbVagues += 1 # Incrémentation du nombre de vagues
+    self.nbZombiesVagueActuelle = 0 # Réinitialisation du nombre de zombies tués dans la vague actuelle
+    self.nbZombiesPourTerminerVague += 5 # Incrémentation du nombre de zombies à tuer pour terminer une vague
+    self.personnage.maxHP += 10 # Incrémentation des points de vie max du joueur
+    self.personnage.currentHP = self.personnage.maxHP # Régénération complète des points de vie du joueur 
+    
+    # Début du temps de pause avant le début de la prochaine vague
+    self.tempsAttenteStartFrame = pyxel.frame_count
+    self.attenteNouvelleVague = True
   
   def screenTextPrint(self, x, y, text):
     assert type(text) == str, "text doit être une chaîne de caractères"
@@ -221,6 +240,16 @@ class Jeu:
         if not element.alive:
           self.tirsList.remove(element)
 
+      # Démarrage d'une nouvelle vague
+      if self.nbZombiesVagueActuelle == self.nbZombiesPourTerminerVague:
+        self.startNewWave()
+        
+      # Temps d'attente avant le début de la prochaine vague
+      if self.attenteNouvelleVague:
+        if self.tempsAttenteStartFrame + (fps*self.tempsAttenteNouvelleVague) == pyxel.frame_count:
+          self.attenteNouvelleVague = False
+          self.tempsSpawnMobActuel = self.tempsSpawnMobBase - 1
+      
       # Détéction de la superposition de deux entités
       def isOverlapping(entity1, entity2):
         if entity1.x+entity1.width > entity2.x and entity2.x+entity2.width > entity1.x and entity1.y+entity1.height > entity2.y and entity2.y+entity2.height > entity1.y:
@@ -276,7 +305,9 @@ class Jeu:
             self.personnage.kills += 1
 
       # Spawn aléatoire des zombies
-      if pyxel.frame_count % (fps*self.tempsSpawnMob) == 0:
+      if pyxel.frame_count % (fps*self.tempsSpawnMobActuel) == 0:
+        self.nbZombiesVagueActuelle += 1
+        self.nbZombiesTotal += 1
         numeroSpawner = randint(1,3)
         if numeroSpawner == 1:
           self.zombiesList.append(Zombie(725, 50, 50, 80, 1, self.personnage))
@@ -343,6 +374,11 @@ class Jeu:
       self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
       self.screenTextPrint(120, 15, self.personnage.scoreTXT)
 
+      # Affiche le numéro de vague actuel
+      pyxel.blt(15, 45, 0, 0, 48, 91, 19, 0) # Affiche le texte "Vague :"
+      self.nbVaguesTXT = str(self.nbVagues) # Transforme le nombre de vague en texte (INT -> STR)
+      self.screenTextPrint(120, 45, self.nbVaguesTXT)
+      
       # Affichage de la barre d'HP du joueur
       pyxel.rect(740, 25, 200, 10, 8)
       pyxel.rect(740, 25, self.personnage.currentHP*2, 10, 11)
