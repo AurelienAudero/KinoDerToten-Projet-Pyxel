@@ -322,15 +322,6 @@ class Jeu:
       # Efface l'écran
       pyxel.cls(13)
 
-      # Affiche le score actuel du joueur
-      pyxel.blt(15, 15, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
-      self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
-      self.screenTextPrint(120, 15, self.personnage.scoreTXT)
-      
-      # Affichage de la barre d'HP du joueur
-      pyxel.rect(740, 25, 200, 10, 8)
-      pyxel.rect(740, 25, self.personnage.currentHP*2, 10, 11)
-
       # Affichage des deux spawners de zombies
       pyxel.rect(725, 50, 100, 100, 12)
       pyxel.rect(425, 50, 100, 100, 12)
@@ -346,6 +337,15 @@ class Jeu:
       # Affichage des zombies
       for element in self.zombiesList:
         element.draw()
+
+      # Affiche le score actuel du joueur
+      pyxel.blt(15, 15, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
+      self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
+      self.screenTextPrint(120, 15, self.personnage.scoreTXT)
+
+      # Affichage de la barre d'HP du joueur
+      pyxel.rect(740, 25, 200, 10, 8)
+      pyxel.rect(740, 25, self.personnage.currentHP*2, 10, 11)
     
     elif self.partieTerminee:
       # Efface l'écran
