@@ -303,11 +303,11 @@ class Jeu:
             self.zombiesList.remove(ennemi)
             self.personnage.score += self.gainScoreKill
             self.personnage.kills += 1
+            self.nbZombiesVagueActuelle += 1
+            self.nbZombiesTotal += 1
 
       # Spawn aléatoire des zombies
       if pyxel.frame_count % (fps*self.tempsSpawnMobActuel) == 0:
-        self.nbZombiesVagueActuelle += 1
-        self.nbZombiesTotal += 1
         numeroSpawner = randint(1,3)
         if numeroSpawner == 1:
           self.zombiesList.append(Zombie(725, 50, 50, 80, 1, self.personnage))
