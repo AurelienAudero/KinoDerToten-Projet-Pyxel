@@ -346,7 +346,7 @@ class Jeu:
       # Clic sur le bouton "GitHub"
       if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
         import webbrowser
-        webbrowser.open("https://github.com/AurelienAudero/NSI-Terminale-Projet-Pyxel")
+        webbrowser.open("https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel")
 
   def draw(self):
     if not self.partieTerminee:
