@@ -65,17 +65,17 @@ class Personnage:
     if (self.keybinds != 4) and (self.keybinds != 5):
       if pyxel.btn(self.personnageHaut) and (self.y > 0) :
           self.y = self.y - 10
-      elif pyxel.btn(self.personnageGauche) and (self.x > 0) :
+      if pyxel.btn(self.personnageGauche) and (self.x > 0) :
           self.x = self.x - 10
           if self.lastSide != "Left":
             self.lastSide = "Left"
-      elif pyxel.btn(self.personnageBas) and (self.y < resHauteur-self.height) :
+      if pyxel.btn(self.personnageBas) and (self.y < resHauteur-self.height) :
           self.y = self.y + 10
-      elif pyxel.btn(self.personnageDroite) and (self.x < resLongueur-self.width) :
+      if pyxel.btn(self.personnageDroite) and (self.x < resLongueur-self.width) :
           self.x = self.x + 10
           if self.lastSide != "Right":
             self.lastSide = "Right"
-      elif pyxel.btnp(self.personnageTir):
+      if pyxel.btnp(self.personnageTir):
         if self.lastSide == "Right":
           return self.x+(self.width), self.y+(self.height/2), self.lastSide
         elif self.lastSide == "Left":
@@ -85,17 +85,17 @@ class Personnage:
     elif (self.keybinds == 4) or (self.keybinds == 5):
       if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and (self.y > 0) :
           self.y = self.y - 10
-      elif pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and (self.x > 0) :
+      if pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and (self.x > 0) :
           self.x = self.x - 10
           if self.lastSide != "Left":
             self.lastSide = "Left"
-      elif pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and (self.y < resHauteur-self.height) :
+      if pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and (self.y < resHauteur-self.height) :
           self.y = self.y + 10
-      elif pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and (self.x < resLongueur-self.width) :
+      if pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and (self.x < resLongueur-self.width) :
           self.x = self.x + 10
           if self.lastSide != "Right":
             self.lastSide = "Right"
-      elif pyxel.btnp(self.personnageTir):
+      if pyxel.btnp(self.personnageTir):
         if self.lastSide == "Right":
           return self.x+(self.width), self.y+(self.height/2), self.lastSide
         elif self.lastSide == "Left":
@@ -145,11 +145,11 @@ class Zombie:
   def move(self):
     if (self.y > 0) and (self.y-self.height > self.personnage.y) :
       self.y = self.y - self.vitesse
-    elif (self.x > 0) and (self.x > self.personnage.x-self.personnage.width) :
+    if (self.x > 0) and (self.x > self.personnage.x-self.personnage.width) :
       self.x = self.x - self.vitesse
-    elif (self.y < resHauteur-self.height) and (self.y+self.height < self.personnage.y):
+    if (self.y < resHauteur-self.height) and (self.y+self.height < self.personnage.y):
       self.y = self.y + self.vitesse
-    elif (self.x < resLongueur-self.width) and (self.x < self.personnage.x+self.personnage.width):
+    if (self.x < resLongueur-self.width) and (self.x < self.personnage.x+self.personnage.width):
       self.x = self.x + self.vitesse
 
   def draw(self):
