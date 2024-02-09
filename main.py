@@ -112,25 +112,48 @@ class Personnage:
       pyxel.rect(self.x+self.width-15, self.y+10, 10, 10, 0)
 
 class Tir:
-  def __init__(self, x, y, direction):
+  def __init__(self, x, y, personnage):
     self.x = x
     self.y = y
-    self.width = 40
+    self.width = 10
     self.height = 10
+    self.radius = 5
     self.alive = True
-    self.direction = direction
+    self.mouse_x = pyxel.mouse_x
+    self.mouse_y = pyxel.mouse_y
+    self.player_x = personnage.x
+    self.player_y = personnage.y
+
+  def checkCoordonnees(self, player_x, player_y):
+    if self.mouse_x > player_x:
+      coord_x = True
+    else :
+      coord_x = False
+    
+    if self.mouse_y > player_y:
+      coord_y = True
+    else :
+      coord_y = False
+    
+    return coord_x, coord_y
 
   def move(self):
-    if self.x < 0-self.width or self.x > resLongueur+self.width:
-      self.alive = False
+    direction_x,direction_y = self.checkCoordonnees(self.player_x,self.player_y)
+    distance_x = abs(self.mouse_x - self.player_x)/30
+    distance_y = abs(self.mouse_y - self.player_y)/30
+
+    if direction_x:
+      self.x += distance_x
     else:
-        if self.direction == "Right":
-          self.x = self.x + 10
-        elif self.direction == "Left":
-          self.x = self.x - 10
+      self.x -= distance_x
+
+    if direction_y:
+      self.y += distance_y
+    else:
+      self.y -= distance_y
 
   def draw(self):
-    pyxel.rect(self.x, self.y, self.width, self.height, 10)
+    pyxel.circ(self.x, self.y, self.radius, 10)
 
 class Zombie:
   def __init__(self, x, y, width, height, vitesse, personnage):
@@ -183,6 +206,7 @@ class Jeu:
     self.startNewWave() # Démarrage de la première vague
 
   def startNewWave(self):
+    pyxel.mouse(True)
     self.tempsSpawnMobActuel = 3600 # Arrêt du spawn des zombies
     self.zombiesList = [] # Suppression de tous les zombies
     self.nbVagues += 1 # Incrémentation du nombre de vagues
@@ -232,7 +256,7 @@ class Jeu:
       
       # Création d'un tir si le joueur appuie sur la touche de tir
       if v is not None:
-        self.tirsList.append(Tir(v[0], v[1], v[2]))
+        self.tirsList.append(Tir(v[0], v[1], self.personnage))
 
       # Déplacement des tirs existants et suppression des tirs terminés
       for element in self.tirsList:
