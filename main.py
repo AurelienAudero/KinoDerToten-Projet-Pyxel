@@ -590,7 +590,7 @@ def choixSensibiliteEtZoneMorte():
 
   # Retour du choix de l'utilisateur
   if v1 == -1:
-    return -1
+    return (-1,-1)
   else:
     return (v1.get(),v2.get())
 
@@ -622,19 +622,25 @@ while userChosenKeybinds == 0 :
     fenetre.destroy()
   elif userChosenKeybinds == 4:
     controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
-    fenetre = Tk()
-    fenetre.title("Kino der toten")
-    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick gauche : Se déplacer\nStick droit : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
-    fenetre.destroy()
+    if controllerSensitivity == -1:
+      userChosenKeybinds = -1
+    else:
+      fenetre = Tk()
+      fenetre.title("Kino der toten")
+      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick gauche : Se déplacer\nStick droit : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+      fenetre.destroy()
   elif userChosenKeybinds == 5:
     controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
-    fenetre = Tk()
-    fenetre.title("Kino der toten")
-    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nStick gauche : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
-    fenetre.destroy()
+    if controllerSensitivity == -1:
+      userChosenKeybinds = -1
+    else:
+      fenetre = Tk()
+      fenetre.title("Kino der toten")
+      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nStick gauche : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+      fenetre.destroy()
 
 # Lancement du jeu
-if (userChosenKeybinds != 0) and (userChosenKeybinds != -1) and (controllerSensitivity != -1):
+if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   resLongueur = 960
   resHauteur = 540
   fps = 60
