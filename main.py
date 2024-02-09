@@ -79,10 +79,7 @@ class Personnage:
           if self.lastSide != "Right":
             self.lastSide = "Right"
       if pyxel.btnp(self.personnageTir):
-        if self.lastSide == "Right":
-          return self.x+(self.width), self.y+(self.height/2), self.lastSide
-        elif self.lastSide == "Left":
-          return self.x-((self.width/4)*3), self.y+(self.height/2), self.lastSide
+        return self.x+(self.width/2), self.y+(self.height/2)
     
     # Contrôles avec les sticks analogiques de la manette
     elif (self.keybinds == 4) or (self.keybinds == 5):
@@ -99,10 +96,7 @@ class Personnage:
           if self.lastSide != "Right":
             self.lastSide = "Right"
       if pyxel.btnp(self.personnageTir):
-        if self.lastSide == "Right":
-          return self.x+(self.width), self.y+(self.height/2), self.lastSide
-        elif self.lastSide == "Left":
-          return self.x-((self.width/4)*3), self.y+(self.height/2), self.lastSide
+        return self.x+(self.width/2), self.y+(self.height/2)
     
     return None
           
