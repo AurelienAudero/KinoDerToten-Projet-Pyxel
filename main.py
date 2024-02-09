@@ -1,13 +1,13 @@
 # Importations des bibliothèques nécéssaires
 import pyxel
 from random import randint
-from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox
+from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL
 
 ########################
 #   PROGRAMME DU JEU   #
 ########################
 class Personnage:
-  def __init__(self, x, y, width, height, keybinds):
+  def __init__(self, x, y, width, height, keybinds, controllerSensitivity=None, controllerDeadzone=None):
     # Création de variables
     self.x = x
     self.y = y
@@ -31,34 +31,37 @@ class Personnage:
       self.personnageBas = pyxel.KEY_S
       self.personnageDroite = pyxel.KEY_D
       self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
+      self.reticule = Reticule(self.x, self.y, self.keybinds)
     elif self.keybinds == 2 :
       self.personnageHaut = pyxel.KEY_W
       self.personnageGauche = pyxel.KEY_A
       self.personnageBas = pyxel.KEY_S
       self.personnageDroite = pyxel.KEY_D
       self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
+      self.reticule = Reticule(self.x, self.y, self.keybinds)
     elif self.keybinds == 3 :
       self.personnageHaut = pyxel.KEY_UP
       self.personnageGauche = pyxel.KEY_LEFT
       self.personnageBas = pyxel.KEY_DOWN
       self.personnageDroite = pyxel.KEY_RIGHT
       self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
+      self.reticule = Reticule(self.x, self.y, self.keybinds)
     elif self.keybinds == 4 :
       self.personnageAxeY = pyxel.GAMEPAD1_AXIS_LEFTY
       self.personnageAxeX = pyxel.GAMEPAD1_AXIS_LEFTX
       self.personnageTir = pyxel.GAMEPAD1_BUTTON_A
-      self.controllerDeadzone = 2000
+      self.controllerSensitivity = controllerSensitivity
+      self.controllerDeadzone = controllerDeadzone
+      self.reticule = Reticule(self.x, self.y, self.keybinds, self.controllerSensitivity, self.controllerDeadzone)
     elif self.keybinds == 5 :
-      self.personnageAxeY = pyxel.GAMEPAD1_AXIS_RIGHTY
-      self.personnageAxeX = pyxel.GAMEPAD1_AXIS_RIGHTX
-      self.personnageTir = pyxel.GAMEPAD1_BUTTON_A
-      self.controllerDeadzone = 2000
-    elif self.keybinds == 6 :
       self.personnageHaut = pyxel.GAMEPAD1_BUTTON_DPAD_UP
       self.personnageGauche = pyxel.GAMEPAD1_BUTTON_DPAD_LEFT
       self.personnageBas = pyxel.GAMEPAD1_BUTTON_DPAD_DOWN
       self.personnageDroite = pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT
       self.personnageTir = pyxel.GAMEPAD1_BUTTON_A
+      self.controllerSensitivity = controllerSensitivity
+      self.controllerDeadzone = controllerDeadzone
+      self.reticule = Reticule(self.x, self.y, self.keybinds, self.controllerSensitivity, self.controllerDeadzone)
 
   def move(self):
     # Contrôles avec les boutons du clavier ou de la manette
@@ -111,6 +114,35 @@ class Personnage:
       pyxel.rect(self.x, self.y, self.width, self.height, 9)
       pyxel.rect(self.x+self.width-15, self.y+10, 10, 10, 0)
 
+class Reticule:
+  def __init__(self, x, y, keybinds, controllerSensitivity=None, controllerDeadzone=None):
+    self.x = x # Position en x du réticule
+    self.y = y # Position en y du réticule
+    self.size = 31 # Taille du réticule
+    self.keybinds = keybinds # Méthode d'entrée choisie par l'utilisateur
+    
+    # Sensibilité et deadzone de la manette
+    if (self.keybinds == 4) or (self.keybinds == 5): 
+      self.controllerSensitivity = controllerSensitivity
+      self.controllerDeadzone = controllerDeadzone
+  
+  def move(self):
+    if (self.keybinds != 4) and (self.keybinds != 5):
+      self.x = pyxel.mouse_x
+      self.y = pyxel.mouse_y
+    elif (self.keybinds == 4) or (self.keybinds == 5):
+      if pyxel.btnv(pyxel.GAMEPAD1_AXIS_RIGHTX) < -self.controllerDeadzone and (self.x > 0):
+        self.x -= self.controllerSensitivity
+      if pyxel.btnv(pyxel.GAMEPAD1_AXIS_RIGHTX) > self.controllerDeadzone and (self.x < resLongueur-self.size):
+        self.x += self.controllerSensitivity
+      if pyxel.btnv(pyxel.GAMEPAD1_AXIS_RIGHTY) < -self.controllerDeadzone and (self.y > 0):
+        self.y -= self.controllerSensitivity
+      if pyxel.btnv(pyxel.GAMEPAD1_AXIS_RIGHTY) > self.controllerDeadzone and (self.y < resHauteur-self.size):
+        self.y += self.controllerSensitivity
+  
+  def draw(self):
+    pyxel.blt(self.x, self.y, 0, 0, 72, self.size, self.size, 0)
+
 class Tir:
   def __init__(self, x, y, personnage):
     self.x = x
@@ -119,18 +151,18 @@ class Tir:
     self.height = 10
     self.radius = 5
     self.alive = True
-    self.mouse_x = pyxel.mouse_x
-    self.mouse_y = pyxel.mouse_y
+    self.viseur_x = personnage.reticule.x
+    self.viseur_y = personnage.reticule.y
     self.player_x = personnage.x
     self.player_y = personnage.y
 
   def checkCoordonnees(self, player_x, player_y):
-    if self.mouse_x > player_x:
+    if self.viseur_x > player_x:
       coord_x = True
     else :
       coord_x = False
     
-    if self.mouse_y > player_y:
+    if self.viseur_y > player_y:
       coord_y = True
     else :
       coord_y = False
@@ -139,8 +171,8 @@ class Tir:
 
   def move(self):
     direction_x,direction_y = self.checkCoordonnees(self.player_x,self.player_y)
-    distance_x = abs(self.mouse_x - self.player_x)/30
-    distance_y = abs(self.mouse_y - self.player_y)/30
+    distance_x = abs(self.viseur_x - self.player_x)/30
+    distance_y = abs(self.viseur_y - self.player_y)/30
 
     if direction_x:
       self.x += distance_x
@@ -180,14 +212,25 @@ class Zombie:
     pyxel.rectb(self.x, self.y, self.width, self.height, 0)
 
 class Jeu:
-  def __init__(self, l, h, fps, keybinds):
+  def __init__(self, l, h, fps, keybinds, controllerSensitivity=None, controllerDeadzone=None):
     pyxel.init(l, h, title="Kino der toten", fps=fps)
     pyxel.load("KinoDerToten.pyxres")
     self.keybinds = keybinds
-    self.start(self.keybinds)
+    if (self.keybinds == 4) or (self.keybinds == 5):
+      self.controllerSensitivity = controllerSensitivity
+      self.controllerDeadzone = controllerDeadzone
+      self.start(self.keybinds, self.controllerSensitivity, self.controllerDeadzone)
+    else:
+      self.start(self.keybinds)
     pyxel.run(self.update, self.draw)
 
-  def start(self, keybinds):
+  def start(self, keybinds, controllerSensitivity=None, controllerDeadzone=None):
+    # Initialisation du personnage joueur
+    if (keybinds == 4) or (keybinds == 5):
+      self.personnage = Personnage(450, 210, 50, 80, keybinds, controllerSensitivity, controllerDeadzone) # Si le joueur joue à la manette
+    else:
+      self.personnage = Personnage(450, 210, 50, 80, keybinds) # Si le joueur joue au clavier et à la souris
+    
     self.zombiesList = [] # Liste de tous les zombies
     self.tirsList = [] # Liste de tous les tirs
     self.nbVagues = 0 # Nombre de vagues de zombies
@@ -195,7 +238,6 @@ class Jeu:
     self.tempsSpawnMobActuel = 0 # Initialisation de la variable de temps entre chaque spawn de mob
     self.tempsSpawnMobBase = 5 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
-    self.personnage = Personnage(450, 210, 50, 80, keybinds) # Initialisation du personnage joueur
     self.perteHP = 0.5 # Nombre de points de vie perdus au contact d'un zombie
     self.partieTerminee = False # Etat de la partie en cours
     self.gameOverChosenBtn = 1 # Bouton choisi sur l'écran "Game Over" lors du contrôle à la manette
@@ -204,9 +246,9 @@ class Jeu:
     self.nbZombiesPourTerminerVague = 20 # Nombre de zombies à tuer pour terminer une vague
     self.tempsAttenteNouvelleVague = 15 # Temps d'attente avant le début de la prochaine vague (en secondes)
     self.startNewWave() # Démarrage de la première vague
+    pyxel.mouse(False) # Désactive le curseur de la souris
 
   def startNewWave(self):
-    pyxel.mouse(True)
     self.tempsSpawnMobActuel = 3600 # Arrêt du spawn des zombies
     self.zombiesList = [] # Suppression de tous les zombies
     self.nbVagues += 1 # Incrémentation du nombre de vagues
@@ -251,6 +293,9 @@ class Jeu:
       if self.personnage.currentHP <= 0:
         self.partieTerminee = True
       
+      # Déplacement du réticule de visée
+      self.personnage.reticule.move()
+
       # Déplacement du personnage joueur
       v = self.personnage.move()
       
@@ -393,6 +438,9 @@ class Jeu:
       for element in self.zombiesList:
         element.draw()
 
+      # Affichage du réticule de visée
+      self.personnage.reticule.draw()
+
       # Affiche le score actuel du joueur
       pyxel.blt(15, 15, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
       self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
@@ -506,10 +554,50 @@ def fenetreChoix(question, reponses):
   else:
     return v.get()
 
+def choixSensibiliteEtZoneMorte():
+  """
+  Crée une fenêtre de choix pour la sensibilité de la manette
+  IN : None
+  OUT : Sensibilité de la manette
+  """
+  
+  # Initialisation de la fenêtre et de ses variables
+  fenetre = Tk()
+  fenetre.title("Kino der toten")
+  fenetre.eval('tk::PlaceWindow . center')
+  v1 = IntVar()
+  v1.set(10)
+  v2 = IntVar()
+  v2.set(2000)
+
+  # Action en cas de fermeture de la fenêtre
+  def fermetureFenetre():
+    nonlocal v1
+    if messagebox.askokcancel("Kino der toten", "Voulez-vous quitter le jeu ?"):
+      v1 = -1
+      fenetre.destroy()
+
+  # Ajout du contenu à la fenêtre
+  Label(fenetre, text="Sensibilité de la visée à la manette").pack()
+  Scale(fenetre, from_=1, to=20, orient=HORIZONTAL, variable=v1).pack()
+  Label(fenetre, text="Zone morte de la manette").pack()
+  Scale(fenetre, from_=0, to=10000, orient=HORIZONTAL, variable=v2).pack()
+  Button(fenetre, text="Confirmer", command=fenetre.destroy).pack()
+  
+  # Création de la fenêtre
+  fenetre.protocol("WM_DELETE_WINDOW", fermetureFenetre)
+  fenetre.mainloop()
+
+  # Retour du choix de l'utilisateur
+  if v1 == -1:
+    return -1
+  else:
+    return (v1.get(),v2.get())
+
 # Demande à l'utilisateur les touches à utiliser
 userChosenKeybinds = 0
 while userChosenKeybinds == 0 :
-  userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles", "Manette - Stick Gauche", "Manette - Stick Droit", "Manette - Flèches directionnelles"])
+  userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles", "Manette - Stick Gauche + Stick Droit", "Manette - Flèches directionnelles + Stick Droit"])
   # Affiche une erreur si aucun choix n'est fait par l'utilisateur
   if userChosenKeybinds == 0:
     fenetre = Tk()
@@ -533,24 +621,24 @@ while userChosenKeybinds == 0 :
     messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\n Clic gauche de la souris : Tirer")
     fenetre.destroy()
   elif userChosenKeybinds == 4:
+    controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
     fenetre = Tk()
     fenetre.title("Kino der toten")
-    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick gauche : Se déplacer\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick gauche : Se déplacer\nStick droit : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
     fenetre.destroy()
   elif userChosenKeybinds == 5:
+    controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
     fenetre = Tk()
     fenetre.title("Kino der toten")
-    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick droit : Se déplacer\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
-    fenetre.destroy()
-  elif userChosenKeybinds == 6:
-    fenetre = Tk()
-    fenetre.title("Kino der toten")
-    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nStick gauche : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
     fenetre.destroy()
 
 # Lancement du jeu
-if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
+if (userChosenKeybinds != 0) and (userChosenKeybinds != -1) and (controllerSensitivity != -1):
   resLongueur = 960
   resHauteur = 540
   fps = 60
-  game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds)
+  if (userChosenKeybinds == 1) or (userChosenKeybinds == 2) or (userChosenKeybinds == 3):
+    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds)
+  elif (userChosenKeybinds == 4) or (userChosenKeybinds == 5):
+    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds, controllerSensitivity, controllerDeadzone)
