@@ -9,20 +9,23 @@ from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, H
 class Personnage:
   def __init__(self, x, y, width, height, keybinds, controllerSensitivity=None, controllerDeadzone=None):
     # Création de variables
-    self.x = x
-    self.y = y
-    self.width = width
-    self.height = height
-    self.keybinds = keybinds
-    self.score = 0
-    self.scoreTXT = ""
-    self.kills = 0
-    self.killsTXT = ""
-    self.pvPerdus = 0
-    self.pvPerdusTXT = ""
-    self.lastSide = "Right"
-    self.currentHP = 100.0
-    self.maxHP = 100.0
+    self.x = x # Position x du personnage
+    self.y = y # Position y du personnage
+    self.width = width # Largeur du personnage
+    self.height = height # Hauteur du personnage
+    self.keybinds = keybinds # Méthode d'entrée choisie par l'utilisateur
+    self.score = 0 # Score du joueur (valeur int)
+    self.scoreTXT = "" # Score du joueur (valeur str)
+    self.kills = 0 # Nombre de kills du joueur (valeur int)
+    self.killsTXT = "" # Nombre de kills du joueur (valeur str)
+    self.pvPerdus = 0 # Points de vie perdus par le joueur (valeur int)
+    self.pvPerdusTXT = "" # Points de vie perdus par le joueur (valeur str)
+    self.lastSide = "Bottom" # Dernière direction prise par le personnage
+    self.numberOfSteps = 1 # Nombre de pas effectués par le personnage depuis le changement de direction
+    self.timeBetweenAnimation = 10 # Temps entre chaque changement de sprite (en frames)
+    self.currentHP = 100.0 # Points de vie actuels du joueur
+    self.maxHP = 100.0 # Points de vie max du joueur
+    self.vitesse = 3 # Vitesse de déplacement du personnage
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -67,34 +70,98 @@ class Personnage:
     # Contrôles avec les boutons du clavier ou de la manette
     if (self.keybinds != 4) and (self.keybinds != 5):
       if pyxel.btn(self.personnageHaut) and (self.y > 0) :
-          self.y = self.y - 10
+          self.y -= self.vitesse
+          if self.lastSide != "Top":
+            self.lastSide = "Top"
+            self.numberOfSteps = 1
+          else:
+            if pyxel.frame_count % self.timeBetweenAnimation == 0:
+              if self.numberOfSteps == 5:
+                self.numberOfSteps = 1
+              else:
+                self.numberOfSteps += 1
       if pyxel.btn(self.personnageGauche) and (self.x > 0) :
-          self.x = self.x - 10
+          self.x -= self.vitesse
           if self.lastSide != "Left":
             self.lastSide = "Left"
+            self.numberOfSteps = 1
+          else:
+            if pyxel.frame_count % self.timeBetweenAnimation == 0:
+              if self.numberOfSteps == 5:
+                self.numberOfSteps = 1
+              else:
+                self.numberOfSteps += 1
       if pyxel.btn(self.personnageBas) and (self.y < resHauteur-self.height) :
-          self.y = self.y + 10
+          self.y += self.vitesse
+          if self.lastSide != "Bottom":
+            self.lastSide = "Bottom"
+            self.numberOfSteps = 1
+          else:
+            if pyxel.frame_count % self.timeBetweenAnimation == 0:
+              if self.numberOfSteps == 4:
+                self.numberOfSteps = 1
+              else:
+                self.numberOfSteps += 1
       if pyxel.btn(self.personnageDroite) and (self.x < resLongueur-self.width) :
-          self.x = self.x + 10
+          self.x += self.vitesse
           if self.lastSide != "Right":
             self.lastSide = "Right"
+            self.numberOfSteps = 1
+          else:
+            if pyxel.frame_count % self.timeBetweenAnimation == 0:
+              if self.numberOfSteps == 5:
+                self.numberOfSteps = 1
+              else:
+                self.numberOfSteps += 1
       if pyxel.btnp(self.personnageTir):
         return self.x+(self.width/2), self.y+(self.height/2)
     
     # Contrôles avec les sticks analogiques de la manette
     elif (self.keybinds == 4) or (self.keybinds == 5):
       if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and (self.y > 0) :
-          self.y = self.y - 10
+          self.y -= self.vitesse
+          if self.lastSide != "Top":
+            self.lastSide = "Top"
+            self.numberOfSteps = 1
+          else:
+            if pyxel.frame_count % self.timeBetweenAnimation == 0:
+              if self.numberOfSteps == 5:
+                self.numberOfSteps = 1
+              else:
+                self.numberOfSteps += 1
       if pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and (self.x > 0) :
-          self.x = self.x - 10
+          self.x -= self.vitesse
           if self.lastSide != "Left":
             self.lastSide = "Left"
+            self.numberOfSteps = 1
+          else:
+            if pyxel.frame_count % self.timeBetweenAnimation == 0:
+              if self.numberOfSteps == 5:
+                self.numberOfSteps = 1
+              else:
+                self.numberOfSteps += 1
       if pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and (self.y < resHauteur-self.height) :
-          self.y = self.y + 10
+          self.y += self.vitesse
+          if self.lastSide != "Bottom":
+            self.lastSide = "Bottom"
+            self.numberOfSteps = 1
+          else:
+            if pyxel.frame_count % self.timeBetweenAnimation == 0:
+              if self.numberOfSteps == 4:
+                self.numberOfSteps = 1
+              else:
+                self.numberOfSteps += 1
       if pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and (self.x < resLongueur-self.width) :
-          self.x = self.x + 10
+          self.x += self.vitesse
           if self.lastSide != "Right":
             self.lastSide = "Right"
+            self.numberOfSteps = 1
+          else:
+            if pyxel.frame_count % self.timeBetweenAnimation == 0:
+              if self.numberOfSteps == 5:
+                self.numberOfSteps = 1
+              else:
+                self.numberOfSteps += 1
       if pyxel.btnp(self.personnageTir):
         return self.x+(self.width/2), self.y+(self.height/2)
     
