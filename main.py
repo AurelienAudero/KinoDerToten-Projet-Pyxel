@@ -1,7 +1,7 @@
 # Importations des bibliothèques nécéssaires
-import pyxel
+import pyxel, sys, sched, time
 from random import randint
-from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL
+from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL, Checkbutton
 
 ########################
 #   PROGRAMME DU JEU   #
@@ -210,6 +210,9 @@ class Personnage:
         pyxel.blt(self.x, self.y, 1, 80, 170, self.width, self.height, 7)
       elif self.numberOfSteps == 4:
         pyxel.blt(self.x, self.y, 1, 120, 170, self.width, self.height, 7)
+    if debug:
+      if debug1 == 1: 
+        pyxel.rectb(self.x, self.y, self.width, self.height, 8) # Affichage de la hitbox du personnage (si activé dans le debug)
 
 class Reticule:
   def __init__(self, x, y, keybinds, controllerSensitivity=None, controllerDeadzone=None):
@@ -283,6 +286,9 @@ class Tir:
 
   def draw(self):
     pyxel.circ(self.x, self.y, self.radius, 10)
+    if debug:
+      if debug3 == 1:
+        pyxel.rectb(self.x, self.y, self.width, self.height, 8) # Affichage de la hitbox du tir (si activé dans le debug)
 
 class Zombie:
   def __init__(self, x, y, width, height, vitesse, personnage):
@@ -304,9 +310,12 @@ class Zombie:
     if (self.x < resLongueur-self.width) and (self.x < self.personnage.x+self.personnage.width):
       self.x = self.x + self.vitesse
 
-  def draw(self):
+  def draw(self): 
     pyxel.rect(self.x, self.y, self.width, self.height, 11)
     pyxel.rectb(self.x, self.y, self.width, self.height, 0)
+    if debug:
+      if debug2 == 1:
+        pyxel.rectb(self.x, self.y, self.width, self.height, 8) # Affichage de la hitbox du zombie (si activé dans le debug)
 
 class Jeu:
   def __init__(self, l, h, fps, keybinds, controllerSensitivity=None, controllerDeadzone=None):
@@ -615,6 +624,14 @@ class Jeu:
 ########################
 #  PROGRAMME PRINCIPAL #
 #######################
+debug = False
+
+# Récupération des arguments passés en ligne de commande
+sysArgs = []
+for i in range(1, len(sys.argv)):
+  sysArgs.append(sys.argv[i])
+
+# Fonction pour créer une fenêtre de choix
 def fenetreChoix(question, reponses):
   """
   Crée une fenêtre de choix en utilisant Tkinter
@@ -653,6 +670,7 @@ def fenetreChoix(question, reponses):
   else:
     return v.get()
 
+# Fonction pour choisir la sensibilité et la zone morte de la manette
 def choixSensibiliteEtZoneMorte():
   """
   Crée une fenêtre de choix pour la sensibilité de la manette
@@ -693,57 +711,127 @@ def choixSensibiliteEtZoneMorte():
   else:
     return (v1.get(),v2.get())
 
-# Demande à l'utilisateur les touches à utiliser
-userChosenKeybinds = 0
-while userChosenKeybinds == 0 :
-  userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles", "Manette - Stick Gauche + Stick Droit", "Manette - Flèches directionnelles + Stick Droit"])
-  # Affiche une erreur si aucun choix n'est fait par l'utilisateur
-  if userChosenKeybinds == 0:
-    fenetre = Tk()
-    fenetre.title("Kino der toten")
-    messagebox.showwarning("Erreur", "Il est nécéssaire de choisir une méthode d'entrée")
-    fenetre.destroy()
-  # Affiche un message d'informations avec toutes les touches utilisables par l'utilisateur
-  elif userChosenKeybinds == 1:
-    fenetre = Tk()
-    fenetre.title("Kino der toten")
-    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nZ : Aller vers le haut\nA : Aller à gauche\nS : Aller en bas\nD : Aller à droite\nClic gauche de la souris : Tirer")
-    fenetre.destroy()
-  elif userChosenKeybinds == 2:
-    fenetre = Tk()
-    fenetre.title("Kino der toten")
-    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nW : Aller vers le haut\nA : Aller à gauche\nS : Aller en bas\nD : Aller à droite\nClic gauche de la souris : Tirer")
-    fenetre.destroy()
-  elif userChosenKeybinds == 3:
-    fenetre = Tk()
-    fenetre.title("Kino der toten")
-    messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\n Clic gauche de la souris : Tirer")
-    fenetre.destroy()
-  elif userChosenKeybinds == 4:
-    controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
-    if controllerSensitivity == -1:
-      userChosenKeybinds = -1
-    else:
-      fenetre = Tk()
-      fenetre.title("Kino der toten")
-      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick gauche : Se déplacer\nStick droit : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
-      fenetre.destroy()
-  elif userChosenKeybinds == 5:
-    controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
-    if controllerSensitivity == -1:
-      userChosenKeybinds = -1
-    else:
-      fenetre = Tk()
-      fenetre.title("Kino der toten")
-      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nStick gauche : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+#Paramètres de debug
+def debugSettings():
+  """
+  Crée une fenêtre de choix des paramètres de debug en utilisant Tkinter
+  IN : None
+  OUT : Hitbox du joueur (Bool), Hitbox des zombies (Bool), Hitbox des tirs (Bool), Affichage des FPS (Bool)
+  """
+  
+  # Intialisation de la fenêtre et de ses variables
+  fenetre = Tk()
+  fenetre.title("Kino der toten")
+  fenetre.eval('tk::PlaceWindow . center')
+  v1 = IntVar()
+  v2 = IntVar()
+  v3 = IntVar()
+  v4 = IntVar()
+
+  # Action en cas de fermeture de la fenêtre
+  def fermetureFenetre():
+    nonlocal v1
+    if messagebox.askokcancel("Kino der toten", "Voulez-vous quitter le jeu ?"):
+      v1 = -1
       fenetre.destroy()
 
+  # Ajout du contenu à la fenêtre
+  Label(fenetre, text="MENU DEBUG").pack()
+  Label(fenetre, text="Quels éléments voulez-vous activer ?", anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Hitbox du joueur", variable=v1, anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Hitbox des zombies", variable=v2, anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Hitbox des tirs", variable=v3, anchor="w", justify="left").pack(fill='both')
+  Label(fenetre, text="Affichage des infos graphiques avec ALT+0 ou OPTION+0", anchor="w", justify="left").pack(fill='both')
+  Button(text="Confirmer", command=fenetre.destroy).pack()
+
+  # Création de la fenêtre
+  fenetre.protocol("WM_DELETE_WINDOW", fermetureFenetre)
+  fenetre.mainloop()
+
+  # Retour du choix de l'utilisateur
+  if v1 == -1:
+    return (-1,-1,-1,-1)
+  else:
+    return (v1.get(),v2.get(),v3.get(),v4.get())
+  
+# Fonction pour demander à l'utilisateur les contrôles à utiliser
+def askPlayer():
+  """
+  Demande à l'utilisateur les contrôles à utiliser, les paramètres de la manette (si nécéssaire) et affiche la liste de touches
+  IN : None
+  OUT : userChoosenKeybinds (Int), controllerSensitivity (Int), controllerDeadzone (Int)
+  """
+
+  userChosenKeybinds = 0
+  while userChosenKeybinds == 0 :
+    userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles", "Manette - Stick Gauche + Stick Droit", "Manette - Flèches directionnelles + Stick Droit"])
+    # Affiche une erreur si aucun choix n'est fait par l'utilisateur
+    if userChosenKeybinds == 0:
+      fenetre = Tk()
+      fenetre.title("Kino der toten")
+      messagebox.showwarning("Erreur", "Il est nécéssaire de choisir une méthode d'entrée")
+      fenetre.destroy()
+    # Affiche un message d'informations avec toutes les touches utilisables par l'utilisateur
+    elif userChosenKeybinds == 1:
+      fenetre = Tk()
+      fenetre.title("Kino der toten")
+      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nZ : Aller vers le haut\nA : Aller à gauche\nS : Aller en bas\nD : Aller à droite\nClic gauche de la souris : Tirer")
+      fenetre.destroy()
+    elif userChosenKeybinds == 2:
+      fenetre = Tk()
+      fenetre.title("Kino der toten")
+      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nW : Aller vers le haut\nA : Aller à gauche\nS : Aller en bas\nD : Aller à droite\nClic gauche de la souris : Tirer")
+      fenetre.destroy()
+    elif userChosenKeybinds == 3:
+      fenetre = Tk()
+      fenetre.title("Kino der toten")
+      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\n Clic gauche de la souris : Tirer")
+      fenetre.destroy()
+    elif userChosenKeybinds == 4:
+      controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
+      if controllerSensitivity == -1:
+        userChosenKeybinds = -1
+      else:
+        fenetre = Tk()
+        fenetre.title("Kino der toten")
+        messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick gauche : Se déplacer\nStick droit : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+        fenetre.destroy()
+    elif userChosenKeybinds == 5:
+      controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
+      if controllerSensitivity == -1:
+        userChosenKeybinds = -1
+      else:
+        fenetre = Tk()
+        fenetre.title("Kino der toten")
+        messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nStick gauche : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+        fenetre.destroy()
+  
+  if (userChosenKeybinds == 4) or (userChosenKeybinds == 5):
+    return (userChosenKeybinds, controllerSensitivity, controllerDeadzone)
+  else:
+    return (userChosenKeybinds, None, None)
+
 # Lancement du jeu
+if sysArgs:
+  if sysArgs[0] == "--debug=True":
+    debug = True
+    debug1, debug2, debug3, debug4 = debugSettings()
+    if debug1 == -1:
+      sys.exit()
+  if (sysArgs[0] == "--help") or (sysArgs[0] == "--h"):
+    print("Pour plus d'informations, veuillez consulter le GitHub du projet : https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/")
+    sys.exit()
+
+# Lancement du jeu
+userChosenKeybinds, controllerSensitivity, controllerDeadzone = askPlayer()
+
 if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   resLongueur = 960
   resHauteur = 540
   fps = 60
   if (userChosenKeybinds == 1) or (userChosenKeybinds == 2) or (userChosenKeybinds == 3):
+    del(controllerSensitivity)
+    del(controllerDeadzone)
     game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds)
   elif (userChosenKeybinds == 4) or (userChosenKeybinds == 5):
     game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds, controllerSensitivity, controllerDeadzone)
