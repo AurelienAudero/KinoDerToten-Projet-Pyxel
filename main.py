@@ -169,11 +169,47 @@ class Personnage:
           
   def draw(self):
     if self.lastSide == "Left":
-      pyxel.rect(self.x, self.y, self.width, self.height, 9)
-      pyxel.rect(self.x+5, self.y+10, 10, 10, 0)
+      if self.numberOfSteps == 1:
+        pyxel.blt(self.x, self.y, 1, 0, 60, self.width, self.height, 7)
+      elif self.numberOfSteps == 2:
+        pyxel.blt(self.x, self.y, 1, 40, 60, self.width, self.height, 7)
+      elif self.numberOfSteps == 3:
+        pyxel.blt(self.x, self.y, 1, 80, 60, self.width, self.height, 7)
+      elif self.numberOfSteps == 4:
+        pyxel.blt(self.x, self.y, 1, 120, 60, self.width, self.height, 7)
+      elif self.numberOfSteps == 5:
+        pyxel.blt(self.x, self.y, 1, 160, 60, self.width, self.height, 7)
     elif self.lastSide == "Right":
-      pyxel.rect(self.x, self.y, self.width, self.height, 9)
-      pyxel.rect(self.x+self.width-15, self.y+10, 10, 10, 0)
+      if self.numberOfSteps == 1:
+        pyxel.blt(self.x, self.y, 1, 0, 0, self.width, self.height, 7)
+      elif self.numberOfSteps == 2:
+        pyxel.blt(self.x, self.y, 1, 40, 0, self.width, self.height, 7)
+      elif self.numberOfSteps == 3:
+        pyxel.blt(self.x, self.y, 1, 80, 0, self.width, self.height, 7)
+      elif self.numberOfSteps == 4:
+        pyxel.blt(self.x, self.y, 1, 120, 0, self.width, self.height, 7)
+      elif self.numberOfSteps == 5:
+        pyxel.blt(self.x, self.y, 1, 160, 0, self.width, self.height, 7)
+    elif self.lastSide == "Top":
+      if self.numberOfSteps == 1:
+        pyxel.blt(self.x, self.y, 1, 0, 115, self.width, self.height, 7)
+      elif self.numberOfSteps == 2:
+        pyxel.blt(self.x, self.y, 1, 40, 115, self.width, self.height, 7)
+      elif self.numberOfSteps == 3:
+        pyxel.blt(self.x, self.y, 1, 80, 115, self.width, self.height, 7)
+      elif self.numberOfSteps == 4:
+        pyxel.blt(self.x, self.y, 1, 120, 115, self.width, self.height, 7)
+      elif self.numberOfSteps == 5:
+        pyxel.blt(self.x, self.y, 1, 160, 115, self.width, self.height, 7)
+    elif self.lastSide == "Bottom":
+      if self.numberOfSteps == 1:
+        pyxel.blt(self.x, self.y, 1, 0, 170, self.width, self.height, 7)
+      elif self.numberOfSteps == 2:
+        pyxel.blt(self.x, self.y, 1, 40, 170, self.width, self.height, 7)
+      elif self.numberOfSteps == 3:
+        pyxel.blt(self.x, self.y, 1, 80, 170, self.width, self.height, 7)
+      elif self.numberOfSteps == 4:
+        pyxel.blt(self.x, self.y, 1, 120, 170, self.width, self.height, 7)
 
 class Reticule:
   def __init__(self, x, y, keybinds, controllerSensitivity=None, controllerDeadzone=None):
@@ -288,9 +324,9 @@ class Jeu:
   def start(self, keybinds, controllerSensitivity=None, controllerDeadzone=None):
     # Initialisation du personnage joueur
     if (keybinds == 4) or (keybinds == 5):
-      self.personnage = Personnage(450, 210, 50, 80, keybinds, controllerSensitivity, controllerDeadzone) # Si le joueur joue à la manette
+      self.personnage = Personnage(450, 210, 40, 50, keybinds, controllerSensitivity, controllerDeadzone) # Si le joueur joue à la manette
     else:
-      self.personnage = Personnage(450, 210, 50, 80, keybinds) # Si le joueur joue au clavier et à la souris
+      self.personnage = Personnage(450, 210, 40, 50, keybinds) # Si le joueur joue au clavier et à la souris
     
     self.zombiesList = [] # Liste de tous les zombies
     self.tirsList = [] # Liste de tous les tirs
@@ -308,6 +344,7 @@ class Jeu:
     self.tempsAttenteNouvelleVague = 15 # Temps d'attente avant le début de la prochaine vague (en secondes)
     self.startNewWave() # Démarrage de la première vague
     pyxel.mouse(False) # Désactive le curseur de la souris
+    pyxel.images[1].load(0,0, "RichtofenSpriteSheet.png") # Chargement des sprites de Richtofen (joueur)
 
   def startNewWave(self):
     self.tempsSpawnMobActuel = 3600 # Arrêt du spawn des zombies
@@ -440,11 +477,11 @@ class Jeu:
       if pyxel.frame_count % (fps*self.tempsSpawnMobActuel) == 0:
         numeroSpawner = randint(1,3)
         if numeroSpawner == 1:
-          self.zombiesList.append(Zombie(725, 50, 50, 80, 1, self.personnage))
+          self.zombiesList.append(Zombie(725, 50, 40, 50, 1, self.personnage))
         elif numeroSpawner == 2:
-          self.zombiesList.append(Zombie(425, 50, 50, 80, 1, self.personnage))
+          self.zombiesList.append(Zombie(425, 50, 40, 50, 1, self.personnage))
         elif numeroSpawner == 3:
-          self.zombiesList.append(Zombie(125, 50, 50, 80, 1, self.personnage))
+          self.zombiesList.append(Zombie(125, 50, 40, 50, 1, self.personnage))
     
     elif self.partieTerminee:
       self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
@@ -481,12 +518,12 @@ class Jeu:
   def draw(self):
     if not self.partieTerminee:
       # Efface l'écran
-      pyxel.cls(13)
+      pyxel.cls(5)
 
       # Affichage des deux spawners de zombies
-      pyxel.rect(725, 50, 100, 100, 12)
-      pyxel.rect(425, 50, 100, 100, 12)
-      pyxel.rect(125, 50, 100, 100, 12)
+      pyxel.rect(725, 50, 100, 100, 9)
+      pyxel.rect(425, 50, 100, 100, 9)
+      pyxel.rect(125, 50, 100, 100, 9)
       
       # Affichage du personnage joueur
       self.personnage.draw()
