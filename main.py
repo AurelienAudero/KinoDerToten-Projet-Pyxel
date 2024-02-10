@@ -352,7 +352,8 @@ class Jeu:
     self.nbVagues += 1 # Incrémentation du nombre de vagues
     self.nbZombiesVagueActuelle = 0 # Réinitialisation du nombre de zombies tués dans la vague actuelle
     self.nbZombiesPourTerminerVague += 5 # Incrémentation du nombre de zombies à tuer pour terminer une vague
-    self.personnage.maxHP += 10 # Incrémentation des points de vie max du joueur
+    if self.nbVagues != 1:
+      self.personnage.maxHP += 10 # Incrémentation des points de vie max du joueur (sauf à la première vague)
     self.personnage.currentHP = self.personnage.maxHP # Régénération complète des points de vie du joueur 
     
     # Début du temps de pause avant le début de la prochaine vague
