@@ -1,5 +1,11 @@
+# macOS Files
 .DS_Store
+
+# Python files
 __pycache__
+
+# Replit files
 .replit
 poetry.lock
 pyproject.toml
+replit.nix
