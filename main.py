@@ -1,5 +1,6 @@
 # Importations des bibliothèques nécéssaires
-import pyxel, sys, sched, time
+import pyxel, sys
+from time import gmtime, mktime
 from random import randint
 from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL, Checkbutton
 
@@ -328,6 +329,11 @@ class Jeu:
       self.start(self.keybinds, self.controllerSensitivity, self.controllerDeadzone)
     else:
       self.start(self.keybinds)
+    if debug:
+      if debug4 == 1:
+        self.previousFPSTime = mktime(gmtime())
+        self.previousFPSFrame = 0
+        self.currentFPS = 0
     pyxel.run(self.update, self.draw)
 
   def start(self, keybinds, controllerSensitivity=None, controllerDeadzone=None):
@@ -524,6 +530,13 @@ class Jeu:
       if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
         import webbrowser
         webbrowser.open("https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel")
+    
+    if debug:
+      if debug4 == 1:
+        if mktime(gmtime()) - self.previousFPSTime == 1:
+          self.previousFPSTime += 1
+          self.currentFPS = pyxel.frame_count - self.previousFPSFrame
+          self.previousFPSFrame = pyxel.frame_count
 
   def draw(self):
     if not self.partieTerminee:
@@ -620,6 +633,10 @@ class Jeu:
 
       # Affiche le lien vers le GitHub du projet
       pyxel.blt(875, 510, 1, 0, 65, 75, 25, 7)
+    
+    if debug:
+      if debug4 == 1:
+        self.screenTextPrint(resLongueur-64, resHauteur-32, str(self.currentFPS))
 
 ########################
 #  PROGRAMME PRINCIPAL #
@@ -741,7 +758,7 @@ def debugSettings():
   Checkbutton(fenetre, text="Hitbox du joueur", variable=v1, anchor="w", justify="left").pack(fill='both')
   Checkbutton(fenetre, text="Hitbox des zombies", variable=v2, anchor="w", justify="left").pack(fill='both')
   Checkbutton(fenetre, text="Hitbox des tirs", variable=v3, anchor="w", justify="left").pack(fill='both')
-  Label(fenetre, text="Affichage des infos graphiques avec ALT+0 ou OPTION+0", anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Affichage des FPS", variable=v4, anchor="w", justify="left").pack(fill='both')
   Button(text="Confirmer", command=fenetre.destroy).pack()
 
   # Création de la fenêtre
