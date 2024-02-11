@@ -2,7 +2,7 @@
 import pyxel, sys
 from time import gmtime, mktime
 from random import randint
-from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL, Checkbutton
+from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL, Checkbutton, Frame
 
 ########################
 #   PROGRAMME DU JEU   #
@@ -744,6 +744,8 @@ def debugSettings():
   v2 = IntVar()
   v3 = IntVar()
   v4 = IntVar()
+  v5 = IntVar()
+  v5.set(60)
 
   # Action en cas de fermeture de la fenêtre
   def fermetureFenetre():
@@ -753,13 +755,17 @@ def debugSettings():
       fenetre.destroy()
 
   # Ajout du contenu à la fenêtre
-  Label(fenetre, text="MENU DEBUG").pack()
-  Label(fenetre, text="Quels éléments voulez-vous activer ?", anchor="w", justify="left").pack(fill='both')
+  Label(fenetre, text="MENU DEBUG", bg='red').pack()
+  Label(fenetre, text="Quels éléments voulez-vous activer ?", anchor="w", justify="left").pack(fill='both', pady=(0,10))
   Checkbutton(fenetre, text="Hitbox du joueur", variable=v1, anchor="w", justify="left").pack(fill='both')
   Checkbutton(fenetre, text="Hitbox des zombies", variable=v2, anchor="w", justify="left").pack(fill='both')
   Checkbutton(fenetre, text="Hitbox des tirs", variable=v3, anchor="w", justify="left").pack(fill='both')
-  Checkbutton(fenetre, text="Affichage des FPS", variable=v4, anchor="w", justify="left").pack(fill='both')
-  Button(text="Confirmer", command=fenetre.destroy).pack()
+  Checkbutton(fenetre, text="Affichage des FPS", variable=v4, anchor="w", justify="left").pack(fill='both', pady=(0,10))
+  fpsSelectorFrame = Frame(fenetre)
+  Label(fpsSelectorFrame, text="Limite de FPS en jeu :", anchor="w", justify="left").pack(side='left', pady=(15,0))
+  Scale(fpsSelectorFrame, from_=1, to=1000, orient=HORIZONTAL, variable=v5).pack(side='right')
+  fpsSelectorFrame.pack(fill='both')
+  Button(text="Confirmer", command=fenetre.destroy).pack(pady=(10,0))
 
   # Création de la fenêtre
   fenetre.protocol("WM_DELETE_WINDOW", fermetureFenetre)
@@ -767,9 +773,9 @@ def debugSettings():
 
   # Retour du choix de l'utilisateur
   if v1 == -1:
-    return (-1,-1,-1,-1)
+    return (-1,-1,-1,-1,-1)
   else:
-    return (v1.get(),v2.get(),v3.get(),v4.get())
+    return (v1.get(),v2.get(),v3.get(),v4.get(),v5.get())
   
 # Fonction pour demander à l'utilisateur les contrôles à utiliser
 def askPlayer():
@@ -832,7 +838,7 @@ def askPlayer():
 if sysArgs:
   if sysArgs[0] == "--debug=True":
     debug = True
-    debug1, debug2, debug3, debug4 = debugSettings()
+    debug1, debug2, debug3, debug4, debug5 = debugSettings()
     if debug1 == -1:
       sys.exit()
   if (sysArgs[0] == "--help") or (sysArgs[0] == "--h"):
@@ -846,6 +852,9 @@ if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   resLongueur = 960
   resHauteur = 540
   fps = 60
+  if debug:
+    if debug5 != 60:
+      fps = debug5
   if (userChosenKeybinds == 1) or (userChosenKeybinds == 2) or (userChosenKeybinds == 3):
     del(controllerSensitivity)
     del(controllerDeadzone)
