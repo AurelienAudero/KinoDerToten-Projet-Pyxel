@@ -9,3 +9,4 @@ __pycache__
 poetry.lock
 pyproject.toml
 replit.nix
+venv
