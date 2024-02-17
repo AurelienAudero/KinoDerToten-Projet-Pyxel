@@ -5,7 +5,7 @@
 [![Release](https://img.shields.io/github/v/release/AurelienAudero/KinoDerToten-Projet-Pyxel?label=Download)](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest)
 -----
 
-[Français](README.md) | **English** | [Español](README_ES.md)
+[Français](README.md) | **English** | [Español](README_ES.md) | [Deutsch](README_DE.md) | [Italiano](README_IT.md)
 
 ## Contents
 - [About the game](#about-the-game)
@@ -76,7 +76,7 @@ If you are using a Linux system, install SDL2 using your package manager:
     - [Aurélien Audero](https://github.com/AurelienAudero)
     - [Axel Thibert](https://github.com/Oxwerth)
     - [Tony Baca](https://github.com/Thidokachi)
-- Remerciments :
+- Acknowledgment :
     - Amine Ouichen *(for the system allowing the shots to go in the direction of the crosshair)*
     - Timothée Ané *(for the system allowing the shots to go in the direction of the crosshair)*
 
