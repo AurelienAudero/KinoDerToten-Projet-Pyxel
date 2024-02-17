@@ -574,7 +574,7 @@ class Jeu:
       
       # Affichage de la barre d'HP du joueur
       pyxel.rect(740, 25, 200, 10, 8)
-      pyxel.rect(740, 25, self.personnage.currentHP*2, 10, 11)
+      pyxel.rect(740, 25, (self.personnage.currentHP/self.personnage.maxHP)*200, 10, 11)
     
     elif self.partieTerminee:
       # Efface l'écran
