@@ -548,9 +548,6 @@ class Jeu:
       pyxel.rect(425, 50, 100, 100, 9)
       pyxel.rect(125, 50, 100, 100, 9)
       
-      # Affichage du personnage joueur
-      self.personnage.draw()
-      
       # Affichage des tirs
       for element in self.tirsList:
         element.draw()
@@ -558,6 +555,9 @@ class Jeu:
       # Affichage des zombies
       for element in self.zombiesList:
         element.draw()
+
+      # Affichage du personnage joueur
+      self.personnage.draw()
 
       # Affichage du réticule de visée
       self.personnage.reticule.draw()
