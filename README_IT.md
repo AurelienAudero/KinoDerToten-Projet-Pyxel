@@ -1,7 +1,7 @@
 <img src="Images/Readme-Title.png" width="525vw">
 
 [![Stars](https://img.shields.io/github/stars/AurelienAudero/KinoDerToten-Projet-Pyxel?label=Stars)](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/stargazers)
-[![Forks](https://img.shields.io/badge/Forks-not%20authorized%20(see%20license%20for%20more%20info)-red)](LICENSE)
+[![Forks](https://img.shields.io/badge/Forks-non%20autorizzato%20(vedi%20licenza%20per%20maggiori%20informazioni)-red)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/AurelienAudero/KinoDerToten-Projet-Pyxel?label=Download)](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest)
 -----
 
@@ -14,7 +14,7 @@
     - [Requisiti](#requisiti)
     - [Installazione di Pyxel](#installazione-di-pyxel)
     - [Aggiorna Pyxel](#aggiorna-pyxel)
-    - [Installazione di SDL2 (su Linux)](#installazione-di-SDL2-su-linux)
+    - [Installazione di SDL2 (su Linux)](#installazione-di-sdl2-su-linux)
     - [Come iniziare il gioco](#come-iniziare-il-gioco)
 - [Crediti](#crediti)
 
