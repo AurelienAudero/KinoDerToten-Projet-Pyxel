@@ -76,7 +76,7 @@ Si está utilizando un sistema Linux, instale SDL2 usando su administrador de pa
     - [Aurélien Audero](https://github.com/AurelienAudero)
     - [Axel Thibert](https://github.com/Oxwerth)
     - [Tony Baca](https://github.com/Thidokachi)
-- Remercios:
+- Reconocimientos:
     - Amine Ouichen *(para el sistema que permite que los disparos vayan en dirección a la mira)*
     - Timothée Ané *(para el sistema que permite que los disparos vayan en dirección a la mira)*
 
