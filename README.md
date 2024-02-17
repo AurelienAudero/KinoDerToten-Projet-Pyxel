@@ -5,7 +5,7 @@
 [![Release](https://img.shields.io/github/v/release/AurelienAudero/KinoDerToten-Projet-Pyxel?label=Download)](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest)
 -----
 
-**Français** | [English](README_EN.md) | [Español](README_ES.md)
+**Français** | [English](README_EN.md) | [Español](README_ES.md) | [Deutsch](README_DE.md) | [Italiano](README_IT.md)
 
 ## Sommaire
 - [Présentation du jeu](#présentation-du-jeu)
