@@ -5,7 +5,7 @@
 [![Release](https://img.shields.io/github/v/release/AurelienAudero/KinoDerToten-Projet-Pyxel?label=Download)](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest)
 -----
 
-**Français** | [English](README_EN.md)
+**Français** | [English](README_EN.md) | [Español](README_ES.md)
 
 ## Sommaire
 - [Présentation du jeu](#présentation-du-jeu)
@@ -13,6 +13,7 @@
 - [Installation](#installation)
     - [Configuration requise](#configuration-requise)
     - [Installation de Pyxel](#installation-de-pyxel)
+    - [Mettre à jour Pyxel](#mettre-à-jour-pyxel)
     - [Installation de SDL2 (pour les systèmes Linux)](#installation-de-sdl2-sur-linux)
     - [Comment lancer le jeu](#comment-lancer-le-jeu)
 - [Crédits](#crédits)
@@ -75,7 +76,7 @@ Si vous utilisez un système Linux, installer SDL2 à l'aide de votre gestionnai
     - [Aurélien Audero](https://github.com/AurelienAudero)
     - [Axel Thibert](https://github.com/Oxwerth)
     - [Tony Baca](https://github.com/Thidokachi)
-- Remerciments :
+- Remerciements :
     - Amine Ouichen *(pour le système permettant aux tirs de partir dans la direction du viseur)*
     - Timothée Ané *(pour le système permettant aux tirs de partir dans la direction du viseur)*
 
