@@ -76,7 +76,7 @@ If you are using a Linux system, install SDL2 using your package manager:
     - [Aurélien Audero](https://github.com/AurelienAudero)
     - [Axel Thibert](https://github.com/Oxwerth)
     - [Tony Baca](https://github.com/Thidokachi)
-- Acknowledgment :
+- Acknowledgments :
     - Amine Ouichen *(for the system allowing the shots to go in the direction of the crosshair)*
     - Timothée Ané *(for the system allowing the shots to go in the direction of the crosshair)*
 
