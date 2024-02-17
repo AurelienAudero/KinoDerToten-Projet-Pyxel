@@ -76,7 +76,7 @@ Wenn Sie ein Linux-System verwenden, installieren Sie SDL2 mit Ihrem Paketmanage
     - [Aurélien Audero](https://github.com/AurelienAudero)
     - [Axel Thibert](https://github.com/Oxwerth)
     - [Tony Baca](https://github.com/Thidokachi)
-- Erinnerungen :
+- Anerkennungen :
     - Amine Ouichen *(für das System, das die Schüsse in Richtung des Fadenkreuzes ermöglicht)*
     - Timothée Ané *(für das System, das die Schüsse in Richtung des Fadenkreuzes ermöglicht)*
 
