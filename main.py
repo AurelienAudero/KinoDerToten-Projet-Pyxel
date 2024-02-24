@@ -563,9 +563,9 @@ class Jeu:
       self.personnage.reticule.draw()
 
       # Affiche le score actuel du joueur
-      pyxel.blt(15, 15, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
+      pyxel.blt(15, 20, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
       self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
-      self.screenTextPrint(120, 15, self.personnage.scoreTXT)
+      self.screenTextPrint(120, 20, self.personnage.scoreTXT)
 
       # Affiche le numéro de vague actuel
       pyxel.blt(15, 45, 0, 0, 48, 91, 19, 0) # Affiche le texte "Vague :"
@@ -635,6 +635,7 @@ class Jeu:
       pyxel.blt(875, 510, 1, 0, 65, 75, 25, 7)
     
     if debug:
+      pyxel.blt(5, 5, 0, 0, 112, 77, 10, 0) # Affiche un indicateur sur l'écran quand le mode debug est activé
       if debug4 == 1:
         self.screenTextPrint(resLongueur-64, resHauteur-32, str(self.currentFPS))
 
