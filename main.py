@@ -846,7 +846,6 @@ if sysArgs:
     print("Pour plus d'informations, veuillez consulter le GitHub du projet : https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/")
     sys.exit()
 
-# Lancement du jeu
 userChosenKeybinds, controllerSensitivity, controllerDeadzone = askPlayer()
 
 if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
