@@ -16,6 +16,8 @@
 
 # Importations des bibliothèques nécéssaires
 import pyxel, sys
+from playsound import playsound
+from threading import Thread
 from time import gmtime, mktime
 from random import randint
 from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL, Checkbutton, Frame
@@ -368,10 +370,11 @@ class Zombie:
         pyxel.rectb(self.x, self.y, self.width, self.height, 8) # Affichage de la hitbox du zombie (si activé dans le debug)
 
 class Jeu:
-  def __init__(self, l, h, fps, keybinds, controllerSensitivity=None, controllerDeadzone=None):
+  def __init__(self, l, h, fps, keybinds, musicEnabled, controllerSensitivity=None, controllerDeadzone=None):
     pyxel.init(l, h, title="Kino der toten", fps=fps)
     pyxel.load("KinoDerToten.pyxres")
     self.keybinds = keybinds
+    self.musicEnabled = musicEnabled
     if (self.keybinds == 4) or (self.keybinds == 5):
       self.controllerSensitivity = controllerSensitivity
       self.controllerDeadzone = controllerDeadzone
@@ -384,6 +387,10 @@ class Jeu:
         self.previousFPSFrame = 0
         self.currentFPS = 0
     pyxel.run(self.update, self.draw)
+
+  def loopGameMusic(self):
+    while True:
+      playsound('KinoDerTotenOST.mp3', block=True)
 
   def start(self, keybinds, controllerSensitivity=None, controllerDeadzone=None):
     """
@@ -420,6 +427,10 @@ class Jeu:
     self.startNewWave() # Démarrage de la première vague
     pyxel.mouse(False) # Désactive le curseur de la souris
     pyxel.images[1].load(0,0, "RichtofenSpriteSheet.png") # Chargement des sprites de Richtofen (joueur)
+    if self.musicEnabled: # Si la musique est activée
+      musicThread = Thread(target=self.loopGameMusic, name="musicThread") # Création d'un thread pour la musique du jeu
+      musicThread.daemon = True # Le thread s'arrête lorsque le programme principal s'arrête
+      musicThread.start() # Démarrage du thread pour la musique du jeu
 
   def startNewWave(self):
     """
@@ -764,21 +775,24 @@ def fenetreChoix(question, reponses):
   fenetre = Tk()
   fenetre.title("Kino der toten")
   fenetre.eval('tk::PlaceWindow . center')
-  v = IntVar()
+  v1 = IntVar()
+  v2 = IntVar(value=1)
   i = 1
 
   # Action en cas de fermeture de la fenêtre
   def fermetureFenetre():
-    nonlocal v
+    nonlocal v1
     if messagebox.askokcancel("Kino der toten", "Voulez-vous quitter le jeu ?"):
-      v = -1
+      v1 = -1
       fenetre.destroy()
 
   # Ajout du contenu à la fenêtre
   Label(fenetre, text=question).pack()
   for element in reponses:
-    Radiobutton(fenetre, text=element, variable=v, value=i).pack(anchor="w")
+    Radiobutton(fenetre, text=element, variable=v1, value=i, anchor="w", justify="left").pack(fill='both')
     i += 1
+  Label(fenetre, text="Options").pack(pady=(10,0))
+  Checkbutton(fenetre, text="Activer la musique du jeu", variable=v2, anchor="w", justify="left").pack(fill='both')
   Button(text="Confirmer", command=fenetre.destroy).pack()
 
   # Création de la fenêtre
@@ -786,10 +800,10 @@ def fenetreChoix(question, reponses):
   fenetre.mainloop()
 
   # Retour du choix de l'utilisateur
-  if v == -1:
-    return -1
+  if v1 == -1:
+    return (-1,-1)
   else:
-    return v.get()
+    return (v1.get(),v2.get())
 
 # Fonction pour choisir la sensibilité et la zone morte de la manette
 def choixSensibiliteEtZoneMorte():
@@ -891,7 +905,7 @@ def askPlayer():
 
   userChosenKeybinds = 0
   while userChosenKeybinds == 0 :
-    userChosenKeybinds = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles", "Manette - Stick Gauche + Stick Droit", "Manette - Flèches directionnelles + Stick Droit"])
+    userChosenKeybinds, musicEnabled = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles", "Manette - Stick Gauche + Stick Droit", "Manette - Flèches directionnelles + Stick Droit"])
     # Affiche une erreur si aucun choix n'est fait par l'utilisateur
     if userChosenKeybinds == 0:
       fenetre = Tk()
@@ -934,9 +948,9 @@ def askPlayer():
         fenetre.destroy()
   
   if (userChosenKeybinds == 4) or (userChosenKeybinds == 5):
-    return (userChosenKeybinds, controllerSensitivity, controllerDeadzone)
+    return (userChosenKeybinds, musicEnabled, controllerSensitivity, controllerDeadzone)
   else:
-    return (userChosenKeybinds, None, None)
+    return (userChosenKeybinds, musicEnabled, None, None)
 
 # Lancement du jeu
 if sysArgs:
@@ -949,7 +963,7 @@ if sysArgs:
     print("Pour plus d'informations, veuillez consulter le GitHub du projet : https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/")
     sys.exit()
 
-userChosenKeybinds, controllerSensitivity, controllerDeadzone = askPlayer()
+userChosenKeybinds, musicEnabled, controllerSensitivity, controllerDeadzone = askPlayer()
 
 if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   resLongueur = 960
@@ -961,6 +975,6 @@ if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   if (userChosenKeybinds == 1) or (userChosenKeybinds == 2) or (userChosenKeybinds == 3):
     del(controllerSensitivity)
     del(controllerDeadzone)
-    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds)
+    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds, musicEnabled)
   elif (userChosenKeybinds == 4) or (userChosenKeybinds == 5):
-    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds, controllerSensitivity, controllerDeadzone)
+    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds, musicEnabled, controllerSensitivity, controllerDeadzone)
