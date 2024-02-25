@@ -12,8 +12,8 @@
 - [Main features of the game](#main-features-of-the-game)
 - [Installation](#installation)
     - [Requirements](#requirements)
-    - [Installing Pyxel](#installing-pyxel)
-    - [Update Pyxel](#update-pyxel)
+    - [Installing Pyxel and Playsound](#installing-pyxel-and-playsound)
+    - [Update Pyxel and Playsound](#update-pyxel-and-playsound)
     - [Installing SDL2 (on Linux)](#installing-sdl2-on-linux)
     - [How to start the game](#how-to-start-the-game)
 - [Credits](#credits)
@@ -44,19 +44,21 @@ Devastating weapons, powerful power-ups and well-hidden secrets will help you po
     - [X] macOS X 10.6 or later
     - [X] Linux
 - [X] [Python 3.7 or later](https://www.python.org/downloads/)
-- [X] [Pyxel 2.0.6 or later](#installing-pyxel)
+- [X] [Pyxel 2.0.6 or later](#installing-pyxel-and-playsound)
+- [X] [Playsound 1.3.0 or later](#installing-pyxel-and-playsound)
 - [X] [The latest version of SDL2 (for Linux systems)](#installing-sdl2-on-linux)
 
-### Installing Pyxel
+### Installing Pyxel and Playsound
 After installing Python, run the following command in a terminal:
 ```
-pip install pyxel
+pip install --upgrade setuptools wheel
+pip install pyxel playsound
 ```
 
-### Update Pyxel
-If you have already installed Pyxel, execute the following command in a terminal to update it:
+### Update Pyxel and Playsound
+If you have already installed Pyxel and Playsound, execute the following command in a terminal to update it:
 ```
-pip install --upgrade pyxel
+pip install --upgrade setuptools wheel pyxel playsound
 ```
 
 ### Installing SDL2 (on Linux)
@@ -69,7 +71,7 @@ If you are using a Linux system, install SDL2 using your package manager:
 - Download the latest stable version of the game [here](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest).
 - Unzip the downloaded archive
 - Open a terminal in the directory where the game is located
-- Execute one of the following commands : `python3 main.py` or `python3 ./main.py`
+- Execute one of the following commands : `python3 main.py` or `python main.py`
 
 ## Credits
 - Creators of the game :

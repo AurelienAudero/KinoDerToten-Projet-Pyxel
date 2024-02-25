@@ -12,8 +12,8 @@
 - [Hauptmerkmale des Spiels](#hauptmerkmale-des-spiels)
 - [Installation](#installation)
     - [Anforderungen](#anforderungen)
-    - [Pyxel installieren](#pyxel-installieren)
-    - [Aktualisieren Sie Pyxel](#aktualisieren-sie-pyxel)
+    - [Pyxel und Playsound installieren](#pyxel-und-playsound-installieren)
+    - [Aktualisieren Sie Pyxel und Playsound](#aktualisieren-sie-pyxel-und-playsound)
     - [SDL2 installieren (unter Linux)](#sdl2-installieren-unter-linux)
     - [So starten Sie das Spiel](#so-starten-sie-das-spiel)
 - [Credits](#credits)
@@ -45,18 +45,20 @@ Verheerende Waffen, mächtige Power-Ups und gut versteckte Geheimnisse helfen Ih
     - [X] Linux
 - [X] [Python 3.7 oder höher](https://www.python.org/downloads/)
 - [X] [Pyxel 2.0.6 oder höher](#pyxel-installieren)
+- [X] [Playsound 1.3.0 oder höher](#pyxel-und-playsound-installieren)
 - [X] [Die neueste Version von SDL2 (für Linux-Systeme)](#sdl2-installieren-unter-linux)
 
-### Pyxel installieren
+### Pyxel und Playsound installieren
 Führen Sie nach der Installation von Python den folgenden Befehl in einem Terminal aus:
 ```
-pip install pyxel
+pip install --upgrade setuptools wheel
+pip install pyxel playsound
 ```
 
-### Aktualisieren Sie Pyxel
+### Aktualisieren Sie Pyxel und Playsound
 Wenn Sie Pyxel bereits installiert haben, führen Sie den folgenden Befehl in einem Terminal aus, um es zu aktualisieren:
 ```
-pip install --upgrade pyxel
+pip install --upgrade setuptools wheel pyxel playsound
 ```
 
 ### SDL2 installieren (unter Linux)
@@ -69,7 +71,7 @@ Wenn Sie ein Linux-System verwenden, installieren Sie SDL2 mit Ihrem Paketmanage
 - Laden Sie die neueste stabile Version des Spiels herunter [hier](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest).
 - Entpacken Sie das heruntergeladene Archiv
 - Öffnen Sie ein Terminal in dem Verzeichnis, in dem sich das Spiel befindet
-- Führen Sie einen der folgenden Befehle aus: `python3 main.py` or `python3 ./main.py`
+- Führen Sie einen der folgenden Befehle aus: `python3 main.py` or `python main.py`
 
 ## Credits
 - Schöpfer des Spiels :

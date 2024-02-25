@@ -12,8 +12,8 @@
 - [Caratteristiche principali del gioco](#caratteristiche-principali-del-gioco)
 - [Installazione](#installazione)
     - [Requisiti](#requisiti)
-    - [Installazione di Pyxel](#installazione-di-pyxel)
-    - [Aggiorna Pyxel](#aggiorna-pyxel)
+    - [Installazione di Pyxel e Playsound](#installazione-di-pyxel-e-playsound)
+    - [Aggiorna Pyxel e Playsound](#aggiorna-pyxel-e-playsound)
     - [Installazione di SDL2 (su Linux)](#installazione-di-sdl2-su-linux)
     - [Come iniziare il gioco](#come-iniziare-il-gioco)
 - [Crediti](#crediti)
@@ -44,16 +44,17 @@ Armi devastanti, potenti potenziamenti e segreti ben nascosti ti aiuteranno a po
     - [X] macOS X 10.6 o successivo
     - [X] Linux
 - [X] [Python 3.7 o successivo](https://www.python.org/downloads/)
-- [X] [Pyxel 2.0.6 o successivo](#installazione-di-pyxel)
+- [X] [Pyxel 2.0.6 o successivo](#installazione-di-pyxel-e-playsound)
+- [ ] [Playsound 1.3.0 o successivo](#installazione-di-pyxel-e-playsound)
 - [X] [L'ultima versione di SDL2 (per sistemi Linux)](#installazione-di-SDL2-su-linux)
 
-### Installazione di Pyxel
+### Installazione di Pyxel e Playsound
 Dopo aver installato Python, esegui il seguente comando in un terminale:
 ```
 pip install pyxel
 ```
 
-### Aggiorna Pyxel
+### Aggiorna Pyxel e Playsound
 Se hai già installato Pyxel, esegui il seguente comando in un terminale per aggiornarlo:
 ```
 pip install --upgrade pyxel
@@ -69,7 +70,7 @@ Se utilizzi un sistema Linux, installa SDL2 utilizzando il gestore pacchetti:
 - Scarica l'ultima versione stabile del gioco [qui](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest).
 - Decomprimere l'archivio scaricato
 - Apri un terminale nella directory in cui si trova il gioco
-- Esegui uno dei seguenti comandi: `python3 main.py` or `python3 ./main.py`
+- Esegui uno dei seguenti comandi: `python3 main.py` or `python main.py`
 
 ## Crediti
 - Creatori del gioco :
