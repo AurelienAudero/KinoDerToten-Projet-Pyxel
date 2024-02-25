@@ -12,8 +12,8 @@
 - [Características principales del juego](#características-principales-del-juego)
 - [Instalación](#instalación)
     - [Requisitos](#requisitos)
-    - [Instalación de Pyxel](#instalación-de-pyxel)
-    - [Actualizar Pyxel](#actualizar-pyxel)
+    - [Instalación de Pyxel y Playsound](#instalación-de-pyxel-y-playsound)
+    - [Actualizar Pyxel y Playsound](#actualizar-pyxel-y-playsound)
     - [Instalación de SDL2 (en Linux)](#instalación-de-sdl2-en-linux)
     - [Cómo empezar el juego](#cómo-empezar-el-juego)
 - [Créditos](#créditos)
@@ -44,19 +44,21 @@ Armas devastadoras, poderosos potenciadores y secretos bien escondidos te ayudar
     - [X] macOS X 10.6 o posterior
     - [X] Linux
 - [X] [Python 3.7 o posterior](https://www.python.org/downloads/)
-- [X] [Pyxel 2.0.6 o posterior](#instalación-de-pyxel)
+- [X] [Pyxel 2.0.6 o posterior](#instalación-de-pyxel-y-playsound)
+- [X] [Playsound 1.3.0 o posterior](#instalación-de-pyxel-y-playsound)
 - [X] [La última versión de SDL2 (para sistemas Linux)](#instalación-de-sdl2-en-linux)
 
-### Instalación de Pyxel
+### Instalación de Pyxel y Playsound
 Después de instalar Python, ejecute el siguiente comando en una terminal:
 ```
-pip install pyxel
+pip install --upgrade setuptools wheel
+pip install pyxel playsound
 ```
 
-### Actualizar Pyxel
-Si ya instaló Pyxel, ejecute el siguiente comando en una terminal para actualizarlo:
+### Actualizar Pyxel y Playsound
+Si ya instaló Pyxel y Playsound, ejecute el siguiente comando en una terminal para actualizarlo:
 ```
-pip install --upgrade pyxel
+pip install --upgrade setuptools wheel pyxel playsound
 ```
 
 ### Instalación de SDL2 (en Linux)
@@ -69,7 +71,7 @@ Si está utilizando un sistema Linux, instale SDL2 usando su administrador de pa
 - Descarga la última versión estable del juego [aquí](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest).
 - Descomprime el archivo descargado
 - Abra una terminal en el directorio donde se encuentra el juego.
-- Ejecute uno de los siguientes comandos: `python3 main.py` or `python3 ./main.py`
+- Ejecute uno de los siguientes comandos: `python3 main.py` or `python main.py`
 
 ## Créditos
 - Creadores del juego:
