@@ -47,6 +47,8 @@ class Personnage:
     self.maxPlayerAmmo = 15 # Munitions max dans le chargeur de l'arme du joueur
     self.ammoReloadingStatus = 100 # Etat de rechargement de l'arme du joueur (en % de progression)
     self.ammoReloadingCooldown = 2 # Temps de rechargement de l'arme du joueur (en secondes)
+    self.lastShot = 0 # Numéro de frame où le dernier tir à été effectué par le joueur
+    self.shotCooldown = 30 # Temps d'attente entre chaque tir (en frames)
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -141,7 +143,6 @@ class Personnage:
                 self.numberOfSteps += 1
       if pyxel.btnp(self.personnageTir):
         if self.currentPlayerAmmo > 0:
-          self.currentPlayerAmmo -= 1
           return self.x+(self.width/2), self.y+(self.height/2)
         elif self.currentPlayerAmmo == 0:
           return None
@@ -197,7 +198,6 @@ class Personnage:
                 self.numberOfSteps += 1
       if pyxel.btnp(self.personnageTir):
         if self.currentPlayerAmmo > 0:
-          self.currentPlayerAmmo -= 1
           return self.x+(self.width/2), self.y+(self.height/2)
         elif self.currentPlayerAmmo == 0:
           return None
@@ -496,7 +496,9 @@ class Jeu:
       v = self.personnage.move()
       
       # Création d'un tir si le joueur appuie sur la touche de tir
-      if v is not None:
+      if (v is not None) and (pyxel.frame_count-self.personnage.lastShot > self.personnage.shotCooldown):
+        self.personnage.lastShot = pyxel.frame_count
+        self.personnage.currentPlayerAmmo -= 1
         self.tirsList.append(Tir(v[0], v[1], self.personnage))
 
       # Déplacement des tirs existants et suppression des tirs terminés
