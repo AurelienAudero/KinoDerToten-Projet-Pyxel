@@ -281,6 +281,16 @@ class Tir:
     self.player_y = personnage.y
 
   def checkCoordonnees(self, player_x, player_y):
+    """
+    Détermine la direction du tir par rapport à la position du joueur.
+
+    Args:
+        player_x: La position x du joueur.
+        player_y: La position y du joueur.
+
+    Returns:
+        La fonction retourne deux booléens correspondant à la direction du tir par rapport à la position du joueur.
+    """
     if self.viseur_x > player_x:
       coord_x = True
     else :
@@ -360,6 +370,17 @@ class Jeu:
     pyxel.run(self.update, self.draw)
 
   def start(self, keybinds, controllerSensitivity=None, controllerDeadzone=None):
+    """
+    Initialise les variables du jeu au début de la partie.
+
+    Args:
+        keybinds: Le type de contrôles choisi par le joueur.
+        controllerSensitivity: La sensibilité des sticks analogiques de la manette (facultatif).
+        controllerDeadzone: La zone morte des sticks analogiques de la manette (facultatif).
+
+    Returns:
+        La fonction ne retourne rien mais opère des changements sur les variables de la classe.
+    """
     # Initialisation du personnage joueur
     if (keybinds == 4) or (keybinds == 5):
       self.personnage = Personnage(450, 210, 40, 50, keybinds, controllerSensitivity, controllerDeadzone) # Si le joueur joue à la manette
@@ -385,6 +406,15 @@ class Jeu:
     pyxel.images[1].load(0,0, "RichtofenSpriteSheet.png") # Chargement des sprites de Richtofen (joueur)
 
   def startNewWave(self):
+    """
+    Démarre une nouvelle vague de zombies.
+
+    Args:
+        Aucun argument n'est requis.
+
+    Returns:
+        La fonction ne retourne rien mais opère des changements sur les variables de la classe.
+    """
     self.tempsSpawnMobActuel = 3600 # Arrêt du spawn des zombies
     self.zombiesList = [] # Suppression de tous les zombies
     self.nbVagues += 1 # Incrémentation du nombre de vagues
@@ -399,6 +429,17 @@ class Jeu:
     self.attenteNouvelleVague = True
   
   def screenTextPrint(self, x, y, text):
+    """
+    Affiche un texte sur l'écran aux coordonnées indiquées.
+
+    Args:
+        x: Le coordonnée x de l'écran où afficher le texte.
+        y: Le coordonnée y de l'écran où afficher le texte.
+        text: Le texte a afficher.
+
+    Returns:
+        La fonction ne retourne rien mais affiche le texte à l'écran en utilisant la bibliothèque Pyxel.
+    """
     assert type(text) == str, "text doit être une chaîne de caractères"
     for i in range(len(text)):
         if text[i] == "1":
