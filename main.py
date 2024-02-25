@@ -27,6 +27,10 @@ class Personnage:
     self.currentHP = 100.0 # Points de vie actuels du joueur
     self.maxHP = 100.0 # Points de vie max du joueur
     self.vitesse = 3 # Vitesse de déplacement du personnage
+    self.currentPlayerAmmo = 15 # Munitions dans le chargeur de l'arme du joueur
+    self.maxPlayerAmmo = 15 # Munitions max dans le chargeur de l'arme du joueur
+    self.ammoReloadingStatus = 100 # Etat de rechargement de l'arme du joueur (en % de progression)
+    self.ammoReloadingCooldown = 2 # Temps de rechargement de l'arme du joueur (en secondes)
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -35,6 +39,7 @@ class Personnage:
       self.personnageBas = pyxel.KEY_S
       self.personnageDroite = pyxel.KEY_D
       self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
+      self.personnageRecharger = pyxel.KEY_R
       self.reticule = Reticule(self.x, self.y, self.keybinds)
     elif self.keybinds == 2 :
       self.personnageHaut = pyxel.KEY_W
@@ -42,6 +47,7 @@ class Personnage:
       self.personnageBas = pyxel.KEY_S
       self.personnageDroite = pyxel.KEY_D
       self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
+      self.personnageRecharger = pyxel.KEY_R
       self.reticule = Reticule(self.x, self.y, self.keybinds)
     elif self.keybinds == 3 :
       self.personnageHaut = pyxel.KEY_UP
@@ -49,11 +55,13 @@ class Personnage:
       self.personnageBas = pyxel.KEY_DOWN
       self.personnageDroite = pyxel.KEY_RIGHT
       self.personnageTir = pyxel.MOUSE_BUTTON_LEFT
+      self.personnageRecharger = pyxel.KEY_RSHIFT
       self.reticule = Reticule(self.x, self.y, self.keybinds)
     elif self.keybinds == 4 :
       self.personnageAxeY = pyxel.GAMEPAD1_AXIS_LEFTY
       self.personnageAxeX = pyxel.GAMEPAD1_AXIS_LEFTX
       self.personnageTir = pyxel.GAMEPAD1_BUTTON_A
+      self.personnageRecharger = pyxel.GAMEPAD1_BUTTON_X
       self.controllerSensitivity = controllerSensitivity
       self.controllerDeadzone = controllerDeadzone
       self.reticule = Reticule(self.x, self.y, self.keybinds, self.controllerSensitivity, self.controllerDeadzone)
@@ -63,6 +71,7 @@ class Personnage:
       self.personnageBas = pyxel.GAMEPAD1_BUTTON_DPAD_DOWN
       self.personnageDroite = pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT
       self.personnageTir = pyxel.GAMEPAD1_BUTTON_A
+      self.personnageRecharger = pyxel.GAMEPAD1_BUTTON_X
       self.controllerSensitivity = controllerSensitivity
       self.controllerDeadzone = controllerDeadzone
       self.reticule = Reticule(self.x, self.y, self.keybinds, self.controllerSensitivity, self.controllerDeadzone)
@@ -115,7 +124,14 @@ class Personnage:
               else:
                 self.numberOfSteps += 1
       if pyxel.btnp(self.personnageTir):
-        return self.x+(self.width/2), self.y+(self.height/2)
+        if self.currentPlayerAmmo > 0:
+          self.currentPlayerAmmo -= 1
+          return self.x+(self.width/2), self.y+(self.height/2)
+        elif self.currentPlayerAmmo == 0:
+          return None
+      if pyxel.btnp(self.personnageRecharger) and (self.ammoReloadingStatus == 100) and (self.currentPlayerAmmo < self.maxPlayerAmmo):
+        self.ammoReloadingStatus = 0
+        self.currentPlayerAmmo = 0
     
     # Contrôles avec les sticks analogiques de la manette
     elif (self.keybinds == 4) or (self.keybinds == 5):
@@ -164,7 +180,14 @@ class Personnage:
               else:
                 self.numberOfSteps += 1
       if pyxel.btnp(self.personnageTir):
-        return self.x+(self.width/2), self.y+(self.height/2)
+        if self.currentPlayerAmmo > 0:
+          self.currentPlayerAmmo -= 1
+          return self.x+(self.width/2), self.y+(self.height/2)
+        elif self.currentPlayerAmmo == 0:
+          return None
+      if pyxel.btnp(self.personnageRecharger) and (self.ammoReloadingStatus == 100) and (self.currentPlayerAmmo < self.maxPlayerAmmo):
+        self.ammoReloadingStatus = 0
+        self.currentPlayerAmmo = 0
     
     return None
           
@@ -400,6 +423,8 @@ class Jeu:
           pyxel.blt(x+(16*i), y, 0, 144, 24, 11, 19, 0) # Affichage du chiffre 0
         elif text[i] == ".":
           pyxel.blt(x+(16*i), y, 0, 158, 24, 11, 19, 0) # Affichage de la virgule
+        elif text[i] == "/":
+          pyxel.blt(x+(16*i), y, 0, 170, 24, 11, 19, 0) # Affichage de la virgule
 
   def update(self): 
     if not self.partieTerminee:
@@ -433,6 +458,14 @@ class Jeu:
           self.attenteNouvelleVague = False
           self.tempsSpawnMobActuel = self.tempsSpawnMobBase - 1
       
+      # Temps d'attente pour le rechargement de l'arme du joueur
+      if self.personnage.ammoReloadingStatus < 100:
+        if self.personnage.ammoReloadingStatus + (100/(fps*self.personnage.ammoReloadingCooldown)) <= 100:
+          self.personnage.ammoReloadingStatus += 100/(fps*self.personnage.ammoReloadingCooldown)
+        else:
+          self.personnage.ammoReloadingStatus = 100
+          self.personnage.currentPlayerAmmo = self.personnage.maxPlayerAmmo
+
       # Détéction de la superposition de deux entités
       def isOverlapping(entity1, entity2):
         if entity1.x+entity1.width > entity2.x and entity2.x+entity2.width > entity1.x and entity1.y+entity1.height > entity2.y and entity2.y+entity2.height > entity1.y:
@@ -575,6 +608,14 @@ class Jeu:
       # Affichage de la barre d'HP du joueur
       pyxel.rect(740, 25, 200, 10, 8)
       pyxel.rect(740, 25, (self.personnage.currentHP/self.personnage.maxHP)*200, 10, 11)
+
+      # Affichage du nombre de munitions restantes dans le chargeur de l'arme du joueur
+      if self.personnage.ammoReloadingStatus == 100:
+        self.screenTextPrint(15, resHauteur-48, "{}/{}".format(self.personnage.currentPlayerAmmo,self.personnage.maxPlayerAmmo))
+      else:
+        self.screenTextPrint(15, resHauteur-48, "{}/{}".format(round((self.personnage.maxPlayerAmmo/100)*self.personnage.ammoReloadingStatus),self.personnage.maxPlayerAmmo))
+        pyxel.rect(15, resHauteur-24, 200, 10, 15)
+        pyxel.rect(15, resHauteur-24, self.personnage.ammoReloadingStatus*2, 10, 13)
     
     elif self.partieTerminee:
       # Efface l'écran
@@ -799,17 +840,17 @@ def askPlayer():
     elif userChosenKeybinds == 1:
       fenetre = Tk()
       fenetre.title("Kino der toten")
-      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nZ : Aller vers le haut\nA : Aller à gauche\nS : Aller en bas\nD : Aller à droite\nClic gauche de la souris : Tirer")
+      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nZ : Aller vers le haut\nA : Aller à gauche\nS : Aller en bas\nD : Aller à droite\nR : Recharger\nClic gauche de la souris : Tirer")
       fenetre.destroy()
     elif userChosenKeybinds == 2:
       fenetre = Tk()
       fenetre.title("Kino der toten")
-      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nW : Aller vers le haut\nA : Aller à gauche\nS : Aller en bas\nD : Aller à droite\nClic gauche de la souris : Tirer")
+      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nW : Aller vers le haut\nA : Aller à gauche\nS : Aller en bas\nD : Aller à droite\nR : Recharger\nClic gauche de la souris : Tirer")
       fenetre.destroy()
     elif userChosenKeybinds == 3:
       fenetre = Tk()
       fenetre.title("Kino der toten")
-      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\n Clic gauche de la souris : Tirer")
+      messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nShift Droit : Recharger\nClic gauche de la souris : Tirer")
       fenetre.destroy()
     elif userChosenKeybinds == 4:
       controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
@@ -818,7 +859,7 @@ def askPlayer():
       else:
         fenetre = Tk()
         fenetre.title("Kino der toten")
-        messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick gauche : Se déplacer\nStick droit : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+        messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nStick gauche : Se déplacer\nStick droit : Viser\n\nXbox :\nBouton A : Tirer\nBouton X : Recharger\n\nPlayStation :\nBouton × : Tirer\nBouton □ : Recharger")
         fenetre.destroy()
     elif userChosenKeybinds == 5:
       controllerSensitivity, controllerDeadzone = choixSensibiliteEtZoneMorte()
@@ -827,7 +868,7 @@ def askPlayer():
       else:
         fenetre = Tk()
         fenetre.title("Kino der toten")
-        messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nStick gauche : Viser\nBouton A (Xbox) : Tirer\nBouton X (PlayStation) : Tirer")
+        messagebox.showinfo("Kino der toten", "Contrôles du jeu :\n\nFlèche du haut : Aller vers le haut\nFlèche de gauche : Aller à gauche\nFlèche du bas : Aller en bas\nFlèche de droite : Aller à droite\nStick gauche : Viser\n\nXbox :\nBouton A : Tirer\nBouton X : Recharger\n\nPlayStation :\nBouton × : Tirer\nBouton □ : Recharger")
         fenetre.destroy()
   
   if (userChosenKeybinds == 4) or (userChosenKeybinds == 5):
