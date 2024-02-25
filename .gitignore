@@ -6,6 +6,9 @@ __pycache__
 
 # Replit files
 .replit
+.local
+.upm
+.config
 poetry.lock
 pyproject.toml
 replit.nix
