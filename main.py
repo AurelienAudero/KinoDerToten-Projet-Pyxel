@@ -1,3 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# Version: Dev 0.1
+# Copyright (c) 2024 Aurélien Audero, Axel Thibert and Tony Baca
+#
+# This file is part of "Kino der toten - A Pyxel Game".
+#
+# This program is licensed under Attribution-NonCommercial-NoDerivs 4.0 International
+# (CC BY-NC-ND 4.0). You should have received a copy of the license along with this
+# program; if not, see <https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode>.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of TITLE, MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the CC BY-NC-ND 4.0 License for more details.
+
 # Importations des bibliothèques nécéssaires
 import pyxel, sys
 from time import gmtime, mktime
