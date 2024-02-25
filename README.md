@@ -56,7 +56,7 @@ pip install pyxel playsound
 ```
 
 ### Mettre à jour Pyxel et Playsound
-Si vous avez déjà installé Pyxel, exécuter la commande suivante dans un terminal de commande pour le mettre à jour :
+Si vous avez déjà installé Pyxel et Playsound, exécuter la commande suivante dans un terminal de commande pour le mettre à jour :
 ```
 pip install --upgrade setuptools wheel pyxel playsound
 ```
