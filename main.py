@@ -564,6 +564,7 @@ class Jeu:
         import webbrowser
         webbrowser.open("https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel")
     
+    # Calcul du nombre d'images par seconde affichées
     if debug:
       if debug4 == 1:
         if mktime(gmtime()) - self.previousFPSTime == 1:
@@ -576,7 +577,7 @@ class Jeu:
       # Efface l'écran
       pyxel.cls(5)
 
-      # Affichage des deux spawners de zombies
+      # Affichage des trois spawners de zombies
       pyxel.rect(725, 50, 100, 100, 9)
       pyxel.rect(425, 50, 100, 100, 9)
       pyxel.rect(125, 50, 100, 100, 9)
@@ -612,6 +613,8 @@ class Jeu:
       # Affichage du nombre de munitions restantes dans le chargeur de l'arme du joueur
       if self.personnage.ammoReloadingStatus == 100:
         self.screenTextPrint(15, resHauteur-48, "{}/{}".format(self.personnage.currentPlayerAmmo,self.personnage.maxPlayerAmmo))
+      
+      # Affichage du statut de rechargement de l'arme du joueur
       else:
         self.screenTextPrint(15, resHauteur-48, "{}/{}".format(round((self.personnage.maxPlayerAmmo/100)*self.personnage.ammoReloadingStatus),self.personnage.maxPlayerAmmo))
         pyxel.rect(15, resHauteur-24, 200, 10, 15)
@@ -678,7 +681,7 @@ class Jeu:
     if debug:
       pyxel.blt(5, 5, 0, 0, 112, 77, 10, 0) # Affiche un indicateur sur l'écran quand le mode debug est activé
       if debug4 == 1:
-        self.screenTextPrint(resLongueur-64, resHauteur-32, str(self.currentFPS))
+        self.screenTextPrint(resLongueur-64, resHauteur-32, str(self.currentFPS)) # Affiche le compteur de FPS à l'écran
 
 ########################
 #  PROGRAMME PRINCIPAL #
