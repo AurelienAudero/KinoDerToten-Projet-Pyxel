@@ -52,13 +52,13 @@ Des armes dévastatrices, des power-ups surpuissants et des secrets bien cachés
 Après avoir installé Python, exécuter la commande suivante dans un terminal de commande :
 ```
 pip install --upgrade setuptools wheel
-pip install pyxel playsound
+pip install pyxel playsound pygobject
 ```
 
 ### Mettre à jour Pyxel et Playsound
 Si vous avez déjà installé Pyxel et Playsound, exécuter la commande suivante dans un terminal de commande pour le mettre à jour :
 ```
-pip install --upgrade setuptools wheel pyxel playsound
+pip install --upgrade setuptools wheel pyxel playsound pygobject
 ```
 
 ### Installation de SDL2 (sur Linux)
