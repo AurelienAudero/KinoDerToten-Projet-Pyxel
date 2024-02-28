@@ -371,22 +371,22 @@ class Zombie:
 
 class Jeu:
   def __init__(self, l, h, fps, keybinds, musicEnabled, controllerSensitivity=None, controllerDeadzone=None):
-    pyxel.init(l, h, title="Kino der toten", fps=fps, quit_key=pyxel.KEY_NONE)
-    pyxel.load("KinoDerToten.pyxres")
-    self.keybinds = keybinds
-    self.musicEnabled = musicEnabled
+    pyxel.init(l, h, title="Kino der toten", fps=fps, quit_key=pyxel.KEY_NONE) # Initialisation de la fenêtre de jeu
+    pyxel.load("KinoDerToten.pyxres") # Chargement des ressources du jeu
+    self.keybinds = keybinds # Méthode d'entrée choisie par l'utilisateur
+    self.musicEnabled = musicEnabled # Etat de la musique dans le jeu
     if (self.keybinds == 4) or (self.keybinds == 5):
-      self.controllerSensitivity = controllerSensitivity
-      self.controllerDeadzone = controllerDeadzone
-      self.start(self.keybinds, self.controllerSensitivity, self.controllerDeadzone)
+      self.controllerSensitivity = controllerSensitivity # Sensibilité des sticks analogiques de la manette (si jeu sur manette)
+      self.controllerDeadzone = controllerDeadzone # Zone morte des sticks analogiques de la manette (si jeu sur manette)
+      self.start(self.keybinds, self.controllerSensitivity, self.controllerDeadzone) # Démarrage du jeu (si jeu sur manette)
     else:
-      self.start(self.keybinds)
+      self.start(self.keybinds) # Démarrage du jeu (si jeu sur clavier et souris)
     if debug:
-      if debug4 == 1:
-        self.previousFPSTime = mktime(gmtime())
-        self.previousFPSFrame = 0
-        self.currentFPS = 0
-    pyxel.run(self.update, self.draw)
+      if debug4 == 1: # Compteur de FPS (si activé dans le debug)
+        self.previousFPSTime = mktime(gmtime()) # Timestamp pour compter le nombre de frames en une seconde
+        self.previousFPSFrame = 0 # Nombre de frame au début de la seconde (Initialisation : 1ère frame = frame 0)
+        self.currentFPS = 0 # Initialisation du compteur de FPS
+    pyxel.run(self.update, self.draw) # Démarrage de la boucle principale du jeu
 
   def loopGameMusic(self):
     while True:
