@@ -787,7 +787,7 @@ def fenetreChoix(question, reponses):
   # Action en cas de fermeture de la fenêtre
   def fermetureFenetre():
     nonlocal v1
-    if messagebox.askokcancel("Kino der toten", "Voulez-vous quitter le jeu ?"):
+    if gameQuitConfirmationWindow():
       v1 = -1
       fenetre.destroy()
 
@@ -830,7 +830,7 @@ def choixSensibiliteEtZoneMorte():
   # Action en cas de fermeture de la fenêtre
   def fermetureFenetre():
     nonlocal v1
-    if messagebox.askokcancel("Kino der toten", "Voulez-vous quitter le jeu ?"):
+    if gameQuitConfirmationWindow():
       v1 = -1
       fenetre.destroy()
 
@@ -873,7 +873,7 @@ def debugSettings():
   # Action en cas de fermeture de la fenêtre
   def fermetureFenetre():
     nonlocal v1
-    if messagebox.askokcancel("Kino der toten", "Voulez-vous quitter le jeu ?"):
+    if gameQuitConfirmationWindow():
       v1 = -1
       fenetre.destroy()
 
