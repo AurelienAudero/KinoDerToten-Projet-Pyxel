@@ -371,7 +371,7 @@ class Zombie:
 
 class Jeu:
   def __init__(self, l, h, fps, keybinds, musicEnabled, controllerSensitivity=None, controllerDeadzone=None):
-    pyxel.init(l, h, title="Kino der toten", fps=fps)
+    pyxel.init(l, h, title="Kino der toten", fps=fps, quit_key=pyxel.KEY_NONE)
     pyxel.load("KinoDerToten.pyxres")
     self.keybinds = keybinds
     self.musicEnabled = musicEnabled
@@ -496,6 +496,11 @@ class Jeu:
 
   def update(self): 
     if not self.partieTerminee:
+      # Touche pour quitter le jeu
+      if pyxel.btnp(pyxel.KEY_ESCAPE):
+        if gameQuitConfirmationWindow():
+          pyxel.quit()
+
       # Vérifie si le joueur est mort
       if self.personnage.currentHP <= 0:
         self.partieTerminee = True
@@ -951,6 +956,11 @@ def askPlayer():
     return (userChosenKeybinds, musicEnabled, controllerSensitivity, controllerDeadzone)
   else:
     return (userChosenKeybinds, musicEnabled, None, None)
+
+# Fonction pour demander à l'utilisateur s'il veut quitter le jeu en cours de partie
+def gameQuitConfirmationWindow():
+  if messagebox.askyesno("Kino der toten", "Voulez-vous quitter le jeu ?"):
+    return True
 
 # Lancement du jeu
 if sysArgs:
