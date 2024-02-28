@@ -26,13 +26,14 @@ from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, H
 #   PROGRAMME DU JEU   #
 ########################
 class Personnage:
-  def __init__(self, x, y, width, height, keybinds, controllerSensitivity=None, controllerDeadzone=None):
+  def __init__(self, x, y, width, height, keybinds, soundEnabled, controllerSensitivity=None, controllerDeadzone=None):
     # Création de variables
     self.x = x # Position x du personnage
     self.y = y # Position y du personnage
     self.width = width # Largeur du personnage
     self.height = height # Hauteur du personnage
     self.keybinds = keybinds # Méthode d'entrée choisie par l'utilisateur
+    self.soundEnabled = soundEnabled # Etat des effets sonores dans le jeu
     self.score = 0 # Score du joueur (valeur int)
     self.scoreTXT = "" # Score du joueur (valeur str)
     self.kills = 0 # Nombre de kills du joueur (valeur int)
@@ -145,10 +146,16 @@ class Personnage:
                 self.numberOfSteps += 1
       if pyxel.btnp(self.personnageTir):
         if self.currentPlayerAmmo > 0:
+          if self.soundEnabled:
+            pyxel.play(0, 0, loop=False) # Sound effect du tir (si les effets sonores sont activés)
           return self.x+(self.width/2), self.y+(self.height/2)
         elif self.currentPlayerAmmo == 0:
+          if self.soundEnabled:
+            pyxel.play(0, 4, loop=False) # Sound effect du chargeur de l'arme vide (si les effets sonores sont activés)
           return None
       if pyxel.btnp(self.personnageRecharger) and (self.ammoReloadingStatus == 100) and (self.currentPlayerAmmo < self.maxPlayerAmmo):
+        if self.soundEnabled:
+          pyxel.play(0, 3, loop=False) # Sound effect du rechargement de l'arme (si les effets sonores sont activés)
         self.ammoReloadingStatus = 0
         self.currentPlayerAmmo = 0
     
@@ -200,10 +207,16 @@ class Personnage:
                 self.numberOfSteps += 1
       if pyxel.btnp(self.personnageTir):
         if self.currentPlayerAmmo > 0:
+          if self.soundEnabled:
+            pyxel.play(0, 0, loop=False) # Sound effect du tir (si les effets sonores sont activés)
           return self.x+(self.width/2), self.y+(self.height/2)
         elif self.currentPlayerAmmo == 0:
+          if self.soundEnabled:
+            pyxel.play(0, 4, loop=False) # Sound effect du chargeur de l'arme vide (si les effets sonores sont activés)
           return None
       if pyxel.btnp(self.personnageRecharger) and (self.ammoReloadingStatus == 100) and (self.currentPlayerAmmo < self.maxPlayerAmmo):
+        if self.soundEnabled:
+          pyxel.play(0, 3, loop=False) # Sound effect du rechargement de l'arme (si les effets sonores sont activés)
         self.ammoReloadingStatus = 0
         self.currentPlayerAmmo = 0
     
@@ -370,17 +383,16 @@ class Zombie:
         pyxel.rectb(self.x, self.y, self.width, self.height, 8) # Affichage de la hitbox du zombie (si activé dans le debug)
 
 class Jeu:
-  def __init__(self, l, h, fps, keybinds, musicEnabled, controllerSensitivity=None, controllerDeadzone=None):
+  def __init__(self, l, h, fps, keybinds, musicEnabled, soundEnabled, controllerSensitivity=None, controllerDeadzone=None):
     pyxel.init(l, h, title="Kino der toten", fps=fps, quit_key=pyxel.KEY_NONE) # Initialisation de la fenêtre de jeu
     pyxel.load("KinoDerToten.pyxres") # Chargement des ressources du jeu
     self.keybinds = keybinds # Méthode d'entrée choisie par l'utilisateur
     self.musicEnabled = musicEnabled # Etat de la musique dans le jeu
+    self.soundEnabled = soundEnabled # Etat des effets sonores dans le jeu
     if (self.keybinds == 4) or (self.keybinds == 5):
       self.controllerSensitivity = controllerSensitivity # Sensibilité des sticks analogiques de la manette (si jeu sur manette)
       self.controllerDeadzone = controllerDeadzone # Zone morte des sticks analogiques de la manette (si jeu sur manette)
-      self.start(self.keybinds, self.controllerSensitivity, self.controllerDeadzone) # Démarrage du jeu (si jeu sur manette)
-    else:
-      self.start(self.keybinds) # Démarrage du jeu (si jeu sur clavier et souris)
+    self.start() # Démarrage du jeu
     if debug:
       if debug4 == 1: # Compteur de FPS (si activé dans le debug)
         self.previousFPSTime = mktime(gmtime()) # Timestamp pour compter le nombre de frames en une seconde
@@ -392,7 +404,7 @@ class Jeu:
     while True:
       playsound('KinoDerTotenOST.mp3', block=True)
 
-  def start(self, keybinds, controllerSensitivity=None, controllerDeadzone=None):
+  def start(self):
     """
     Initialise les variables du jeu au début de la partie.
 
@@ -405,10 +417,10 @@ class Jeu:
         La fonction ne retourne rien mais opère des changements sur les variables de la classe.
     """
     # Initialisation du personnage joueur
-    if (keybinds == 4) or (keybinds == 5):
-      self.personnage = Personnage(450, 210, 40, 50, keybinds, controllerSensitivity, controllerDeadzone) # Si le joueur joue à la manette
+    if (self.keybinds == 4) or (self.keybinds == 5):
+      self.personnage = Personnage(450, 210, 40, 50, self.keybinds, self.soundEnabled, self.controllerSensitivity, self.controllerDeadzone) # Si le joueur joue à la manette
     else:
-      self.personnage = Personnage(450, 210, 40, 50, keybinds) # Si le joueur joue au clavier et à la souris
+      self.personnage = Personnage(450, 210, 40, 50, self.keybinds, self.soundEnabled) # Si le joueur joue au clavier et à la souris
     
     self.zombiesList = [] # Liste de tous les zombies
     self.tirsList = [] # Liste de tous les tirs
@@ -450,7 +462,9 @@ class Jeu:
       self.nbZombiesPourTerminerVague += 5 # Incrémentation du nombre de zombies à tuer pour terminer une vague (sauf à la première vague)
       self.personnage.maxHP += 10 # Incrémentation des points de vie max du joueur (sauf à la première vague)
     self.personnage.currentHP = self.personnage.maxHP # Régénération complète des points de vie du joueur 
-    
+    if self.soundEnabled:
+        pyxel.play(0, 1, loop=False) # Sound effect du début de la vague (si les effets sonores sont activés)
+      
     # Début du temps de pause avant le début de la prochaine vague
     self.tempsAttenteStartFrame = pyxel.frame_count
     self.attenteNouvelleVague = True
@@ -503,6 +517,11 @@ class Jeu:
 
       # Vérifie si le joueur est mort
       if self.personnage.currentHP <= 0:
+        if self.musicEnabled:
+          # MANQUANT : Arrêt de la musique du jeu (si la musique est activée)
+          pass
+        if self.soundEnabled:
+          pyxel.play(0, 5, loop=False) # Lecture du sound effect de game over (si les effets sonores sont activés)
         self.partieTerminee = True
       
       # Déplacement du réticule de visée
@@ -583,6 +602,8 @@ class Jeu:
       # Dégâts des zombies sur le joueur
       for ennemi in self.zombiesList:
         if isOverlapping(self.personnage, ennemi):
+          if self.soundEnabled:
+            pyxel.play(0, 2, loop=False) # Sound effect de la perte de point de vie (si les effets sonores sont activés)
           self.personnage.currentHP -= self.perteHP
           self.personnage.pvPerdus += self.perteHP
 
@@ -620,15 +641,15 @@ class Jeu:
         
         # Clic sur le bouton "Rejouer"
         if self.gameOverChosenBtn == 1 and pyxel.btn(self.personnage.personnageTir):
-          self.start(self.keybinds)
+          self.start()
         
         # Clic sur le bouton "Quitter"
-        elif self.gameOverChosenBtn and pyxel.btn(self.personnage.personnageTir):
+        elif self.gameOverChosenBtn == 2 and pyxel.btn(self.personnage.personnageTir):
           pyxel.quit()
       else:
         # Clic sur le bouton "Rejouer"
         if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
-          self.start(self.keybinds)
+          self.start()
         
         # Clic sur le bouton "Quitter"
         elif pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
@@ -782,6 +803,7 @@ def fenetreChoix(question, reponses):
   fenetre.eval('tk::PlaceWindow . center')
   v1 = IntVar()
   v2 = IntVar(value=1)
+  v3 = IntVar(value=1)
   i = 1
 
   # Action en cas de fermeture de la fenêtre
@@ -798,6 +820,7 @@ def fenetreChoix(question, reponses):
     i += 1
   Label(fenetre, text="Options").pack(pady=(10,0))
   Checkbutton(fenetre, text="Activer la musique du jeu", variable=v2, anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Activer les effets sonores", variable=v3, anchor="w", justify="left").pack(fill='both')
   Button(text="Confirmer", command=fenetre.destroy).pack()
 
   # Création de la fenêtre
@@ -806,9 +829,9 @@ def fenetreChoix(question, reponses):
 
   # Retour du choix de l'utilisateur
   if v1 == -1:
-    return (-1,-1)
+    return (-1,-1,-1)
   else:
-    return (v1.get(),v2.get())
+    return (v1.get(),v2.get(),v3.get())
 
 # Fonction pour choisir la sensibilité et la zone morte de la manette
 def choixSensibiliteEtZoneMorte():
@@ -910,7 +933,7 @@ def askPlayer():
 
   userChosenKeybinds = 0
   while userChosenKeybinds == 0 :
-    userChosenKeybinds, musicEnabled = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles", "Manette - Stick Gauche + Stick Droit", "Manette - Flèches directionnelles + Stick Droit"])
+    userChosenKeybinds, musicEnabled, soundEnabled = fenetreChoix("Choissisez votre méthode d'entrée :", ["Clavier - AZERTY", "Clavier - QWERTY", "Clavier - Flèches directionnelles", "Manette - Stick Gauche + Stick Droit", "Manette - Flèches directionnelles + Stick Droit"])
     # Affiche une erreur si aucun choix n'est fait par l'utilisateur
     if userChosenKeybinds == 0:
       fenetre = Tk()
@@ -953,9 +976,9 @@ def askPlayer():
         fenetre.destroy()
   
   if (userChosenKeybinds == 4) or (userChosenKeybinds == 5):
-    return (userChosenKeybinds, musicEnabled, controllerSensitivity, controllerDeadzone)
+    return (userChosenKeybinds, musicEnabled, soundEnabled, controllerSensitivity, controllerDeadzone)
   else:
-    return (userChosenKeybinds, musicEnabled, None, None)
+    return (userChosenKeybinds, musicEnabled, soundEnabled, None, None)
 
 # Fonction pour demander à l'utilisateur s'il veut quitter le jeu en cours de partie
 def gameQuitConfirmationWindow():
@@ -973,7 +996,7 @@ if sysArgs:
     print("Pour plus d'informations, veuillez consulter le GitHub du projet : https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/")
     sys.exit()
 
-userChosenKeybinds, musicEnabled, controllerSensitivity, controllerDeadzone = askPlayer()
+userChosenKeybinds, musicEnabled, soundEnabled, controllerSensitivity, controllerDeadzone = askPlayer()
 
 if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   resLongueur = 960
@@ -985,6 +1008,6 @@ if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   if (userChosenKeybinds == 1) or (userChosenKeybinds == 2) or (userChosenKeybinds == 3):
     del(controllerSensitivity)
     del(controllerDeadzone)
-    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds, musicEnabled)
+    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds, musicEnabled, soundEnabled)
   elif (userChosenKeybinds == 4) or (userChosenKeybinds == 5):
-    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds, musicEnabled, controllerSensitivity, controllerDeadzone)
+    game = Jeu(resLongueur, resHauteur, fps, userChosenKeybinds, musicEnabled, soundEnabled, controllerSensitivity, controllerDeadzone)
