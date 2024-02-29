@@ -12,8 +12,8 @@
 - [Hauptmerkmale des Spiels](#hauptmerkmale-des-spiels)
 - [Installation](#installation)
     - [Anforderungen](#anforderungen)
-    - [Pyxel und Playsound installieren](#pyxel-und-playsound-installieren)
-    - [Aktualisieren Sie Pyxel und Playsound](#aktualisieren-sie-pyxel-und-playsound)
+    - [Pyxel und Pygame installieren](#pyxel-und-pygame-installieren)
+    - [Aktualisieren Sie Pyxel und Pygame](#aktualisieren-sie-pyxel-und-pygame)
     - [SDL2 installieren (unter Linux)](#sdl2-installieren-unter-linux)
     - [So starten Sie das Spiel](#so-starten-sie-das-spiel)
 - [Credits](#credits)
@@ -44,21 +44,20 @@ Verheerende Waffen, mächtige Power-Ups und gut versteckte Geheimnisse helfen Ih
     - [X] macOS X 10.6 oder höher
     - [X] Linux
 - [X] [Python 3.7 oder höher](https://www.python.org/downloads/)
-- [X] [Pyxel 2.0.6 oder höher](#pyxel-installieren)
-- [X] [Playsound 1.3.0 oder höher](#pyxel-und-playsound-installieren)
+- [X] [Pyxel 2.0.6 oder höher](#pyxel-und-pygame-installieren)
+- [X] [Pygame 2.5.2 oder höher](#pyxel-und-pygame-installieren)
 - [X] [Die neueste Version von SDL2 (für Linux-Systeme)](#sdl2-installieren-unter-linux)
 
-### Pyxel und Playsound installieren
+### Pyxel und Pygame installieren
 Führen Sie nach der Installation von Python den folgenden Befehl in einem Terminal aus:
 ```
-pip install --upgrade setuptools wheel
-pip install pyxel playsound pygobject
+pip install pyxel pygame
 ```
 
-### Aktualisieren Sie Pyxel und Playsound
-Wenn Sie Pyxel bereits installiert haben, führen Sie den folgenden Befehl in einem Terminal aus, um es zu aktualisieren:
+### Aktualisieren Sie Pyxel und Pygame
+Se hai già installato Pyxel e Pygame, esegui il seguente comando in un terminale per aggiornarlo:
 ```
-pip install --upgrade setuptools wheel pyxel playsound pygobject
+pip install --upgrade pyxel pygame
 ```
 
 ### SDL2 installieren (unter Linux)
