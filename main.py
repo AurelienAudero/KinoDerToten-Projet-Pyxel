@@ -14,14 +14,55 @@
 # WARRANTY; without even the implied warranty of TITLE, MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE. See the CC BY-NC-ND 4.0 License for more details.
 
+def fenetreErreurLibrary(pyxelLibraryStatus:bool, pygameLibraryStatus:bool):
+  # Intialisation de la fenêtre et de ses variables
+  fenetre = Tk()
+  fenetre.title("Kino der toten")
+  fenetre.eval('tk::PlaceWindow . center')
+  v1 = IntVar(value=1)
+  v2 = IntVar(value=1)
+  if not pyxelLibraryStatus:
+    v1.set(0)
+  if not pygameLibraryStatus:
+    v2.set(0)
+
+  def learnMoreBtn():
+    webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/blob/main/README.md")
+
+  # Ajout du contenu à la fenêtre
+  Label(fenetre, text="Certains composants requis ne sont pas installé", bg='red').pack()
+  Label(fenetre, text="Composants nécéssaires :", anchor="w", justify="left").pack(pady=(10,0), padx=(25,0), fill='both')
+  Checkbutton(fenetre, text="Pyxel", variable=v1, anchor="w", justify="left", state="disabled").pack(padx=(25,0), fill='both')
+  Checkbutton(fenetre, text="Pygame", variable=v2, anchor="w", justify="left", state="disabled").pack(padx=(25,0), fill='both')
+  Label(fenetre, text="Cliquez sur 'En savoir plus'\n pour accéder au guide d'installation").pack(pady=(10,0))
+  Button(text="En savoir plus", command=learnMoreBtn).pack()
+  Button(text="Quitter", command=fenetre.destroy).pack()
+
+  # Création de la fenêtre
+  fenetre.protocol("WM_DELETE_WINDOW")
+  fenetre.mainloop()
+
 # Importations des bibliothèques nécéssaires
-import pyxel, sys
+from webbrowser import open as webbrowserOpen
+from sys import argv as sysArgv, exit as sysExit
 from os import environ as osEnvVar
 osEnvVar['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-from pygame import mixer
 from time import gmtime, mktime
 from random import randint
-from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL, Checkbutton, Frame
+from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL, Checkbutton, Frame, PhotoImage
+pyxelLibraryStatus, pygameLibraryStatus = True, True
+try:
+  import pyxel
+except ImportError:
+  pyxelLibraryStatus = False
+try:
+  from pygame import mixer
+except ImportError:
+  pygameLibraryStatus = False
+
+if not pyxelLibraryStatus or not pygameLibraryStatus:
+  fenetreErreurLibrary(pyxelLibraryStatus, pygameLibraryStatus)
+  sysExit()
 
 ########################
 #   PROGRAMME DU JEU   #
@@ -658,8 +699,7 @@ class Jeu:
 
       # Clic sur le bouton "GitHub"
       if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
-        import webbrowser
-        webbrowser.open("https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel")
+        webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel")
     
     # Calcul du nombre d'images par seconde affichées
     if debug:
@@ -787,8 +827,8 @@ debug = False
 
 # Récupération des arguments passés en ligne de commande
 sysArgs = []
-for i in range(1, len(sys.argv)):
-  sysArgs.append(sys.argv[i])
+for i in range(1, len(sysArgv)):
+  sysArgs.append(sysArgv[i])
 
 # Fonction pour créer une fenêtre de choix
 def fenetreChoix(question, reponses):
@@ -992,10 +1032,10 @@ if sysArgs:
     debug = True
     debug1, debug2, debug3, debug4, debug5 = debugSettings()
     if debug1 == -1:
-      sys.exit()
+      sysExit()
   if (sysArgs[0] == "--help") or (sysArgs[0] == "--h"):
     print("Pour plus d'informations, veuillez consulter le GitHub du projet : https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/")
-    sys.exit()
+    sysExit()
 
 userChosenKeybinds, musicEnabled, soundEnabled, controllerSensitivity, controllerDeadzone = askPlayer()
 
