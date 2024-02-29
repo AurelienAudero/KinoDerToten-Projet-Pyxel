@@ -16,8 +16,9 @@
 
 # Importations des bibliothèques nécéssaires
 import pyxel, sys
-from playsound import playsound
-from threading import Thread
+from os import environ as osEnvVar
+osEnvVar['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+from pygame import mixer
 from time import gmtime, mktime
 from random import randint
 from tkinter import Tk, Label, Radiobutton, Button, IntVar, messagebox, Scale, HORIZONTAL, Checkbutton, Frame
@@ -388,6 +389,10 @@ class Jeu:
     pyxel.load("KinoDerToten.pyxres") # Chargement des ressources du jeu
     self.keybinds = keybinds # Méthode d'entrée choisie par l'utilisateur
     self.musicEnabled = musicEnabled # Etat de la musique dans le jeu
+    if self.musicEnabled: # Si la musique est activée
+      mixer.init() # Initialisation du module mixer de la bibliothèque Pygame
+      mixer.music.load('KinoDerTotenOST.mp3') # Chargement de la musique du jeu
+    self.partieTermineeMusicInitiated = False # Etat de l'initialisation de la musique de l'écran Game Over
     self.soundEnabled = soundEnabled # Etat des effets sonores dans le jeu
     if (self.keybinds == 4) or (self.keybinds == 5):
       self.controllerSensitivity = controllerSensitivity # Sensibilité des sticks analogiques de la manette (si jeu sur manette)
@@ -399,10 +404,6 @@ class Jeu:
         self.previousFPSFrame = 0 # Nombre de frame au début de la seconde (Initialisation : 1ère frame = frame 0)
         self.currentFPS = 0 # Initialisation du compteur de FPS
     pyxel.run(self.update, self.draw) # Démarrage de la boucle principale du jeu
-
-  def loopGameMusic(self):
-    while True:
-      playsound('KinoDerTotenOST.mp3', block=True)
 
   def start(self):
     """
@@ -439,10 +440,10 @@ class Jeu:
     self.startNewWave() # Démarrage de la première vague
     pyxel.mouse(False) # Désactive le curseur de la souris
     pyxel.images[1].load(0,0, "RichtofenSpriteSheet.png") # Chargement des sprites de Richtofen (joueur)
-    if self.musicEnabled: # Si la musique est activée
-      musicThread = Thread(target=self.loopGameMusic, name="musicThread") # Création d'un thread pour la musique du jeu
-      musicThread.daemon = True # Le thread s'arrête lorsque le programme principal s'arrête
-      musicThread.start() # Démarrage du thread pour la musique du jeu
+    if self.musicEnabled:
+      pyxel.stop(1) # Arrêt de la musique de l'écran Game Over
+      self.partieTermineeMusicInitiated = False # Réinitialisation de l'état de l'initialisation de la musique de l'écran Game Over
+      mixer.music.play() # Lecture de la musique du jeu
 
   def startNewWave(self):
     """
@@ -463,7 +464,7 @@ class Jeu:
       self.personnage.maxHP += 10 # Incrémentation des points de vie max du joueur (sauf à la première vague)
     self.personnage.currentHP = self.personnage.maxHP # Régénération complète des points de vie du joueur 
     if self.soundEnabled:
-        pyxel.play(0, 1, loop=False) # Sound effect du début de la vague (si les effets sonores sont activés)
+      pyxel.play(0, 1, loop=False) # Sound effect du début de la vague (si les effets sonores sont activés)
       
     # Début du temps de pause avant le début de la prochaine vague
     self.tempsAttenteStartFrame = pyxel.frame_count
@@ -518,10 +519,7 @@ class Jeu:
       # Vérifie si le joueur est mort
       if self.personnage.currentHP <= 0:
         if self.musicEnabled:
-          # MANQUANT : Arrêt de la musique du jeu (si la musique est activée)
-          pass
-        if self.soundEnabled:
-          pyxel.play(0, 5, loop=False) # Lecture du sound effect de game over (si les effets sonores sont activés)
+          mixer.music.stop()
         self.partieTerminee = True
       
       # Déplacement du réticule de visée
@@ -629,6 +627,9 @@ class Jeu:
           self.zombiesList.append(Zombie(125, 50, 40, 50, 1, self.personnage))
     
     elif self.partieTerminee:
+      if self.musicEnabled and not self.partieTermineeMusicInitiated:
+        self.partieTermineeMusicInitiated = True
+        pyxel.play(1, 5, loop=True) # Lecture du sound effect de game over (si les effets sonores sont activés)
       self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
       self.personnage.killsTXT = str(self.personnage.kills) # Transforme le nombre de kills du joueur en texte (INT -> STR)
       self.personnage.pvPerdusTXT = str(self.personnage.pvPerdus) # Transforme le nombre de PV perdus du joueur en texte (INT -> STR)
