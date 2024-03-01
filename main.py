@@ -308,7 +308,7 @@ class Personnage:
       elif self.numberOfSteps == 4:
         pyxel.blt(self.x, self.y, 1, 120, 170, self.width, self.height, 7)
     if debug:
-      if debug1 == 1: 
+      if debug1: 
         pyxel.rectb(self.x, self.y, self.width, self.height, 8) # Affichage de la hitbox du personnage (si activé dans le debug)
 
 class Reticule:
@@ -394,7 +394,7 @@ class Tir:
   def draw(self):
     pyxel.circ(self.x, self.y, self.radius, 10)
     if debug:
-      if debug3 == 1:
+      if debug3:
         pyxel.rectb(self.x, self.y, self.width, self.height, 8) # Affichage de la hitbox du tir (si activé dans le debug)
 
 class Zombie:
@@ -421,7 +421,7 @@ class Zombie:
     pyxel.rect(self.x, self.y, self.width, self.height, 11)
     pyxel.rectb(self.x, self.y, self.width, self.height, 0)
     if debug:
-      if debug2 == 1:
+      if debug2:
         pyxel.rectb(self.x, self.y, self.width, self.height, 8) # Affichage de la hitbox du zombie (si activé dans le debug)
 
 class Jeu:
@@ -440,7 +440,7 @@ class Jeu:
       self.controllerDeadzone = controllerDeadzone # Zone morte des sticks analogiques de la manette (si jeu sur manette)
     self.start() # Démarrage du jeu
     if debug:
-      if debug4 == 1: # Compteur de FPS (si activé dans le debug)
+      if debug4: # Compteur de FPS (si activé dans le debug)
         self.previousFPSTime = mktime(gmtime()) # Timestamp pour compter le nombre de frames en une seconde
         self.previousFPSFrame = 0 # Nombre de frame au début de la seconde (Initialisation : 1ère frame = frame 0)
         self.currentFPS = 0 # Initialisation du compteur de FPS
@@ -658,14 +658,25 @@ class Jeu:
             self.nbZombiesTotal += 1
 
       # Spawn aléatoire des zombies
-      if pyxel.frame_count % (fps*self.tempsSpawnMobActuel) == 0:
-        numeroSpawner = randint(1,3)
-        if numeroSpawner == 1:
-          self.zombiesList.append(Zombie(725, 50, 40, 50, 1, self.personnage))
-        elif numeroSpawner == 2:
-          self.zombiesList.append(Zombie(425, 50, 40, 50, 1, self.personnage))
-        elif numeroSpawner == 3:
-          self.zombiesList.append(Zombie(125, 50, 40, 50, 1, self.personnage))
+      if debug:
+        if not debug5:
+          if pyxel.frame_count % (fps*self.tempsSpawnMobActuel) == 0:
+            numeroSpawner = randint(1,3)
+            if numeroSpawner == 1:
+              self.zombiesList.append(Zombie(200, 15, 40, 50, 1, self.personnage))
+            elif numeroSpawner == 2:
+              self.zombiesList.append(Zombie(432, 15, 40, 50, 1, self.personnage))
+            elif numeroSpawner == 3:
+              self.zombiesList.append(Zombie(664, 15, 40, 50, 1, self.personnage))
+      else:
+        if pyxel.frame_count % (fps*self.tempsSpawnMobActuel) == 0:
+          numeroSpawner = randint(1,3)
+          if numeroSpawner == 1:
+            self.zombiesList.append(Zombie(200, 15, 40, 50, 1, self.personnage))
+          elif numeroSpawner == 2:
+            self.zombiesList.append(Zombie(432, 15, 40, 50, 1, self.personnage))
+          elif numeroSpawner == 3:
+            self.zombiesList.append(Zombie(664, 15, 40, 50, 1, self.personnage))
     
     elif self.partieTerminee:
       if self.musicEnabled and not self.partieTermineeMusicInitiated:
@@ -703,21 +714,33 @@ class Jeu:
     
     # Calcul du nombre d'images par seconde affichées
     if debug:
-      if debug4 == 1:
+      if debug4:
         if mktime(gmtime()) - self.previousFPSTime == 1:
           self.previousFPSTime += 1
           self.currentFPS = pyxel.frame_count - self.previousFPSFrame
           self.previousFPSFrame = pyxel.frame_count
+      if debug7:
+        if pyxel.frame_count % (fps*1) == 0:
+          print("Reticule : {}, {}".format(str(self.personnage.reticule.x), str(self.personnage.reticule.y)))
 
   def draw(self):
     if not self.partieTerminee:
       # Efface l'écran
       pyxel.cls(5)
 
-      # Affichage des trois spawners de zombies
-      pyxel.rect(725, 50, 100, 100, 9)
-      pyxel.rect(425, 50, 100, 100, 9)
-      pyxel.rect(125, 50, 100, 100, 9)
+      # Affichage de la map
+      if debug:
+        if not debug6:
+          pyxel.bltm(0, 0, 0, 0, 0, resLongueur, resHauteur)
+      else:
+        pyxel.bltm(0, 0, 0, 0, 0, resLongueur, resHauteur)
+
+      # Affichage de la hitbox des trois spawners de zombies (si activé dans le debug)
+      if debug:
+        if debug8:
+          pyxel.rectb(200, 15, 40, 50, 8)
+          pyxel.rectb(432, 15, 40, 50, 8)
+          pyxel.rectb(664, 15, 40, 50, 8)
       
       # Affichage des tirs
       for element in self.tirsList:
@@ -817,7 +840,7 @@ class Jeu:
     
     if debug:
       pyxel.blt(5, 5, 0, 0, 112, 77, 10, 0) # Affiche un indicateur sur l'écran quand le mode debug est activé
-      if debug4 == 1:
+      if debug4:
         self.screenTextPrint(resLongueur-64, resHauteur-32, str(self.currentFPS)) # Affiche le compteur de FPS à l'écran
 
 ########################
@@ -920,9 +943,21 @@ def choixSensibiliteEtZoneMorte():
 #Paramètres de debug
 def debugSettings():
   """
-  Crée une fenêtre de choix des paramètres de debug en utilisant Tkinter
-  IN : None
-  OUT : Hitbox du joueur (Bool), Hitbox des zombies (Bool), Hitbox des tirs (Bool), Affichage des FPS (Bool)
+  Crée une fenêtre de choix des paramètres de debug en utilisant Tkinter.
+
+  Args:
+      Aucun argument n'est requis.
+
+  Returns:
+      v1: Hitbox du joueur (Bool)
+      v2: Hitbox des zombies (Bool)
+      v3: Hitbox des tirs (Bool)
+      v4: Affichage des FPS (Bool)
+      v5: Désactiver les zombies (Bool)
+      v6: Désactiver l'affichage de la map (Bool)
+      v7: Afficher les coordonnées du reticule (Bool)
+      v8: Hitbox des spawners de zombies (Bool)
+      v9: Limite de FPS en jeu (Int)
   """
   
   # Intialisation de la fenêtre et de ses variables
@@ -935,7 +970,10 @@ def debugSettings():
   v3 = IntVar()
   v4 = IntVar()
   v5 = IntVar()
-  v5.set(60)
+  v6 = IntVar()
+  v7 = IntVar()
+  v8 = IntVar()
+  v9 = IntVar(value=60)
 
   # Action en cas de fermeture de la fenêtre
   def fermetureFenetre():
@@ -950,10 +988,14 @@ def debugSettings():
   Checkbutton(fenetre, text="Hitbox du joueur", variable=v1, anchor="w", justify="left").pack(fill='both')
   Checkbutton(fenetre, text="Hitbox des zombies", variable=v2, anchor="w", justify="left").pack(fill='both')
   Checkbutton(fenetre, text="Hitbox des tirs", variable=v3, anchor="w", justify="left").pack(fill='both')
-  Checkbutton(fenetre, text="Affichage des FPS", variable=v4, anchor="w", justify="left").pack(fill='both', pady=(0,10))
+  Checkbutton(fenetre, text="Affichage des FPS", variable=v4, anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Désactiver les zombies", variable=v5, anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Désactiver l'affichage de la map", variable=v6, anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Afficher les coordonnées du reticule", variable=v7, anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Hitbox des spawners de zombies", variable=v8, anchor="w", justify="left").pack(fill='both', pady=(0,10))
   fpsSelectorFrame = Frame(fenetre)
   Label(fpsSelectorFrame, text="Limite de FPS en jeu :", anchor="w", justify="left").pack(side='left', pady=(15,0))
-  Scale(fpsSelectorFrame, from_=1, to=1000, orient=HORIZONTAL, variable=v5).pack(side='right')
+  Scale(fpsSelectorFrame, from_=1, to=1000, orient=HORIZONTAL, variable=v9).pack(side='right')
   fpsSelectorFrame.pack(fill='both')
   Button(text="Confirmer", command=fenetre.destroy).pack(pady=(10,0))
 
@@ -963,9 +1005,9 @@ def debugSettings():
 
   # Retour du choix de l'utilisateur
   if v1 == -1:
-    return (-1,-1,-1,-1,-1)
+    return (-1,-1,-1,-1,-1,-1,-1,-1,-1)
   else:
-    return (v1.get(),v2.get(),v3.get(),v4.get(),v5.get())
+    return (v1.get(),v2.get(),v3.get(),v4.get(),v5.get(), v6.get(), v7.get(), v8.get(), v9.get())
   
 # Fonction pour demander à l'utilisateur les contrôles à utiliser
 def askPlayer():
@@ -1033,7 +1075,7 @@ def gameQuitConfirmationWindow():
 if sysArgs:
   if sysArgs[0] == "--debug=True":
     debug = True
-    debug1, debug2, debug3, debug4, debug5 = debugSettings()
+    debug1, debug2, debug3, debug4, debug5, debug6, debug7, debug8, debug9 = debugSettings()
     if debug1 == -1:
       sysExit()
   if (sysArgs[0] == "--help") or (sysArgs[0] == "--h"):
@@ -1047,8 +1089,8 @@ if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   resHauteur = 540
   fps = 60
   if debug:
-    if debug5 != 60:
-      fps = debug5
+    if debug9 != 60:
+      fps = debug9
   if (userChosenKeybinds == 1) or (userChosenKeybinds == 2) or (userChosenKeybinds == 3):
     del(controllerSensitivity)
     del(controllerDeadzone)
