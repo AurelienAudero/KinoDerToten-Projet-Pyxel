@@ -856,9 +856,14 @@ for i in range(1, len(sysArgv)):
 # Fonction pour créer une fenêtre de choix
 def fenetreChoix(question, reponses):
   """
-  Crée une fenêtre de choix en utilisant Tkinter
-  IN : question (Str) et reponses (list)
-  OUT : Indice de la réponse ou -1 si la fenêtre est fermée ou 0 si aucun choix n'as été fait
+  Crée une fenêtre de choix en utilisant Tkinter.
+
+  Args:
+      question: La question à afficher dans la fenêtre.
+      reponses: Les réponses qui peuvent être sélectionées par l'utilisateur.
+
+  Returns:
+      Indice de la réponse ou -1 si la fenêtre est fermée ou 0 si aucun choix n'as été fait
   """
   
   # Intialisation de la fenêtre et de ses variables
@@ -901,9 +906,13 @@ def fenetreChoix(question, reponses):
 # Fonction pour choisir la sensibilité et la zone morte de la manette
 def choixSensibiliteEtZoneMorte():
   """
-  Crée une fenêtre de choix pour la sensibilité de la manette
-  IN : None
-  OUT : Sensibilité de la manette
+  Crée une fenêtre de choix pour la sensibilité de la manette en utilisant Tkinter.
+
+  Args:
+      Aucun argument n'est requis.
+
+  Returns:
+      Sensibilité et zone morte de la manette
   """
   
   # Initialisation de la fenêtre et de ses variables
@@ -1012,9 +1021,17 @@ def debugSettings():
 # Fonction pour demander à l'utilisateur les contrôles à utiliser
 def askPlayer():
   """
-  Demande à l'utilisateur les contrôles à utiliser, les paramètres de la manette (si nécéssaire) et affiche la liste de touches
-  IN : None
-  OUT : userChoosenKeybinds (Int), controllerSensitivity (Int), controllerDeadzone (Int)
+  Demande à l'utilisateur les contrôles à utiliser, les paramètres de la manette (si nécéssaire) et affiche la liste de touches.
+
+  Args:
+      Aucun argument n'est requis.
+
+  Returns:
+      userChosenKeybinds: Méthode d'entrée choisie par l'utilisateur (Int)
+      musicEnabled: Activation de la musique du jeu (Bool)
+      soundEnabled: Activation des effets sonores du jeu (Bool)
+      controllerSensitivity: Sensibilité de la manette (Int) (dépend de la méthode d'entrée choisie par l'utilisateur)
+      controllerDeadzone: Zone morte de la manette (Int) (dépend de la méthode d'entrée choisie par l'utilisateur)
   """
 
   userChosenKeybinds = 0
