@@ -94,6 +94,8 @@ class Personnage:
     self.ammoReloadingCooldown = 2 # Temps de rechargement de l'arme du joueur (en secondes)
     self.lastShot = 0 # Numéro de frame où le dernier tir à été effectué par le joueur
     self.shotCooldown = 30 # Temps d'attente entre chaque tir (en frames)
+    self.lastHit = -30 # Numéro de frame où le dernier coup à été reçu par le joueur
+    self.hitCooldown = 60 # Temps d'attente entre chaque coup reçu (en frames)
 
     # Détermination des touches pour contrôler le personnage
     if self.keybinds == 1 :
@@ -676,7 +678,7 @@ class Jeu:
     self.tempsSpawnMobActuel = 0 # Initialisation de la variable de temps entre chaque spawn de mob
     self.tempsSpawnMobBase = 5 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
-    self.perteHP = 0.5 # Nombre de points de vie perdus au contact d'un zombie
+    self.perteHP = 5 # Nombre de points de vie perdus au contact d'un zombie
     self.partieTerminee = False # Etat de la partie en cours
     self.gameOverChosenBtn = 1 # Bouton choisi sur l'écran "Game Over" lors du contrôle à la manette
     self.nbZombiesTotal = 0 # Nombre total de zombies tués
@@ -847,10 +849,12 @@ class Jeu:
       # Dégâts des zombies sur le joueur
       for ennemi in self.zombiesList:
         if isOverlapping(self.personnage, ennemi):
-          if self.soundEnabled:
-            pyxel.play(0, 2, loop=False) # Sound effect de la perte de point de vie (si les effets sonores sont activés)
-          self.personnage.currentHP -= self.perteHP
-          self.personnage.pvPerdus += self.perteHP
+          if self.personnage.lastHit + self.personnage.hitCooldown < pyxel.frame_count:
+            self.personnage.lastHit = pyxel.frame_count
+            if self.soundEnabled:
+              pyxel.play(0, 2, loop=False) # Sound effect de la perte de point de vie (si les effets sonores sont activés)
+            self.personnage.currentHP -= self.perteHP
+            self.personnage.pvPerdus += self.perteHP
 
       # Collisions entre zombies et tirs
       for ennemi in self.zombiesList:
