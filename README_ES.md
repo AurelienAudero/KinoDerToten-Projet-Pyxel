@@ -79,6 +79,7 @@ Si está utilizando un sistema Linux, instale SDL2 usando su administrador de pa
     - [Tony Baca](https://github.com/Thidokachi)
 - Reconocimientos:
     - Amine Ouichen *(para el sistema que permite que los disparos vayan en dirección a la mira)*
+    - [Pierrick Perdrieau](https://github.com/Crabiz) *(para el sistema que permite que los disparos vayan en dirección a la mira)*
     - Timothée Ané *(para el sistema que permite que los disparos vayan en dirección a la mira)*
 
 "Kino Der Toten - A Pyxel Game" © 2024 by [Aurélien Audero](https://github.com/AurelienAudero), [Axel Thibert](https://github.com/Oxwerth) and [Tony Baca](https://github.com/Thidokachi) is licensed under [CC BY-NC-ND 4.0](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/blob/main/LICENSE)
