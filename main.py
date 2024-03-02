@@ -145,7 +145,7 @@ class Personnage:
     # Contrôles avec les boutons du clavier ou de la manette
     if (self.keybinds != 4) and (self.keybinds != 5):
       # Déplacement vers le haut
-      if pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageGauche) and not pyxel.btn(self.personnageDroite) and (self.y > 0) :
+      if pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageGauche) and not pyxel.btn(self.personnageDroite) and (self.y > 32) :
           self.y -= self.vitesse
           if self.lastSide != "Top":
             self.lastSide = "Top"
@@ -196,7 +196,7 @@ class Personnage:
       if pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageBas) and pyxel.btn(self.personnageGauche) and not pyxel.btn(self.personnageDroite) :
         if self.x > 0:
           self.x -= self.vitesse/1.5
-        if self.y > 0:
+        if self.y > 32:
           self.y -= self.vitesse/1.5
         if self.lastSide != "Left":
           self.lastSide = "Left"
@@ -211,7 +211,7 @@ class Personnage:
       if pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageBas) and not pyxel.btn(self.personnageGauche) and pyxel.btn(self.personnageDroite) :
         if self.x < resLongueur-self.width:
           self.x += self.vitesse/1.5
-        if self.y > 0:
+        if self.y > 32:
           self.y -= self.vitesse/1.5
         if self.lastSide != "Right":
           self.lastSide = "Right"
@@ -272,7 +272,7 @@ class Personnage:
     # Contrôles avec les sticks analogiques de la manette
     elif (self.keybinds == 4) or (self.keybinds == 5):
       # Déplacement vers le haut
-      if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and (self.y > 0) :
+      if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and (self.y > 32) :
           self.y -= self.vitesse
           if self.lastSide != "Top":
             self.lastSide = "Top"
@@ -323,7 +323,7 @@ class Personnage:
       if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone :
         if self.x > 0:
           self.x -= self.vitesse/1.5
-        if self.y > 0:
+        if self.y > 32:
           self.y -= self.vitesse/1.5
         if self.lastSide != "Left":
           self.lastSide = "Left"
@@ -338,7 +338,7 @@ class Personnage:
       if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone :
         if self.x < resLongueur-self.width:
           self.x += self.vitesse/1.5
-        if self.y > 0:
+        if self.y > 32:
           self.y -= self.vitesse/1.5
         if self.lastSide != "Right":
           self.lastSide = "Right"
@@ -545,7 +545,7 @@ class Zombie:
     self.personnage = personnage # Personnage joueur
 
   def move(self):
-    if (self.y > 0) and (self.y > self.personnage.y) :
+    if (self.y > 32) and (self.y > self.personnage.y) :
       self.y -= self.vitesse
       if self.lastSide != "Top":
         self.lastSide = "Top"
