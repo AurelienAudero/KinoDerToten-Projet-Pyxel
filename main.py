@@ -470,15 +470,15 @@ class Zombie:
         pyxel.blt(self.x, self.y, 2, 169, 61, self.width, self.height, 7)
     elif self.lastSide == "Right":
       if self.numberOfSteps == 1:
-        pyxel.blt(self.x, self.y, 2, 5, 0, self.width, self.height, 7)
+        pyxel.blt(self.x, self.y, 2, 5, 5, self.width, self.height, 7)
       elif self.numberOfSteps == 2:
-        pyxel.blt(self.x, self.y, 2, 46, 0, self.width, self.height, 7)
+        pyxel.blt(self.x, self.y, 2, 46, 5, self.width, self.height, 7)
       elif self.numberOfSteps == 3:
-        pyxel.blt(self.x, self.y, 2, 87, 0, self.width, self.height, 7)
+        pyxel.blt(self.x, self.y, 2, 87, 5, self.width, self.height, 7)
       elif self.numberOfSteps == 4:
-        pyxel.blt(self.x, self.y, 2, 128, 0, self.width, self.height, 7)
+        pyxel.blt(self.x, self.y, 2, 128, 5, self.width, self.height, 7)
       elif self.numberOfSteps == 5:
-        pyxel.blt(self.x, self.y, 2, 169, 0, self.width, self.height, 7)
+        pyxel.blt(self.x, self.y, 2, 169, 5, self.width, self.height, 7)
     elif self.lastSide == "Top":
       if self.numberOfSteps == 1:
         pyxel.blt(self.x, self.y, 2, 5, 119, self.width, self.height, 7)
