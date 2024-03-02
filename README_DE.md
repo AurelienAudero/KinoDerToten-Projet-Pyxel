@@ -1,8 +1,8 @@
 <img src="Images/Readme-Title.png" width="525vw">
 
-[![Stars](https://img.shields.io/github/stars/AurelienAudero/KinoDerToten-Projet-Pyxel?label=Stars)](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/stargazers)
+[![Stars](https://img.shields.io/github/stars/AurelienAudero/KinoDerToten-Pyxel-Game?label=Stars)](https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/stargazers)
 [![Forks](https://img.shields.io/badge/Forks-nicht%20autorisiert%20(siehe%20Lizenz%20f%C3%BCr%20weitere%20Informationen)-red)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/AurelienAudero/KinoDerToten-Projet-Pyxel?label=Download)](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest)
+[![Release](https://img.shields.io/github/v/release/AurelienAudero/KinoDerToten-Pyxel-Game?label=Download)](https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/releases/latest)
 -----
 
 [Français](README.md) | [English](README_EN.md) | [Español](README_ES.md) | **Deutsch** | [Italiano](README_IT.md)
@@ -67,7 +67,7 @@ Wenn Sie ein Linux-System verwenden, installieren Sie SDL2 mit Ihrem Paketmanage
 - yum package manager : `yum install SDL2-devel`
 
 ### So starten Sie das Spiel
-- Laden Sie die neueste stabile Version des Spiels herunter [hier](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/releases/latest).
+- Laden Sie die neueste stabile Version des Spiels herunter [hier](https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/releases/latest).
 - Entpacken Sie das heruntergeladene Archiv
 - Öffnen Sie ein Terminal in dem Verzeichnis, in dem sich das Spiel befindet
 - Führen Sie einen der folgenden Befehle aus: `python3 main.py` or `python main.py`
@@ -82,4 +82,4 @@ Wenn Sie ein Linux-System verwenden, installieren Sie SDL2 mit Ihrem Paketmanage
     - [Pierrick Perdrieau](https://github.com/Crabiz) *(für das System, das die Schüsse in Richtung des Fadenkreuzes ermöglicht)*
     - Timothée Ané *(für das System, das die Schüsse in Richtung des Fadenkreuzes ermöglicht)*
 
-"Kino Der Toten - A Pyxel Game" © 2024 by [Aurélien Audero](https://github.com/AurelienAudero), [Axel Thibert](https://github.com/Oxwerth) and [Tony Baca](https://github.com/Thidokachi) is licensed under [CC BY-NC-ND 4.0](https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/blob/main/LICENSE)
+"Kino Der Toten - A Pyxel Game" © 2024 by [Aurélien Audero](https://github.com/AurelienAudero), [Axel Thibert](https://github.com/Oxwerth) and [Tony Baca](https://github.com/Thidokachi) is licensed under [CC BY-NC-ND 4.0](https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/blob/main/LICENSE)

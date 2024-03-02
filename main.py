@@ -27,7 +27,7 @@ def fenetreErreurLibrary(pyxelLibraryStatus:bool, pygameLibraryStatus:bool):
     v2.set(0)
 
   def learnMoreBtn():
-    webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/blob/main/README.md")
+    webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/blob/main/README.md")
 
   # Ajout du contenu à la fenêtre
   Label(fenetre, text="Certains composants requis ne sont pas installé", bg='red').pack()
@@ -916,7 +916,7 @@ class Jeu:
 
       # Clic sur le bouton "GitHub"
       if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
-        webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel")
+        webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game")
     
     # Calcul du nombre d'images par seconde affichées
     if debug:
@@ -1302,7 +1302,7 @@ if sysArgs:
     if debug1 == -1:
       sysExit()
   if (sysArgs[0] == "--help") or (sysArgs[0] == "--h"):
-    print("Pour plus d'informations, veuillez consulter le GitHub du projet : https://github.com/AurelienAudero/KinoDerToten-Projet-Pyxel/")
+    print("Pour plus d'informations, veuillez consulter le GitHub du projet : https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/")
     sysExit()
 
 userChosenKeybinds, musicEnabled, soundEnabled, controllerSensitivity, controllerDeadzone = askPlayer()
