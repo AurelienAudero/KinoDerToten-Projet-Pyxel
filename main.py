@@ -836,7 +836,8 @@ class Jeu:
       if self.attenteNouvelleVague:
         if self.tempsAttenteStartFrame + (fps*self.tempsAttenteNouvelleVague) == pyxel.frame_count:
           self.attenteNouvelleVague = False
-          self.tempsSpawnMobActuel = self.tempsSpawnMobBase - 1
+          if self.nbVagues != 1:
+            self.tempsSpawnMobActuel = self.tempsSpawnMobBase - 1
       
       # Temps d'attente pour le rechargement de l'arme du joueur
       if self.personnage.ammoReloadingStatus < 100:
