@@ -269,7 +269,8 @@ class Personnage:
     
     # Contrôles avec les sticks analogiques de la manette
     elif (self.keybinds == 4) or (self.keybinds == 5):
-      if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and (self.y > 0) :
+      # Déplacement vers le haut
+      if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and (self.y > 0) :
           self.y -= self.vitesse
           if self.lastSide != "Top":
             self.lastSide = "Top"
@@ -280,7 +281,8 @@ class Personnage:
                 self.numberOfSteps = 1
               else:
                 self.numberOfSteps += 1
-      if pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and (self.x > 0) :
+      # Déplacement vers la gauche
+      if pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and (self.x > 0) :
           self.x -= self.vitesse
           if self.lastSide != "Left":
             self.lastSide = "Left"
@@ -291,7 +293,8 @@ class Personnage:
                 self.numberOfSteps = 1
               else:
                 self.numberOfSteps += 1
-      if pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and (self.y < resHauteur-self.height) :
+      # Déplacement vers le bas
+      if pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and (self.y < resHauteur-self.height) :
           self.y += self.vitesse
           if self.lastSide != "Bottom":
             self.lastSide = "Bottom"
@@ -302,7 +305,8 @@ class Personnage:
                 self.numberOfSteps = 1
               else:
                 self.numberOfSteps += 1
-      if pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and (self.x < resLongueur-self.width) :
+      # Déplacement vers la droite
+      if pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and (self.x < resLongueur-self.width) :
           self.x += self.vitesse
           if self.lastSide != "Right":
             self.lastSide = "Right"
@@ -313,6 +317,67 @@ class Personnage:
                 self.numberOfSteps = 1
               else:
                 self.numberOfSteps += 1
+      # Déplacement en diagonale haut-gauche
+      if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone :
+        if self.x > 0:
+          self.x -= self.vitesse/1.5
+        if self.y > 0:
+          self.y -= self.vitesse/1.5
+        if self.lastSide != "Left":
+          self.lastSide = "Left"
+          self.numberOfSteps = 1
+        else:
+          if pyxel.frame_count % self.timeBetweenAnimation == 0:
+            if self.numberOfSteps == 5:
+              self.numberOfSteps = 1
+            else:
+              self.numberOfSteps += 1
+      # Déplacement en diagonale haut-droite
+      if pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone :
+        if self.x < resLongueur-self.width:
+          self.x += self.vitesse/1.5
+        if self.y > 0:
+          self.y -= self.vitesse/1.5
+        if self.lastSide != "Right":
+          self.lastSide = "Right"
+          self.numberOfSteps = 1
+        else:
+          if pyxel.frame_count % self.timeBetweenAnimation == 0:
+            if self.numberOfSteps == 5:
+              self.numberOfSteps = 1
+            else:
+              self.numberOfSteps += 1
+      # Déplacement en diagonale bas-gauche
+      if pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone :
+        if self.x > 0:
+          self.x -= self.vitesse/1.5
+        if self.y < resHauteur-self.height:
+          self.y += self.vitesse/1.5
+        if self.lastSide != "Left":
+          self.lastSide = "Left"
+          self.numberOfSteps = 1
+        else:
+          if pyxel.frame_count % self.timeBetweenAnimation == 0:
+            if self.numberOfSteps == 5:
+              self.numberOfSteps = 1
+            else:
+              self.numberOfSteps += 1
+      # Déplacement en diagonale bas-droite
+      if pyxel.btnv(self.personnageAxeY) > self.controllerDeadzone and not pyxel.btnv(self.personnageAxeY) < -self.controllerDeadzone and not pyxel.btnv(self.personnageAxeX) < -self.controllerDeadzone and pyxel.btnv(self.personnageAxeX) > self.controllerDeadzone :
+        if self.x < resLongueur-self.width:
+          self.x += self.vitesse/1.5
+        if self.y < resHauteur-self.height:
+          self.y += self.vitesse/1.5
+        if self.lastSide != "Right":
+          self.lastSide = "Right"
+          self.numberOfSteps = 1
+        else:
+          if pyxel.frame_count % self.timeBetweenAnimation == 0:
+            if self.numberOfSteps == 5:
+              self.numberOfSteps = 1
+            else:
+              self.numberOfSteps += 1
+      # Tir
       if pyxel.btnp(self.personnageTir):
         if self.currentPlayerAmmo > 0:
           if self.soundEnabled:
@@ -322,6 +387,7 @@ class Personnage:
           if self.soundEnabled:
             pyxel.play(0, 4, loop=False) # Sound effect du chargeur de l'arme vide (si les effets sonores sont activés)
           return None
+      # Recharger
       if pyxel.btnp(self.personnageRecharger) and (self.ammoReloadingStatus == 100) and (self.currentPlayerAmmo < self.maxPlayerAmmo):
         if self.soundEnabled:
           pyxel.play(0, 3, loop=False) # Sound effect du rechargement de l'arme (si les effets sonores sont activés)
