@@ -1039,7 +1039,7 @@ class Jeu:
           pyxel.blt(525, 400, 1, 0, 222, 96, 35, 7)
 
       # Affiche les copyrights
-      pyxel.text(10, 520, "(c) Aurelien Audero, Axel Thibert, Tony Baca - 2024 - Tous droits reserves", 7)
+      pyxel.text(10, 520, "Copyright (c) Aurelien Audero, Axel Thibert, Tony Baca - 2024 - Tous droits reserves", 7)
 
       # Affiche le lien vers le GitHub du projet
       pyxel.blt(875, 510, 1, 0, 65, 75, 25, 7)
