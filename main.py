@@ -645,7 +645,7 @@ class Jeu:
     if (self.keybinds == 4) or (self.keybinds == 5):
       self.controllerSensitivity = controllerSensitivity # Sensibilité des sticks analogiques de la manette (si jeu sur manette)
       self.controllerDeadzone = controllerDeadzone # Zone morte des sticks analogiques de la manette (si jeu sur manette)
-    self.start() # Démarrage du jeu
+    self.TitleScreen() # Initialise l'écran titre du jeu
     if debug:
       if debug4: # Compteur de FPS (si activé dans le debug)
         self.previousFPSTime = mktime(gmtime()) # Timestamp pour compter le nombre de frames en une seconde
@@ -653,6 +653,25 @@ class Jeu:
         self.currentFPS = 0 # Initialisation du compteur de FPS
     pyxel.run(self.update, self.draw) # Démarrage de la boucle principale du jeu
 
+  def TitleScreen(self):
+    """
+    Initialise l'écran titre du jeu.
+
+    Args:
+        Aucun argument n'est requis.
+
+    Returns:
+        La fonction ne retourne rien mais affiche l'écran titre du jeu.
+    """
+    self.titleScreen = True # Etat de l'écran titre
+    self.partieTerminee = False # Etat de la partie en cours
+    self.TitleScreenChosenBtn = 1 # Bouton choisi sur l'écran titre lors du jeu sur manette
+    self.titleScreenLastStep = 1 # Dernière étape de l'animation des personnages sur l'écran titre
+    self.titleScreenPersoX = resLongueur # Position en x des personnages sur l'écran titre
+    pyxel.images[1].load(0,0, "TitleScreen.png") # Chargement de l'image de l'écran titre
+    if self.musicEnabled:
+      pyxel.play(1, 6, loop=True) # Lecture de la musique de l'écran titre
+  
   def start(self):
     """
     Initialise les variables du jeu au début de la partie.
@@ -690,7 +709,7 @@ class Jeu:
     pyxel.images[1].load(0,0, "RichtofenSpriteSheet.png") # Chargement des sprites de Richtofen (joueur)
     pyxel.images[2].load(0,0, "ZombieSpriteSheet.png") # Chargement des sprites des zombies (ennemis)
     if self.musicEnabled:
-      pyxel.stop(1) # Arrêt de la musique de l'écran Game Over
+      pyxel.stop(1) # Arrêt de la musique de l'écran Game Over ou de l'écran titre
       self.partieTermineeMusicInitiated = False # Réinitialisation de l'état de l'initialisation de la musique de l'écran Game Over
       mixer.music.play() # Lecture de la musique du jeu
 
@@ -759,7 +778,7 @@ class Jeu:
           pyxel.blt(x+(16*i), y, 0, 170, 24, 11, 19, 0) # Affichage de la virgule
 
   def update(self): 
-    if not self.partieTerminee:
+    if not self.partieTerminee and not self.titleScreen:
       # Touche pour quitter le jeu
       if pyxel.btnp(pyxel.KEY_ESCAPE):
         if gameQuitConfirmationWindow():
@@ -922,6 +941,47 @@ class Jeu:
       if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
         webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game")
     
+    elif self.titleScreen:
+      # Animation des personnages sur l'écran titre
+      if pyxel.frame_count % 15 == 0:
+        if self.titleScreenLastStep == 1:
+          self.titleScreenLastStep += 1
+        else:
+          self.titleScreenLastStep -= 1
+        if self.titleScreenPersoX < -89:
+          self.titleScreenPersoX = resLongueur
+        else:
+          self.titleScreenPersoX -= 10
+      
+      if self.keybinds == 4 or self.keybinds == 5:
+        # Effet de hover sur les boutons de l'écran titre
+        if pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT) or pyxel.btnv(pyxel.GAMEPAD1_AXIS_LEFTX) > self.controllerDeadzone:
+          self.TitleScreenChosenBtn = 2
+        elif pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT) or pyxel.btnv(pyxel.GAMEPAD1_AXIS_LEFTX) < -self.controllerDeadzone:
+          self.TitleScreenChosenBtn = 1
+
+        # Clic sur le bouton "Jouer"
+        if self.TitleScreenChosenBtn == 1 and pyxel.btn(pyxel.GAMEPAD1_BUTTON_A):
+          self.titleScreen = False
+          self.start()
+
+        # Clic sur le bouton "Quitter"
+        elif self.TitleScreenChosenBtn == 2 and pyxel.btn(pyxel.GAMEPAD1_BUTTON_A):
+          pyxel.quit()
+      else:
+        # Clic sur le bouton "Jouer"
+        if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
+          self.titleScreen = False
+          self.start()
+        
+        # Clic sur le bouton "Quitter"
+        elif pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
+          pyxel.quit()
+      
+      # Clic sur le bouton "GitHub"
+      if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(pyxel.MOUSE_BUTTON_LEFT):
+        webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game")
+
     # Calcul du nombre d'images par seconde affichées
     if debug:
       if debug4:
@@ -930,11 +990,13 @@ class Jeu:
           self.currentFPS = pyxel.frame_count - self.previousFPSFrame
           self.previousFPSFrame = pyxel.frame_count
       if debug7:
-        if pyxel.frame_count % (fps*1) == 0:
+        if not self.titleScreen and pyxel.frame_count % (fps*1) == 0:
           print("Reticule : {}, {}".format(str(self.personnage.reticule.x), str(self.personnage.reticule.y)))
+        elif self.titleScreen and pyxel.frame_count % (fps*1) == 0:
+          print("Reticule : Valeur inaccessible dans l'écran titre")
 
   def draw(self):
-    if not self.partieTerminee:
+    if not self.partieTerminee and not self.titleScreen:
       # Efface l'écran
       pyxel.cls(5)
 
@@ -1052,6 +1114,52 @@ class Jeu:
       # Affiche le lien vers le GitHub du projet
       pyxel.blt(875, 510, 1, 0, 65, 75, 25, 7)
     
+    elif self.titleScreen:
+      # Efface l'écran
+      pyxel.cls(10)
+
+      # Affiche le curseur de la souris
+      pyxel.mouse(True)
+
+      # Affiche le logo du jeu
+      pyxel.blt(350, 100, 1, 0, 10, 256, 40, 10)
+      pyxel.text(549, 140, "- A PYXEL GAME", 7)
+
+      # Affiche les personnages du jeu sur l'écran titre
+      if self.titleScreenLastStep == 1:
+        pyxel.blt(self.titleScreenPersoX, 200, 1, 21, 199, 83, 58, 7)
+      else:
+        pyxel.blt(self.titleScreenPersoX, 200, 1, 149, 199, 83, 58, 7)
+      
+      # Affichage des boutons lors du jeu sur manette
+      if self.keybinds == 4 or self.keybinds == 5:
+        if self.gameOverChosenBtn == 1:
+          pyxel.blt(322, 364, 1, 8, 93, 118, 74, 10) # Affiche le bouton "Jouer"
+          pyxel.blt(525, 400, 1, 132, 58, 112, 33, 10) # Affiche le bouton "Quitter"
+        elif self.gameOverChosenBtn == 2:
+          pyxel.blt(325, 400, 1, 11, 58, 112, 33, 10) # Affiche le bouton "Jouer"
+          pyxel.blt(522, 364, 1, 129, 93, 118, 74, 10) # Affiche le bouton "Quitter"
+          
+      # Affichage des boutons lors du jeu sur clavier et souris
+      else:
+        # Affiche le bouton "Jouer"
+        if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
+          pyxel.blt(322, 364, 1, 8, 93, 118, 74, 10)
+        else:
+          pyxel.blt(325, 400, 1, 11, 58, 112, 33, 10)
+        
+        # Affiche le bouton "Quitter"
+        if pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
+          pyxel.blt(522, 364, 1, 129, 93, 118, 74, 10)
+        else:
+          pyxel.blt(525, 400, 1, 132, 58, 112, 33, 10)
+
+      # Affiche les copyrights
+      pyxel.text(10, 520, "Copyright (c) Aurelien Audero, Axel Thibert, Tony Baca - 2024 - Tous droits reserves", 7)
+
+      # Affiche le lien vers le GitHub du projet
+      pyxel.blt(875, 510, 1, 11, 171, 61, 17, 10)
+
     if debug:
       pyxel.blt(5, 5, 0, 0, 112, 77, 10, 0) # Affiche un indicateur sur l'écran quand le mode debug est activé
       if debug4:
