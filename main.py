@@ -737,6 +737,26 @@ class Jeu:
     # Début du temps de pause avant le début de la prochaine vague
     self.tempsAttenteStartFrame = pyxel.frame_count
     self.attenteNouvelleVague = True
+
+    # Spawn d'un seul zombie pour se familiariser avec les contrôles
+    if self.nbVagues == 1:
+      if debug:
+        if not debug5:
+          numeroSpawner = randint(1,3)
+          if numeroSpawner == 1:
+            self.zombiesList.append(Zombie(200, 15, 38, 51, 1, self.personnage))
+          elif numeroSpawner == 2:
+            self.zombiesList.append(Zombie(432, 15, 38, 51, 1, self.personnage))
+          elif numeroSpawner == 3:
+            self.zombiesList.append(Zombie(664, 15, 38, 51, 1, self.personnage))
+      else:
+        numeroSpawner = randint(1,3)
+        if numeroSpawner == 1:
+          self.zombiesList.append(Zombie(200, 15, 38, 51, 1, self.personnage))
+        elif numeroSpawner == 2:
+          self.zombiesList.append(Zombie(432, 15, 38, 51, 1, self.personnage))
+        elif numeroSpawner == 3:
+          self.zombiesList.append(Zombie(664, 15, 38, 51, 1, self.personnage))
   
   def screenTextPrint(self, x, y, text):
     """
