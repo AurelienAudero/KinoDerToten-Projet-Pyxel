@@ -963,6 +963,10 @@ class Jeu:
       # Affichage du personnage joueur
       self.personnage.draw()
 
+      # Affiche de l'indicateur de dégâts subis par le joueur
+      if self.personnage.lastHit + (self.personnage.hitCooldown-30) > pyxel.frame_count:
+        pyxel.blt(self.personnage.x+self.personnage.width, self.personnage.y-27, 0, 36, 72, 35, 27, 7)
+
       # Affichage du réticule de visée
       self.personnage.reticule.draw()
 
