@@ -399,27 +399,100 @@ class Tir:
 
 class Zombie:
   def __init__(self, x, y, width, height, vitesse, personnage):
-    self.x = x
-    self.y = y
-    self.width = width
-    self.height = height
-    self.vitesse = vitesse
-    self.alive = True
-    self.personnage = personnage
+    self.x = x # Position en x du zombie
+    self.y = y # Position en y du zombie
+    self.width = width # Largeur du zombie
+    self.height = height # Hauteur du zombie
+    self.vitesse = vitesse # Vitesse de déplacement du zombie
+    self.alive = True # Etat du zombie
+    self.lastSide = "Bottom" # Dernière direction prise par le zombie
+    self.timeBetweenAnimation = 10 # Temps entre chaque changement de sprite (en frames)
+    self.numberOfSteps = 1 # Nombre de pas effectués par le zombie depuis le changement de direction
+    self.personnage = personnage # Personnage joueur
 
   def move(self):
     if (self.y > 0) and (self.y > self.personnage.y) :
-      self.y = self.y - self.vitesse
+      self.y -= self.vitesse
+      if self.lastSide != "Top":
+        self.lastSide = "Top"
+        self.numberOfSteps = 1
+      else:
+        if pyxel.frame_count % self.timeBetweenAnimation == 0:
+          if self.numberOfSteps == 3:
+            self.numberOfSteps = 1
+          else:
+            self.numberOfSteps += 1
     if (self.x > 0) and (self.x > self.personnage.x) :
-      self.x = self.x - self.vitesse
+      self.x -= self.vitesse
+      if self.lastSide != "Left":
+        self.lastSide = "Left"
+        self.numberOfSteps = 1
+      else:
+        if pyxel.frame_count % self.timeBetweenAnimation == 0:
+          if self.numberOfSteps == 5:
+            self.numberOfSteps = 1
+          else:
+            self.numberOfSteps += 1
     if (self.y < resHauteur-self.height) and (self.y < self.personnage.y):
-      self.y = self.y + self.vitesse
+      self.y += self.vitesse
+      if self.lastSide != "Bottom":
+        self.lastSide = "Bottom"
+        self.numberOfSteps = 1
+      else:
+        if pyxel.frame_count % self.timeBetweenAnimation == 0:
+          if self.numberOfSteps == 3:
+            self.numberOfSteps = 1
+          else:
+            self.numberOfSteps += 1
     if (self.x < resLongueur-self.width) and (self.x < self.personnage.x):
-      self.x = self.x + self.vitesse
+      self.x += self.vitesse
+      if self.lastSide != "Right":
+        self.lastSide = "Right"
+        self.numberOfSteps = 1
+      else:
+        if pyxel.frame_count % self.timeBetweenAnimation == 0:
+          if self.numberOfSteps == 5:
+            self.numberOfSteps = 1
+          else:
+            self.numberOfSteps += 1
 
   def draw(self): 
-    pyxel.rect(self.x, self.y, self.width, self.height, 11)
-    pyxel.rectb(self.x, self.y, self.width, self.height, 0)
+    if self.lastSide == "Left":
+      if self.numberOfSteps == 1:
+        pyxel.blt(self.x, self.y, 2, 5, 61, self.width, self.height, 7)
+      elif self.numberOfSteps == 2:
+        pyxel.blt(self.x, self.y, 2, 46, 61, self.width, self.height, 7)
+      elif self.numberOfSteps == 3:
+        pyxel.blt(self.x, self.y, 2, 87, 61, self.width, self.height, 7)
+      elif self.numberOfSteps == 4:
+        pyxel.blt(self.x, self.y, 2, 128, 61, self.width, self.height, 7)
+      elif self.numberOfSteps == 5:
+        pyxel.blt(self.x, self.y, 2, 169, 61, self.width, self.height, 7)
+    elif self.lastSide == "Right":
+      if self.numberOfSteps == 1:
+        pyxel.blt(self.x, self.y, 2, 5, 0, self.width, self.height, 7)
+      elif self.numberOfSteps == 2:
+        pyxel.blt(self.x, self.y, 2, 46, 0, self.width, self.height, 7)
+      elif self.numberOfSteps == 3:
+        pyxel.blt(self.x, self.y, 2, 87, 0, self.width, self.height, 7)
+      elif self.numberOfSteps == 4:
+        pyxel.blt(self.x, self.y, 2, 128, 0, self.width, self.height, 7)
+      elif self.numberOfSteps == 5:
+        pyxel.blt(self.x, self.y, 2, 169, 0, self.width, self.height, 7)
+    elif self.lastSide == "Top":
+      if self.numberOfSteps == 1:
+        pyxel.blt(self.x, self.y, 2, 5, 119, self.width, self.height, 7)
+      elif self.numberOfSteps == 2:
+        pyxel.blt(self.x, self.y, 2, 45, 119, self.width, self.height, 7)
+      elif self.numberOfSteps == 3:
+        pyxel.blt(self.x, self.y, 2, 85, 119, self.width, self.height, 7)
+    elif self.lastSide == "Bottom":
+      if self.numberOfSteps == 1:
+        pyxel.blt(self.x, self.y, 2, 5, 174, self.width, self.height, 7)
+      elif self.numberOfSteps == 2:
+        pyxel.blt(self.x, self.y, 2, 45, 174, self.width, self.height, 7)
+      elif self.numberOfSteps == 3:
+        pyxel.blt(self.x, self.y, 2, 85, 174, self.width, self.height, 7)
     if debug:
       if debug2:
         pyxel.rectb(self.x, self.y, self.width, self.height, 8) # Affichage de la hitbox du zombie (si activé dans le debug)
@@ -481,6 +554,7 @@ class Jeu:
     self.startNewWave() # Démarrage de la première vague
     pyxel.mouse(False) # Désactive le curseur de la souris
     pyxel.images[1].load(0,0, "RichtofenSpriteSheet.png") # Chargement des sprites de Richtofen (joueur)
+    pyxel.images[2].load(0,0, "ZombieSpriteSheet.png") # Chargement des sprites des zombies (ennemis)
     if self.musicEnabled:
       pyxel.stop(1) # Arrêt de la musique de l'écran Game Over
       self.partieTermineeMusicInitiated = False # Réinitialisation de l'état de l'initialisation de la musique de l'écran Game Over
@@ -663,20 +737,20 @@ class Jeu:
           if pyxel.frame_count % (fps*self.tempsSpawnMobActuel) == 0:
             numeroSpawner = randint(1,3)
             if numeroSpawner == 1:
-              self.zombiesList.append(Zombie(200, 15, 40, 50, 1, self.personnage))
+              self.zombiesList.append(Zombie(200, 15, 38, 51, 1, self.personnage))
             elif numeroSpawner == 2:
-              self.zombiesList.append(Zombie(432, 15, 40, 50, 1, self.personnage))
+              self.zombiesList.append(Zombie(432, 15, 38, 51, 1, self.personnage))
             elif numeroSpawner == 3:
-              self.zombiesList.append(Zombie(664, 15, 40, 50, 1, self.personnage))
+              self.zombiesList.append(Zombie(664, 15, 38, 51, 1, self.personnage))
       else:
         if pyxel.frame_count % (fps*self.tempsSpawnMobActuel) == 0:
           numeroSpawner = randint(1,3)
           if numeroSpawner == 1:
-            self.zombiesList.append(Zombie(200, 15, 40, 50, 1, self.personnage))
+            self.zombiesList.append(Zombie(200, 15, 38, 51, 1, self.personnage))
           elif numeroSpawner == 2:
-            self.zombiesList.append(Zombie(432, 15, 40, 50, 1, self.personnage))
+            self.zombiesList.append(Zombie(432, 15, 38, 51, 1, self.personnage))
           elif numeroSpawner == 3:
-            self.zombiesList.append(Zombie(664, 15, 40, 50, 1, self.personnage))
+            self.zombiesList.append(Zombie(664, 15, 38, 51, 1, self.personnage))
     
     elif self.partieTerminee:
       if self.musicEnabled and not self.partieTermineeMusicInitiated:
