@@ -224,7 +224,7 @@ class Personnage:
       if pyxel.btn(self.personnageBas) and not pyxel.btn(self.personnageHaut) and pyxel.btn(self.personnageGauche) and not pyxel.btn(self.personnageDroite) :
         if self.x > 0:
           self.x -= self.vitesse/1.5
-        if self.y > 0:
+        if self.y < resHauteur-self.height:
           self.y += self.vitesse/1.5
         if self.lastSide != "Left":
           self.lastSide = "Left"
@@ -239,7 +239,7 @@ class Personnage:
       if pyxel.btn(self.personnageBas) and not pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageGauche) and pyxel.btn(self.personnageDroite) :
         if self.x < resLongueur-self.width:
           self.x += self.vitesse/1.5
-        if self.y > 0:
+        if self.y < resHauteur-self.height:
           self.y += self.vitesse/1.5
         if self.lastSide != "Right":
           self.lastSide = "Right"
