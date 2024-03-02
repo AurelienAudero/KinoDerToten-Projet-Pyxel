@@ -142,7 +142,8 @@ class Personnage:
   def move(self):
     # Contrôles avec les boutons du clavier ou de la manette
     if (self.keybinds != 4) and (self.keybinds != 5):
-      if pyxel.btn(self.personnageHaut) and (self.y > 0) :
+      # Déplacement vers le haut
+      if pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageGauche) and not pyxel.btn(self.personnageDroite) and (self.y > 0) :
           self.y -= self.vitesse
           if self.lastSide != "Top":
             self.lastSide = "Top"
@@ -153,7 +154,8 @@ class Personnage:
                 self.numberOfSteps = 1
               else:
                 self.numberOfSteps += 1
-      if pyxel.btn(self.personnageGauche) and (self.x > 0) :
+      # Déplacement vers la gauche
+      if pyxel.btn(self.personnageGauche) and not pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageBas) and (self.x > 0) :
           self.x -= self.vitesse
           if self.lastSide != "Left":
             self.lastSide = "Left"
@@ -164,7 +166,8 @@ class Personnage:
                 self.numberOfSteps = 1
               else:
                 self.numberOfSteps += 1
-      if pyxel.btn(self.personnageBas) and (self.y < resHauteur-self.height) :
+      # Déplacement vers le bas
+      if pyxel.btn(self.personnageBas) and not pyxel.btn(self.personnageGauche) and not pyxel.btn(self.personnageDroite) and (self.y < resHauteur-self.height) :
           self.y += self.vitesse
           if self.lastSide != "Bottom":
             self.lastSide = "Bottom"
@@ -175,7 +178,8 @@ class Personnage:
                 self.numberOfSteps = 1
               else:
                 self.numberOfSteps += 1
-      if pyxel.btn(self.personnageDroite) and (self.x < resLongueur-self.width) :
+      # Déplacement vers la droite
+      if pyxel.btn(self.personnageDroite) and not pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageBas) and (self.x < resLongueur-self.width) :
           self.x += self.vitesse
           if self.lastSide != "Right":
             self.lastSide = "Right"
@@ -186,6 +190,67 @@ class Personnage:
                 self.numberOfSteps = 1
               else:
                 self.numberOfSteps += 1
+      # Déplacement en diagonale haut-gauche
+      if pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageBas) and pyxel.btn(self.personnageGauche) and not pyxel.btn(self.personnageDroite) :
+        if self.x > 0:
+          self.x -= self.vitesse/1.5
+        if self.y > 0:
+          self.y -= self.vitesse/1.5
+        if self.lastSide != "Left":
+          self.lastSide = "Left"
+          self.numberOfSteps = 1
+        else:
+          if pyxel.frame_count % self.timeBetweenAnimation == 0:
+            if self.numberOfSteps == 5:
+              self.numberOfSteps = 1
+            else:
+              self.numberOfSteps += 1
+      # Déplacement en diagonale haut-droite
+      if pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageBas) and not pyxel.btn(self.personnageGauche) and pyxel.btn(self.personnageDroite) :
+        if self.x < resLongueur-self.width:
+          self.x += self.vitesse/1.5
+        if self.y > 0:
+          self.y -= self.vitesse/1.5
+        if self.lastSide != "Right":
+          self.lastSide = "Right"
+          self.numberOfSteps = 1
+        else:
+          if pyxel.frame_count % self.timeBetweenAnimation == 0:
+            if self.numberOfSteps == 5:
+              self.numberOfSteps = 1
+            else:
+              self.numberOfSteps += 1
+      # Déplacement en diagonale bas-gauche
+      if pyxel.btn(self.personnageBas) and not pyxel.btn(self.personnageHaut) and pyxel.btn(self.personnageGauche) and not pyxel.btn(self.personnageDroite) :
+        if self.x > 0:
+          self.x -= self.vitesse/1.5
+        if self.y > 0:
+          self.y += self.vitesse/1.5
+        if self.lastSide != "Left":
+          self.lastSide = "Left"
+          self.numberOfSteps = 1
+        else:
+          if pyxel.frame_count % self.timeBetweenAnimation == 0:
+            if self.numberOfSteps == 5:
+              self.numberOfSteps = 1
+            else:
+              self.numberOfSteps += 1
+      # Déplacement en diagonale bas-droite
+      if pyxel.btn(self.personnageBas) and not pyxel.btn(self.personnageHaut) and not pyxel.btn(self.personnageGauche) and pyxel.btn(self.personnageDroite) :
+        if self.x < resLongueur-self.width:
+          self.x += self.vitesse/1.5
+        if self.y > 0:
+          self.y += self.vitesse/1.5
+        if self.lastSide != "Right":
+          self.lastSide = "Right"
+          self.numberOfSteps = 1
+        else:
+          if pyxel.frame_count % self.timeBetweenAnimation == 0:
+            if self.numberOfSteps == 5:
+              self.numberOfSteps = 1
+            else:
+              self.numberOfSteps += 1      
+      # Tir
       if pyxel.btnp(self.personnageTir):
         if self.currentPlayerAmmo > 0:
           if self.soundEnabled:
@@ -195,6 +260,7 @@ class Personnage:
           if self.soundEnabled:
             pyxel.play(0, 4, loop=False) # Sound effect du chargeur de l'arme vide (si les effets sonores sont activés)
           return None
+      # Recharger
       if pyxel.btnp(self.personnageRecharger) and (self.ammoReloadingStatus == 100) and (self.currentPlayerAmmo < self.maxPlayerAmmo):
         if self.soundEnabled:
           pyxel.play(0, 3, loop=False) # Sound effect du rechargement de l'arme (si les effets sonores sont activés)
