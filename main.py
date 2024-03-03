@@ -820,10 +820,9 @@ class Jeu:
       if self.attenteNouvelleVague:
         if self.tempsAttenteStartFrame + (fps*self.tempsAttenteNouvelleVague) == pyxel.frame_count:
           self.attenteNouvelleVague = False
-          if self.nbVagues == 1:
-            self.tempsSpawnMobActuel = self.tempsSpawnMobBase
-          else:
-            self.tempsSpawnMobActuel = self.tempsSpawnMobBase - 1
+          if self.nbVagues != 1:
+            self.tempsSpawnMobBase -= 1
+          self.tempsSpawnMobActuel = self.tempsSpawnMobBase
         if pyxel.frame_count - self.tempsAttenteNouvelleVagueLastCheckedFrameForCountdown >= fps:
           self.tempsAttenteNouvelleVagueLastCheckedFrameForCountdown += fps
           self.tempsAttenteRestantNouvelleVague -= 1
