@@ -1037,6 +1037,11 @@ class Jeu:
           print("Reticule : {}, {}".format(str(self.personnage.reticule.x), str(self.personnage.reticule.y)))
         elif self.titleScreen and pyxel.frame_count % (fps*1) == 0:
           print("Reticule : Valeur inaccessible dans l'écran titre")
+      if debug9:
+        if not self.titleScreen and pyxel.frame_count % (fps*1) == 0:
+          print("Points de vie : {} / {}".format(str(self.personnage.currentHP), str(self.personnage.maxHP)))
+        elif self.titleScreen and pyxel.frame_count % (fps*1) == 0:
+          print("Points de vie : Valeur inaccessible dans l'écran titre")
 
   def draw(self):
     if not self.partieTerminee and not self.titleScreen:
@@ -1394,7 +1399,8 @@ def debugSettings():
       v6: Désactiver l'affichage de la map (Bool)
       v7: Afficher les coordonnées du reticule (Bool)
       v8: Hitbox des spawners de zombies (Bool)
-      v9: Limite de FPS en jeu (Int)
+      v9: Afficher le nombre de points de vie (Bool)
+      v10: Limite de FPS en jeu (Int)
   """
   
   # Intialisation de la fenêtre et de ses variables
@@ -1410,7 +1416,8 @@ def debugSettings():
   v6 = IntVar()
   v7 = IntVar()
   v8 = IntVar()
-  v9 = IntVar(value=60)
+  v9 = IntVar()
+  v10 = IntVar(value=60)
 
   # Action en cas de fermeture de la fenêtre
   def fermetureFenetre():
@@ -1429,10 +1436,11 @@ def debugSettings():
   Checkbutton(fenetre, text="Désactiver les zombies", variable=v5, anchor="w", justify="left").pack(fill='both')
   Checkbutton(fenetre, text="Désactiver l'affichage de la map", variable=v6, anchor="w", justify="left").pack(fill='both')
   Checkbutton(fenetre, text="Afficher les coordonnées du reticule", variable=v7, anchor="w", justify="left").pack(fill='both')
-  Checkbutton(fenetre, text="Hitbox des spawners de zombies", variable=v8, anchor="w", justify="left").pack(fill='both', pady=(0,10))
+  Checkbutton(fenetre, text="Hitbox des spawners de zombies", variable=v8, anchor="w", justify="left").pack(fill='both')
+  Checkbutton(fenetre, text="Afficher le nombre de points de vie", variable=v9, anchor="w", justify="left").pack(fill='both', pady=(0,10))
   fpsSelectorFrame = Frame(fenetre)
   Label(fpsSelectorFrame, text="Limite de FPS en jeu :", anchor="w", justify="left").pack(side='left', pady=(15,0))
-  Scale(fpsSelectorFrame, from_=1, to=1000, orient=HORIZONTAL, variable=v9).pack(side='right')
+  Scale(fpsSelectorFrame, from_=1, to=1000, orient=HORIZONTAL, variable=v10).pack(side='right')
   fpsSelectorFrame.pack(fill='both')
   Button(text="Confirmer", command=fenetre.destroy).pack(pady=(10,0))
 
@@ -1442,9 +1450,9 @@ def debugSettings():
 
   # Retour du choix de l'utilisateur
   if v1 == -1:
-    return (-1,-1,-1,-1,-1,-1,-1,-1,-1)
+    return (-1,-1,-1,-1,-1,-1,-1,-1,-1,-1)
   else:
-    return (v1.get(),v2.get(),v3.get(),v4.get(),v5.get(), v6.get(), v7.get(), v8.get(), v9.get())
+    return (v1.get(),v2.get(),v3.get(),v4.get(),v5.get(), v6.get(), v7.get(), v8.get(), v9.get(), v10.get())
   
 # Fonction pour demander à l'utilisateur les contrôles à utiliser
 def askPlayer():
@@ -1520,7 +1528,7 @@ def gameQuitConfirmationWindow():
 if sysArgs:
   if sysArgs[0] == "--debug=True":
     debug = True
-    debug1, debug2, debug3, debug4, debug5, debug6, debug7, debug8, debug9 = debugSettings()
+    debug1, debug2, debug3, debug4, debug5, debug6, debug7, debug8, debug9, debug10 = debugSettings()
     if debug1 == -1:
       sysExit()
   if (sysArgs[0] == "--help") or (sysArgs[0] == "--h"):
@@ -1534,8 +1542,8 @@ if (userChosenKeybinds != 0) and (userChosenKeybinds != -1):
   resHauteur = 540
   fps = 60
   if debug:
-    if debug9 != 60:
-      fps = debug9
+    if debug10 != 60:
+      fps = debug10
   if (userChosenKeybinds == 1) or (userChosenKeybinds == 2) or (userChosenKeybinds == 3):
     del(controllerSensitivity)
     del(controllerDeadzone)
