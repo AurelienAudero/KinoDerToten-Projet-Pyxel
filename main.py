@@ -698,12 +698,13 @@ class Jeu:
     self.tempsSpawnMobBase = 5 # Temps entre chaque spawn de mob (en secondes)
     self.gainScoreKill = 10 # Nombre de points de score gagné en faisant un kill
     self.perteHP = 5 # Nombre de points de vie perdus au contact d'un zombie
-    self.partieTerminee = False # Etat de la partie en cours
+    self.partieTerminee = False # Etat de la partie en cours (en cours ou terminée)
+    self.partieGagnee = False # Etat de la partie en cours (gagnée ou non)
     self.gameOverChosenBtn = 1 # Bouton choisi sur l'écran "Game Over" lors du contrôle à la manette
     self.nbZombiesTotal = 0 # Nombre total de zombies tués
     self.nbZombiesVagueActuelle = 0 # Nombre de zombies tués dans la vague actuelle
     self.nbZombiesPourTerminerVague = 20 # Nombre de zombies à tuer pour terminer une vague
-    self.tempsAttenteNouvelleVague = 15 # Temps d'attente avant le début de la prochaine vague (en secondes)
+    self.tempsAttenteNouvelleVague = 10 # Temps d'attente avant le début de la prochaine vague (en secondes)
     self.startNewWave() # Démarrage de la première vague
     pyxel.mouse(False) # Désactive le curseur de la souris
     pyxel.images[1].load(0,0, "RichtofenSpriteSheet.png") # Chargement des sprites de Richtofen (joueur)
@@ -806,6 +807,15 @@ class Jeu:
 
       # Vérifie si le joueur est mort
       if self.personnage.currentHP <= 0:
+        if self.musicEnabled:
+          mixer.music.stop()
+        self.partieTerminee = True
+
+      # Vérifie si le joueur a gagné
+      if self.nbVagues == 6:
+        self.partieGagnee = True
+        if self.soundEnabled:
+          pyxel.stop(0)
         if self.musicEnabled:
           mixer.music.stop()
         self.partieTerminee = True
@@ -930,7 +940,7 @@ class Jeu:
           elif numeroSpawner == 3:
             self.zombiesList.append(Zombie(664, 15, 38, 51, 1, self.personnage))
     
-    elif self.partieTerminee:
+    elif self.partieTerminee and not self.partieGagnee:
       if self.musicEnabled and not self.partieTermineeMusicInitiated:
         self.partieTermineeMusicInitiated = True
         pyxel.play(1, 5, loop=True) # Lecture du sound effect de game over (si les effets sonores sont activés)
@@ -964,6 +974,40 @@ class Jeu:
       if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
         webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game")
     
+    elif self.partieTerminee and self.partieGagnee:
+      if self.musicEnabled and not self.partieTermineeMusicInitiated:
+        self.partieTermineeMusicInitiated = True
+        pyxel.play(1, 7, loop=True) # Lecture du sound effect de l'écran de victoire (si les effets sonores sont activés)
+      self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
+      self.personnage.killsTXT = str(self.personnage.kills) # Transforme le nombre de kills du joueur en texte (INT -> STR)
+      self.personnage.pvPerdusTXT = str(self.personnage.pvPerdus) # Transforme le nombre de PV perdus du joueur en texte (INT -> STR)
+      self.nbVaguesTXT = str(self.nbVagues) # Transforme le nombre de vagues en texte (INT -> STR)
+      if self.personnage.keybinds == 4 or self.personnage.keybinds == 5 or self.personnage.keybinds == 6:
+        if pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT) or pyxel.btnv(pyxel.GAMEPAD1_AXIS_LEFTX) > self.personnage.controllerDeadzone:
+          self.gameOverChosenBtn = 2
+        elif pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT) or pyxel.btnv(pyxel.GAMEPAD1_AXIS_LEFTX) < -self.personnage.controllerDeadzone:
+          self.gameOverChosenBtn = 1
+        
+        # Clic sur le bouton "Rejouer"
+        if self.gameOverChosenBtn == 1 and pyxel.btn(self.personnage.personnageTir):
+          self.start()
+        
+        # Clic sur le bouton "Quitter"
+        elif self.gameOverChosenBtn == 2 and pyxel.btn(self.personnage.personnageTir):
+          pyxel.quit()
+      else:
+        # Clic sur le bouton "Rejouer"
+        if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
+          self.start()
+        
+        # Clic sur le bouton "Quitter"
+        elif pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435 and pyxel.btn(self.personnage.personnageTir):
+          pyxel.quit()
+
+      # Clic sur le bouton "GitHub"
+      if pyxel.mouse_x > 875 and pyxel.mouse_x < 960 and pyxel.mouse_y > 510 and pyxel.mouse_y < 540 and pyxel.btn(self.personnage.personnageTir):
+        webbrowserOpen("https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game")
+
     elif self.titleScreen:
       # Animation des personnages sur l'écran titre
       if pyxel.frame_count % 15 == 0:
@@ -1079,7 +1123,7 @@ class Jeu:
         pyxel.rect(15, resHauteur-24, 200, 10, 15)
         pyxel.rect(15, resHauteur-24, self.personnage.ammoReloadingStatus*2, 10, 13)
     
-    elif self.partieTerminee:
+    elif self.partieTerminee and not self.partieGagnee:
       # Efface l'écran
       pyxel.cls(10)
 
@@ -1089,6 +1133,64 @@ class Jeu:
       # Affiche le message de fin de partie
       pyxel.images[1].load(0,0, "GameOverScreen.png")
       pyxel.blt(350, 100, 1, 0, 0, 255, 55, 7) # Affiche le texte "Game Over"
+      pyxel.blt(405, 200, 1, 105, 65, 75, 25, 7) # Affiche le texte "Score :"
+      pyxel.blt(300, 225, 1, 0, 90, 180, 25, 7) # Affiche le texte "Kills :"
+      pyxel.blt(300, 260, 1, 0, 125, 180, 25, 7) # Affiche le texte "PV Perdus :"
+      pyxel.blt(300, 285, 1, 0, 150, 180, 25, 7) # Affiche le texte "Nombre de vagues :"
+
+      for a in range(4):
+        if a == 0:
+          c = 200
+          d = self.personnage.scoreTXT
+        elif a == 1:
+          c = 230
+          d = self.personnage.killsTXT
+        elif a == 2:
+          c = 260
+          d = self.personnage.pvPerdusTXT
+        elif a == 3:
+          c = 290
+          d = self.nbVaguesTXT
+
+        self.screenTextPrint(525, c, d)
+      
+      if self.personnage.keybinds == 4 or self.personnage.keybinds == 5 or self.personnage.keybinds == 6:
+        if self.gameOverChosenBtn == 1:
+          pyxel.blt(325, 400, 1, 105, 187, 105, 35, 7)
+          pyxel.blt(525, 400, 1, 0, 222, 96, 35, 7)
+        elif self.gameOverChosenBtn == 2:
+          pyxel.blt(325, 400, 1, 0, 187, 105, 35, 7)
+          pyxel.blt(525, 400, 1, 96, 222, 96, 35, 7)
+          
+      else:
+        # Affiche le bouton "Rejouer"
+        if pyxel.mouse_x > 325 and pyxel.mouse_x < 430 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
+          pyxel.blt(325, 400, 1, 105, 187, 105, 35, 7)
+        else:
+          pyxel.blt(325, 400, 1, 0, 187, 105, 35, 7)
+        
+        # Affiche le bouton "Quitter"
+        if pyxel.mouse_x > 525 and pyxel.mouse_x < 621 and pyxel.mouse_y > 400 and pyxel.mouse_y < 435:
+          pyxel.blt(525, 400, 1, 96, 222, 96, 35, 7)
+        else:
+          pyxel.blt(525, 400, 1, 0, 222, 96, 35, 7)
+
+      # Affiche les copyrights
+      pyxel.text(10, 520, "Copyright (c) Aurelien Audero, Axel Thibert, Tony Baca - 2024 - Tous droits reserves", 7)
+
+      # Affiche le lien vers le GitHub du projet
+      pyxel.blt(875, 510, 1, 0, 65, 75, 25, 7)
+
+    elif self.partieTerminee and self.partieGagnee:
+      # Efface l'écran
+      pyxel.cls(10)
+
+      # Affiche le curseur de la souris
+      pyxel.mouse(True)
+
+      # Affiche le message de fin de partie
+      pyxel.images[1].load(0,0, "VictoryScreen.png")
+      pyxel.blt(350, 100, 1, 0, 0, 255, 55, 7) # Affiche le texte "You Win !"
       pyxel.blt(405, 200, 1, 105, 65, 75, 25, 7) # Affiche le texte "Score :"
       pyxel.blt(300, 225, 1, 0, 90, 180, 25, 7) # Affiche le texte "Kills :"
       pyxel.blt(300, 260, 1, 0, 125, 180, 25, 7) # Affiche le texte "PV Perdus :"
