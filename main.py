@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Version: Dev 0.1
+# Version: Prod v1.0
 # Copyright (c) 2024 Aurélien Audero, Axel Thibert and Tony Baca
 #
 # This file is part of "Kino der toten - A Pyxel Game".
