@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Read the documentation
+    url: https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/blob/main/README_EN.md
+    about: Learn more about the game
+  - name: GitHub Issues
+    url: https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/issues?q=is%3Aissue
+    about: Check to make sure there is not an issue already open that is related to your issue.
