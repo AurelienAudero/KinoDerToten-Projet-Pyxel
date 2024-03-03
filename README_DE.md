@@ -25,7 +25,7 @@ Tauchen Sie ein in eine von Untoten überfallene Villa und erleben Sie ein inten
 Kino Der Toten ist ein 2D-Spiel, bei dem Ihr Ziel einfach ist: so lange wie möglich zu überleben.
 Bahnen Sie sich Ihren Weg durch Horden immer wilderer Zombies und verbessern Sie Ihre Überlebensfähigkeiten.
 
-Verheerende Waffen, mächtige Power-Ups und gut versteckte Geheimnisse helfen Ihnen dabei, die Frist zu verschieben, aber die Spannung wird mit jeder Minute größer. Treten Sie in epischen Kämpfen gegen furchteinflößende Bosse an, die Ihre Nerven auf die Probe stellen werden.
+Verheerende Waffen und gut versteckte Geheimnisse werden Ihnen helfen, die Frist einzuhalten, aber die Spannung wird mit jeder Minute größer. Stelle dich furchteinflößenden Kreaturen in epischen Schlachten, die deine Nerven auf die Probe stellen werden.
 
 **Wirst du der letzte Überlebende sein?**
 **Nehmen Sie die Herausforderung an und beweisen Sie, dass Sie der Beste sind!**
@@ -33,8 +33,8 @@ Verheerende Waffen, mächtige Power-Ups und gut versteckte Geheimnisse helfen Ih
 ## Hauptmerkmale des Spiels
 * Ein 2D-Gameplay
 * Wellen von Zombies werden immer schwieriger zu besiegen
-* Neue Waffen und Power-Ups im Laufe des Spiels
-* Intensive und spannende Bosskämpfe
+* Eine große Auswahl an Steuerungen verfügbar
+* Intensive und spannende Kämpfe
 * Fesselnde Grafik und Soundtrack
 
 ## Installation

@@ -25,7 +25,7 @@ Immergiti in una villa invasa dai non morti e vivi un'esperienza di sopravvivenz
 Kino Der Toten è un gioco 2D in cui il tuo obiettivo è semplice: sopravvivere il più a lungo possibile.
 Fatti strada tra orde di zombi sempre più feroci e affina le tue abilità di sopravvivenza.
 
-Armi devastanti, potenti potenziamenti e segreti ben nascosti ti aiuteranno a posticipare la scadenza, ma la tensione non farà altro che aumentare con il passare dei minuti. Affronta boss terrificanti in combattimenti epici che metteranno alla prova i tuoi nervi.
+Armi devastanti e segreti ben nascosti ti aiuteranno a rispettare la scadenza, ma la tensione non farà altro che aumentare con il passare dei minuti. Affronta creature terrificanti in battaglie epiche che metteranno alla prova i tuoi nervi.
 
 **Sarai l'ultimo sopravvissuto?**
 **Accetta la sfida e dimostra che sei il migliore!**
@@ -33,8 +33,8 @@ Armi devastanti, potenti potenziamenti e segreti ben nascosti ti aiuteranno a po
 ## Caratteristiche principali del gioco
 * Un gioco 2D
 * Ondate di zombie sempre più difficili da sconfiggere
-* Nuove armi e potenziamenti durante il gioco
-* Combattimenti contro i boss intensi ed emozionanti
+* Un'ampia scelta di controlli disponibili
+* Combattimenti intensi ed emozionanti
 * Grafica e colonna sonora coinvolgenti
 
 ## Installazione
