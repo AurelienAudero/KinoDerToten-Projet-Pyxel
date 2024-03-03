@@ -666,6 +666,8 @@ class Jeu:
     self.nbZombiesVagueActuelle = 0 # Nombre de zombies tués dans la vague actuelle
     self.nbZombiesPourTerminerVague = 20 # Nombre de zombies à tuer pour terminer une vague
     self.tempsAttenteNouvelleVague = 10 # Temps d'attente avant le début de la prochaine vague (en secondes)
+    self.tempsAttenteRestantNouvelleVague = self.tempsAttenteNouvelleVague # Temps écoulé avant le début de la prochaine vague
+    self.tempsAttenteNouvelleVagueLastCheckedFrameForCountdown = 0 # Dernière frame vérifiée pour le compte à rebours avant le début de la prochaine vague
     self.bulletSpeed = 5 # Vitesse des balles
     self.startNewWave() # Démarrage de la première vague
     pyxel.mouse(False) # Désactive le curseur de la souris
@@ -698,8 +700,10 @@ class Jeu:
       pyxel.play(0, 1, loop=False) # Sound effect du début de la vague (si les effets sonores sont activés)
       
     # Début du temps de pause avant le début de la prochaine vague
-    self.tempsAttenteStartFrame = pyxel.frame_count
-    self.attenteNouvelleVague = True
+    self.tempsAttenteStartFrame = pyxel.frame_count # Initialisation de la frame de début du temps de pause avant le début de la prochaine vague
+    self.tempsAttenteRestantNouvelleVague = self.tempsAttenteNouvelleVague+1 # Réinitialisation du temps écoulé avant le début de la prochaine vague
+    self.tempsAttenteNouvelleVagueLastCheckedFrameForCountdown = pyxel.frame_count-fps # Initialisation de la dernière frame vérifiée pour le compte à rebours avant le début de la prochaine vague
+    self.attenteNouvelleVague = True # Etat de l'attente avant le début de la prochaine vague
 
     # Spawn d'un seul zombie pour se familiariser avec les contrôles
     if self.nbVagues == 1:
@@ -820,6 +824,9 @@ class Jeu:
             self.tempsSpawnMobActuel = self.tempsSpawnMobBase
           else:
             self.tempsSpawnMobActuel = self.tempsSpawnMobBase - 1
+        if pyxel.frame_count - self.tempsAttenteNouvelleVagueLastCheckedFrameForCountdown >= fps:
+          self.tempsAttenteNouvelleVagueLastCheckedFrameForCountdown += fps
+          self.tempsAttenteRestantNouvelleVague -= 1
       
       # Temps d'attente pour le rechargement de l'arme du joueur
       if self.personnage.ammoReloadingStatus < 100:
@@ -1068,6 +1075,11 @@ class Jeu:
 
       # Affichage du réticule de visée
       self.personnage.reticule.draw()
+
+      # Affiche le temps restant entre deux vagues
+      if self.attenteNouvelleVague:
+        pyxel.blt(resLongueur-150, resHauteur-48, 0, 112, 48, 93, 19, 0)
+        self.screenTextPrint(resLongueur-47, resHauteur-48, str(self.tempsAttenteRestantNouvelleVague))
 
       # Affiche le score actuel du joueur
       pyxel.blt(15, 20, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
