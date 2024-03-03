@@ -664,7 +664,7 @@ class Jeu:
     self.gameOverChosenBtn = 1 # Bouton choisi sur l'écran "Game Over" lors du contrôle à la manette
     self.nbZombiesTotal = 0 # Nombre total de zombies tués
     self.nbZombiesVagueActuelle = 0 # Nombre de zombies tués dans la vague actuelle
-    self.nbZombiesPourTerminerVague = 20 # Nombre de zombies à tuer pour terminer une vague
+    self.nbZombiesPourTerminerVague = 10 # Nombre de zombies à tuer pour terminer une vague
     self.tempsAttenteNouvelleVague = 10 # Temps d'attente avant le début de la prochaine vague (en secondes)
     self.tempsAttenteRestantNouvelleVague = self.tempsAttenteNouvelleVague # Temps écoulé avant le début de la prochaine vague
     self.tempsAttenteNouvelleVagueLastCheckedFrameForCountdown = 0 # Dernière frame vérifiée pour le compte à rebours avant le début de la prochaine vague
@@ -692,9 +692,15 @@ class Jeu:
     self.zombiesList = [] # Suppression de tous les zombies
     self.nbVagues += 1 # Incrémentation du nombre de vagues
     self.nbZombiesVagueActuelle = 0 # Réinitialisation du nombre de zombies tués dans la vague actuelle
-    if self.nbVagues != 1:
+    if self.nbVagues == 2:
       self.nbZombiesPourTerminerVague += 5 # Incrémentation du nombre de zombies à tuer pour terminer une vague (sauf à la première vague)
-      self.personnage.maxHP += 10 # Incrémentation des points de vie max du joueur (sauf à la première vague)
+      self.personnage.maxHP -= 10 # Décrémentation des points de vie max du joueur (sauf à la première vague)
+    elif self.nbVagues == 3 or self.nbVagues == 4:
+      self.nbZombiesPourTerminerVague += 10 # Incrémentation du nombre de zombies à tuer pour terminer une vague (sauf à la première vague)
+      self.personnage.maxHP -= 10 # Décrémentation des points de vie max du joueur (sauf à la première vague)
+    elif self.nbVagues == 5:
+      self.nbZombiesPourTerminerVague += 20 # Incrémentation du nombre de zombies à tuer pour terminer une vague (sauf à la première vague)
+      self.personnage.maxHP -= 20 # Décrémentation des points de vie max du joueur (sauf à la première vague)
     self.personnage.currentHP = self.personnage.maxHP # Régénération complète des points de vie du joueur 
     if self.soundEnabled:
       pyxel.play(0, 1, loop=False) # Sound effect du début de la vague (si les effets sonores sont activés)
