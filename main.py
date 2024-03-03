@@ -256,8 +256,6 @@ class Personnage:
       # Tir
       if pyxel.btnp(self.personnageTir):
         if self.currentPlayerAmmo > 0:
-          if self.soundEnabled:
-            pyxel.play(0, 0, loop=False) # Sound effect du tir (si les effets sonores sont activés)
           return self.x+(self.width/2), self.y+(self.height/2)
         elif self.currentPlayerAmmo == 0:
           if self.soundEnabled:
@@ -383,8 +381,6 @@ class Personnage:
       # Tir
       if pyxel.btnp(self.personnageTir):
         if self.currentPlayerAmmo > 0:
-          if self.soundEnabled:
-            pyxel.play(0, 0, loop=False) # Sound effect du tir (si les effets sonores sont activés)
           return self.x+(self.width/2), self.y+(self.height/2)
         elif self.currentPlayerAmmo == 0:
           if self.soundEnabled:
@@ -796,6 +792,8 @@ class Jeu:
       if (v is not None) and (pyxel.frame_count-self.personnage.lastShot > self.personnage.shotCooldown):
         self.personnage.lastShot = pyxel.frame_count
         self.personnage.currentPlayerAmmo -= 1
+        if self.soundEnabled:
+          pyxel.play(0, 0, loop=False) # Sound effect du tir (si les effets sonores sont activés)
         distance_x = self.personnage.reticule.x - v[0]
         distance_y = self.personnage.reticule.y - v[1]
         lenght = sqrt(distance_x**2 + distance_y**2)
