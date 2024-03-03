@@ -258,7 +258,7 @@ class Personnage:
         if self.currentPlayerAmmo > 0:
           return self.x+(self.width/2), self.y+(self.height/2)
         elif self.currentPlayerAmmo == 0:
-          if self.soundEnabled:
+          if self.soundEnabled and self.ammoReloadingStatus == 100:
             pyxel.play(0, 4, loop=False) # Sound effect du chargeur de l'arme vide (si les effets sonores sont activés)
           return None
       # Recharger
@@ -383,7 +383,7 @@ class Personnage:
         if self.currentPlayerAmmo > 0:
           return self.x+(self.width/2), self.y+(self.height/2)
         elif self.currentPlayerAmmo == 0:
-          if self.soundEnabled:
+          if self.soundEnabled and self.ammoReloadingStatus == 100:
             pyxel.play(0, 4, loop=False) # Sound effect du chargeur de l'arme vide (si les effets sonores sont activés)
           return None
       # Recharger
