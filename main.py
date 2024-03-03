@@ -1092,18 +1092,20 @@ class Jeu:
         self.screenTextPrint(resLongueur-47, resHauteur-48, str(self.tempsAttenteRestantNouvelleVague))
 
       # Affiche le score actuel du joueur
-      pyxel.blt(15, 20, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
+      pyxel.blt(15, 15, 0, 0, 0, 89, 19, 0) # Affiche le texte "Score :"
       self.personnage.scoreTXT = str(self.personnage.score) # Transforme le score du joueur en texte (INT -> STR)
-      self.screenTextPrint(120, 20, self.personnage.scoreTXT)
+      self.screenTextPrint(120, 15, self.personnage.scoreTXT)
 
       # Affiche le numéro de vague actuel
-      pyxel.blt(15, 45, 0, 0, 48, 91, 19, 0) # Affiche le texte "Vague :"
+      pyxel.blt(15, 40, 0, 0, 48, 91, 19, 0) # Affiche le texte "Vague :"
       self.nbVaguesTXT = str(self.nbVagues) # Transforme le nombre de vague en texte (INT -> STR)
-      self.screenTextPrint(120, 45, self.nbVaguesTXT)
+      self.screenTextPrint(120, 40, self.nbVaguesTXT)
       
       # Affichage de la barre d'HP du joueur
+      pyxel.blt(740, 10, 0, 88, 112, 94, 10, 0)
       pyxel.rect(740, 25, 200, 10, 8)
       pyxel.rect(740, 25, (self.personnage.currentHP/self.personnage.maxHP)*200, 10, 11)
+      pyxel.rectb(740, 25, 200, 10, 0)
 
       # Affichage du nombre de munitions restantes dans le chargeur de l'arme du joueur
       if self.personnage.ammoReloadingStatus == 100:
