@@ -46,6 +46,7 @@ def fenetreErreurLibrary(pyxelLibraryStatus:bool, pygameLibraryStatus:bool):
 from webbrowser import open as webbrowserOpen
 from sys import argv as sysArgv, exit as sysExit
 from os import environ as osEnvVar
+from math import sqrt
 osEnvVar['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 from time import gmtime, mktime
 from random import randint
@@ -475,55 +476,19 @@ class Reticule:
     pyxel.blt(self.x, self.y, 0, 0, 72, self.size, self.size, 0)
 
 class Tir:
-  def __init__(self, x, y, personnage):
+  def __init__(self, x, y, distance_x, distance_y):
     self.x = x
     self.y = y
+    self.distance_x = distance_x
+    self.distance_y = distance_y
     self.width = 10
     self.height = 10
     self.radius = 5
     self.alive = True
-    self.viseur_x = personnage.reticule.x
-    self.viseur_y = personnage.reticule.y
-    self.player_x = personnage.x
-    self.player_y = personnage.y
-
-  def checkCoordonnees(self, player_x, player_y):
-    """
-    Détermine la direction du tir par rapport à la position du joueur.
-
-    Args:
-        player_x: La position x du joueur.
-        player_y: La position y du joueur.
-
-    Returns:
-        La fonction retourne deux booléens correspondant à la direction du tir par rapport à la position du joueur.
-    """
-    if self.viseur_x > player_x:
-      coord_x = True
-    else :
-      coord_x = False
-    
-    if self.viseur_y > player_y:
-      coord_y = True
-    else :
-      coord_y = False
-    
-    return coord_x, coord_y
 
   def move(self):
-    direction_x,direction_y = self.checkCoordonnees(self.player_x,self.player_y)
-    distance_x = abs(self.viseur_x - self.player_x)/30
-    distance_y = abs(self.viseur_y - self.player_y)/30
-
-    if direction_x:
-      self.x += distance_x
-    else:
-      self.x -= distance_x
-
-    if direction_y:
-      self.y += distance_y
-    else:
-      self.y -= distance_y
+    self.x += self.distance_x
+    self.y += self.distance_y
 
   def draw(self):
     pyxel.circ(self.x, self.y, self.radius, 10)
@@ -705,6 +670,7 @@ class Jeu:
     self.nbZombiesVagueActuelle = 0 # Nombre de zombies tués dans la vague actuelle
     self.nbZombiesPourTerminerVague = 20 # Nombre de zombies à tuer pour terminer une vague
     self.tempsAttenteNouvelleVague = 10 # Temps d'attente avant le début de la prochaine vague (en secondes)
+    self.bulletSpeed = 5 # Vitesse des balles
     self.startNewWave() # Démarrage de la première vague
     pyxel.mouse(False) # Désactive le curseur de la souris
     pyxel.images[1].load(0,0, "RichtofenSpriteSheet.png") # Chargement des sprites de Richtofen (joueur)
@@ -830,7 +796,13 @@ class Jeu:
       if (v is not None) and (pyxel.frame_count-self.personnage.lastShot > self.personnage.shotCooldown):
         self.personnage.lastShot = pyxel.frame_count
         self.personnage.currentPlayerAmmo -= 1
-        self.tirsList.append(Tir(v[0], v[1], self.personnage))
+        distance_x = self.personnage.reticule.x - v[0]
+        distance_y = self.personnage.reticule.y - v[1]
+        lenght = sqrt(distance_x**2 + distance_y**2)
+        if lenght != 0:
+          distance_x = (distance_x/lenght)*self.bulletSpeed
+          distance_y = (distance_y/lenght)*self.bulletSpeed
+        self.tirsList.append(Tir(v[0], v[1], distance_x, distance_y))
 
       # Déplacement des tirs existants et suppression des tirs terminés
       for element in self.tirsList:
