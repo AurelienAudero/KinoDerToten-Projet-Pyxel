@@ -80,6 +80,6 @@ Si vous utilisez un système Linux, installer SDL2 à l'aide de votre gestionnai
 - Remerciements :
     - Amine Ouichen *(pour le système permettant aux tirs de partir dans la direction du viseur)*
     - [Pierrick Perdrieau](https://github.com/Crabiz) *(pour le système permettant aux tirs de partir dans la direction du viseur)*
-    - Timothée Ané *(pour le système permettant aux tirs de partir dans la direction du viseur)*
+    - [Timothée Ané](https://github.com/Timothee-Ane) *(pour le système permettant aux tirs de partir dans la direction du viseur)*
 
 "Kino Der Toten - A Pyxel Game" © 2024 by [Aurélien Audero](https://github.com/AurelienAudero), [Axel Thibert](https://github.com/Oxwerth) and [Tony Baca](https://github.com/Thidokachi) is licensed under [CC BY-NC-ND 4.0](https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/blob/main/LICENSE)

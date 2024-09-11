@@ -80,6 +80,6 @@ If you are using a Linux system, install SDL2 using your package manager:
 - Acknowledgments :
     - Amine Ouichen *(for the system allowing the shots to go in the direction of the crosshair)*
     - [Pierrick Perdrieau](https://github.com/Crabiz) *(for the system allowing the shots to go in the direction of the crosshair)*
-    - Timothée Ané *(for the system allowing the shots to go in the direction of the crosshair)*
+    - [Timothée Ané](https://github.com/Timothee-Ane) *(for the system allowing the shots to go in the direction of the crosshair)*
 
 "Kino Der Toten - A Pyxel Game" © 2024 by [Aurélien Audero](https://github.com/AurelienAudero), [Axel Thibert](https://github.com/Oxwerth) and [Tony Baca](https://github.com/Thidokachi) is licensed under [CC BY-NC-ND 4.0](https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/blob/main/LICENSE)

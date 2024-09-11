@@ -80,6 +80,6 @@ Wenn Sie ein Linux-System verwenden, installieren Sie SDL2 mit Ihrem Paketmanage
 - Anerkennungen :
     - Amine Ouichen *(für das System, das die Schüsse in Richtung des Fadenkreuzes ermöglicht)*
     - [Pierrick Perdrieau](https://github.com/Crabiz) *(für das System, das die Schüsse in Richtung des Fadenkreuzes ermöglicht)*
-    - Timothée Ané *(für das System, das die Schüsse in Richtung des Fadenkreuzes ermöglicht)*
+    - [Timothée Ané](https://github.com/Timothee-Ane) *(für das System, das die Schüsse in Richtung des Fadenkreuzes ermöglicht)*
 
 "Kino Der Toten - A Pyxel Game" © 2024 by [Aurélien Audero](https://github.com/AurelienAudero), [Axel Thibert](https://github.com/Oxwerth) and [Tony Baca](https://github.com/Thidokachi) is licensed under [CC BY-NC-ND 4.0](https://github.com/AurelienAudero/KinoDerToten-Pyxel-Game/blob/main/LICENSE)
